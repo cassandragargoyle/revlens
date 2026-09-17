@@ -66,14 +66,15 @@ Ask the user: "Is this issue fully complete?"
 
 ### If YES:
 
-**First read `docs/contributing/ISSUE-MANAGEMENT.md`** and follow the sections
-*Archiving Completed Issues* and *Closing / archiving* — that document is the
-source of truth. The issue index lives on GitHub Issues; there are **no tables or
-statistics in the repo to maintain**. The steps below are a summary; if they
-conflict with the document, the document wins.
+**First read `docs/contributing/ISSUE-MANAGEMENT.md`** and follow the section
+*Closing and Archiving* — that document is the source of truth. The issue index
+lives on GitHub Issues; there are **no tables or statistics in the repo to
+maintain**. The steps below are a summary; if they conflict with the document,
+the document wins.
 
 1. **Edit the issue file** in `docs/issues/`:
-   - **Change the status**: `**Status:** 📋 Open` → `**Status:** ✅ Implemented`
+   - **Change the status** in the `## Metadata` block: `- **Status**: 📋 Open` →
+     `- **Status**: ✅ Implemented`
    - **Add the closing date** (if the file has a date field)
    - **Update the acceptance criteria** - check off completed criteria:
      - Change `- [ ]` to `- [x]` for implemented criteria
@@ -84,10 +85,10 @@ conflict with the document, the document wins.
    ```markdown
    ## Acceptance Criteria
 
-   - [x] "Portunix" submenu appears in Explorer context menu
-   - [x] "Generate Schema" item visible when CLI is installed
-   - [x] Command accepts single file selection
-   - [ ] Command accepts folder selection (recursive processing) - deferred to v0.2.1
+   - [x] The rail holds the three view modes and the about page
+   - [x] The state of the rail is remembered per browser
+   - [ ] The viewer renders correctly in the Pilot webview at half a screen's width -
+         not verified, headless rendering unavailable on this machine
    ```
 
 2. **Archive the file** — move it into `done/`:
@@ -95,7 +96,7 @@ conflict with the document, the document wins.
 
 3. **Close the GitHub issue** `#N` (== `NNN`) and update the link in its body to
    the new `done/` path:
-   `gh issue close N --repo cassandragargoyle/portunix-vscode --reason completed`
+   `gh issue close N --repo cassandragargoyle/revlens --reason completed`
    (use `--reason "not planned"` for ❌ Closed / won't-fix)
 
 Commit the issue status change:

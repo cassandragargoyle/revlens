@@ -86,9 +86,16 @@ Key priorities (in order):
 
 ### Issue Tracking & Documentation
 
-- Issues are managed per project individually
-- May sync to GitHub repositories when applicable
-- Common issue types: Configuration issues, build problems, compatibility issues
+- An issue lives in two places at once: the file `docs/issues/NNN-slug.md` is the content,
+  the GitHub issue `#N` is the number and the index, and they are one to one (`#3` ⇄
+  `003-*.md` ⇄ **INT-003**)
+- **GitHub owns the number** — create the issue there first and adopt what it gives you;
+  never pick `NNN` by counting the files
+- The GitHub body is a summary and a link, not a copy of the file
+- A finished issue moves to `docs/issues/done/` and its GitHub issue is closed; there is no
+  index table in the repository to maintain
+- [docs/contributing/ISSUE-MANAGEMENT.md](docs/contributing/ISSUE-MANAGEMENT.md) is the
+  workflow; the `create-issue`, `implement-issue` and `finish-branch` skills drive it
 
 ### Team Communication
 
