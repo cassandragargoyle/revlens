@@ -1,6 +1,6 @@
 {
   "name": "@revlens/cli",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "description": "revlens command line - build, validate, serve",
   "license": "MIT",

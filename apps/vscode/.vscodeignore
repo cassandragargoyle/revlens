@@ -6,3 +6,4 @@ test/**
 tsconfig.json
 esbuild.mjs
 .vscodeignore
+icon.svg

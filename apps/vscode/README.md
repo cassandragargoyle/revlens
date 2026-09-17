@@ -83,12 +83,27 @@ node apps/cli/bin/revlens.js build --source engagement ... --out out/analysis.re
 be offered for every JSON file in the application, so it does not claim it — see
 `apps/pilot/src/catalog.ts`.
 
+## The icon
+
+`icon.svg` is the drawing and `icon.png` is what ships: Visual Studio Code and the Pilot
+catalog both read the `icon` field of the manifest, which may not be an SVG. After editing
+the drawing, render it again at 128x128 with a headless browser and commit both files:
+
+```bash
+chrome --headless --default-background-color=00000000 --window-size=128,128 --screenshot=apps/vscode/icon.png apps/vscode/icon.svg
+```
+
+The mark is the document the tool shows: a page with one line struck out and one inserted,
+in the deletion and insertion colours of the viewer itself.
+
 ## Layout
 
 ```text
 apps/vscode/
   package.json          # the extension manifest; not an npm workspace member
   esbuild.mjs           # one CommonJS bundle, plus the built viewer copied into media/
+  icon.svg              # the icon as drawn; edited here and nowhere else
+  icon.png              # the same icon at 128x128, which is what the manifest points at
   src/
     extension.ts        # activation; registers what the host supports
     bundle-editor.ts    # the custom readonly editor and the file watch
