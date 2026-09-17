@@ -24,7 +24,7 @@ related:
 ## Přehled
 
 **Repozitář**: `revlens`
-**Jazyk**: TypeScript na Node.js 20+, npm workspaces
+**Jazyk**: TypeScript na Node.js 26.9+, npm workspaces
 **Stav**: začátek
 
 Prohlížeč revizí dokumentu. Ukazuje **finální text tak, jak ho čtenář dostane**, s každou

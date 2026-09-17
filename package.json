@@ -10,7 +10,7 @@
     "url": "https://github.com/CassandraGargoyle/revlens"
   },
   "engines": {
-    "node": ">=20.11"
+    "node": ">=26.9.0"
   },
   "workspaces": [
     "packages/core",
@@ -51,7 +51,7 @@
     "@types/node": "^22.20.3",
     "@types/vscode": "^1.80.0",
     "ajv": "^8.20.0",
-    "esbuild": "^0.25.12",
+    "esbuild": "^0.28.2",
     "eslint": "^10.10.0",
     "globals": "^17.12.0",
     "jsdom": "^30.0.1",

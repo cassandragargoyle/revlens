@@ -7,7 +7,7 @@
 ## Overview
 
 **Repository**: `revlens`
-**Language**: TypeScript on Node.js 20+, npm workspaces
+**Language**: TypeScript on Node.js 26.9+, npm workspaces
 **Status**: Early
 
 A document revision viewer. It shows **the final text as the reader gets it**, with every

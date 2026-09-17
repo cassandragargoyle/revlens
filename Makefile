@@ -5,15 +5,20 @@
 # file only adds the one thing they do not cover - turning an example's committed
 # snapshots into a real git history and driving the CLI over it.
 #
-# Needs GNU make, Node 20.11+ and git on the PATH. On Windows, run it from Git Bash
+# Needs GNU make, Node 26.9+ (`.nvmrc`) and git on the PATH. On Windows, run it from Git Bash
 # (`make demo`) or install make with `choco install make`.
 #
 # Override any of these on the command line:
 #   make demo LANGUAGE=cs PORT=5000
 
 EXAMPLE  ?= examples/01-revision-round
-LANGUAGE ?= en
 OUT      ?= out/example
+
+# `LANGUAGE` is also a locale variable the desktop exports - empty on GNOME, `cs_CZ:en`
+# elsewhere - and make's `?=` never overrides the environment, so `?= en` would not hold.
+# Take the inherited value only when it names a language the example has; an assignment on
+# the command line still wins over this one, so `make demo LANGUAGE=cs` works.
+LANGUAGE := $(if $(wildcard $(EXAMPLE)/$(strip $(LANGUAGE))/history/history.json),$(strip $(LANGUAGE)),en)
 PORT     ?= 4173
 HOST     ?= 127.0.0.1
 

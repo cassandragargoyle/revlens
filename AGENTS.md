@@ -6,7 +6,7 @@
 - **Project Name**: revlens
 - **Primary Purpose**: A document revision viewer — the final text with every change
   highlighted in place, and the revision and reviewer comment behind each one
-- **Primary Language**: TypeScript on Node.js 20.11+, npm workspaces
+- **Primary Language**: TypeScript on Node.js 26.9+, npm workspaces
 - **Platforms**: Linux, Windows (macOS development status TBD)
 
 The tool was built inside `InfiniteCare-architecture` under `tools/revlens/` and moved
@@ -128,7 +128,7 @@ Key priorities (in order):
 
 ### Prerequisites
 
-- Node.js 20.11 or newer, with npm
+- Node.js 26.9.0 or newer, with npm — the version is in `.nvmrc`, so `nvm use` picks it up
 - git on the PATH — the adapters read history by calling it
 - For `verify:pilot-host` only: a `portunix-vscode` checkout whose `src/electron` is built
 
