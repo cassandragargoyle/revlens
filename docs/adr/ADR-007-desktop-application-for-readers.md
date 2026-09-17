@@ -15,7 +15,7 @@ editors, still holds.
 - **Related**:
   - [ADR-006 — revlens as a product of its own](ADR-006-standalone-product-and-editor-extensions.md)
   - [ADR-005 — a Node workspace for revlens](ADR-005-revlens-node-workspace-packaging.md)
-  - [INT-004 — revlens as a desktop application](../issues/004-desktop-application.md)
+  - [INT-004 — revlens as a desktop application](../issues/done/004-desktop-application.md)
   - [INT-002 — document revision viewer](../issues/002-document-revision-viewer.md)
 
 ---

@@ -17,7 +17,7 @@ exists.
 
 The editor stays the primary target; this is the second one. See
 [ADR-007](../../docs/adr/ADR-007-desktop-application-for-readers.md) for why both exist,
-and [INT-004](../../docs/issues/004-desktop-application.md) for what was asked for.
+and [INT-004](../../docs/issues/done/004-desktop-application.md) for what was asked for.
 
 ## What it does
 

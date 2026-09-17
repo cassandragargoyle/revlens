@@ -3,7 +3,7 @@ title: INT-004 - revlens as a desktop application, built with Electron
 description: Apply when working on the desktop target of revlens - the Electron shell around the viewer, the bundle it builds itself, and the make targets that produce the installers.
 category: specification
 ai_load: on-demand
-status: draft
+status: active
 created: 2026-09-17
 related:
   - docs/issues/002-document-revision-viewer.md
@@ -15,21 +15,24 @@ related:
 
 ## Metadata
 
-- **Status**: 📋 Open
+- **Status**: ✅ Implemented
 - **Type**: enhancement
 - **Priority**: medium
 - **Created**: 2026-09-17
+- **Closed**: 2026-09-17
 - **Author**: Zdeněk Kurc
 - **Target**: a new `apps/desktop/` (Electron main process, preload, packaging), plus
   `Makefile` targets and a script under `scripts/`
 - **GitHub**: [#4](https://github.com/cassandragargoyle/revlens/issues/4)
 - **Related**:
-  - [INT-002 — Document revision viewer](002-document-revision-viewer.md) — the tool this
+  - [INT-002 — Document revision viewer](../002-document-revision-viewer.md) — the tool this
     packages; the bundle contract and the adapters are unchanged by it
-  - [INT-003 — Left rail for the viewer's main window](003-viewer-left-rail.md) — the same
+  - [INT-003 — Left rail for the viewer's main window](../003-viewer-left-rail.md) — the same
     window, which is what the desktop application shows
-  - [ADR-006 — Standalone product and editor extensions](../adr/ADR-006-standalone-product-and-editor-extensions.md)
+  - [ADR-006 — Standalone product and editor extensions](../../adr/ADR-006-standalone-product-and-editor-extensions.md)
     — **this issue contradicts it**, see [Against ADR-006](#against-adr-006)
+  - [ADR-007 — A desktop application for readers who are not in an editor](../../adr/ADR-007-desktop-application-for-readers.md)
+    — the record this issue asked for, which amends ADR-006 rather than reversing it
 
 ## Feature Description
 
@@ -80,7 +83,7 @@ of writing six CLI flags, and sends one file rather than a directory tree.
 
 ## Against ADR-006
 
-[ADR-006](../adr/ADR-006-standalone-product-and-editor-extensions.md) decided the opposite
+[ADR-006](../../adr/ADR-006-standalone-product-and-editor-extensions.md) decided the opposite
 of this issue, and for a good reason:
 
 > reading a document in a browser tab on `127.0.0.1` is the wrong end of the workflow. The
@@ -109,7 +112,7 @@ quietly bypassed, and the new record has to answer the three objections honestly
   working offline with no CDN. Electron is a build-time and packaging dependency of one app,
   not of `core`, `adapters`, `cli`, `server` or `web`, and the acceptance criteria below
   make that structural rather than a promise.
-- **Three platforms to sign and ship.** [AGENTS.md](../../AGENTS.md) lists macOS as
+- **Three platforms to sign and ship.** [AGENTS.md](../../../AGENTS.md) lists macOS as
   undecided. An unsigned macOS build that shows Gatekeeper's warning is worse than no macOS
   build if it is presented as supported, so the ADR says which platforms are *supported*
   and which are merely *produced*.
@@ -218,7 +221,7 @@ built:
       what they produced before this change
 - [x] The main process, the page builder and the file life-cycle are tested without an
       Electron process, in `apps/desktop/test/`
-- [x] `docs/architecture/ui/` gains the desktop window, and [ARCHITECTURE.md](../../ARCHITECTURE.md)
+- [x] `docs/architecture/ui/` gains the desktop window, and [ARCHITECTURE.md](../../../ARCHITECTURE.md)
       and its Czech translation name the desktop target
 - [x] `npm run lint`, `npm run typecheck`, `npm run schema:check`, `npm run build` and
       `npm test` pass
