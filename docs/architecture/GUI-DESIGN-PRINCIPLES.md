@@ -9,6 +9,7 @@ last_updated: 2026-09-17
 related:
   - docs/DESIGN-PRINCIPLES.md
   - docs/architecture/ui/main-window.svg
+  - docs/architecture/ui/main-window.cs.svg
 ---
 
 # GUI Design Guidelines
@@ -24,7 +25,9 @@ disagree, the stylesheet is right and this document is stale.
 
 - [Design Principles](../DESIGN-PRINCIPLES.md) — automatic over manual, zero configuration,
   convention over configuration, fail gracefully
-- [`ui/main-window.svg`](ui/main-window.svg) — the main window, drawn from the code
+- [`ui/main-window.svg`](ui/main-window.svg) — the main window, drawn from the code, with
+  the interface strings in English; [`ui/main-window.cs.svg`](ui/main-window.cs.svg) is the
+  same drawing with the strings the reader actually sees
 - [ADR-006](../adr/ADR-006-standalone-product-and-editor-extensions.md) — why one viewer
   runs in three places and may not be forked for any of them
 
@@ -79,7 +82,7 @@ The shapes the viewer already uses. A new icon should be as plain as these — a
 drawing with more than four strokes reads as a smudge.
 
 | Item | Shape |
-| ----- | ----- |
+| ---- | ----- |
 | Clean text | Four horizontal lines, the last one short |
 | Marked-up text | The same lines with one diagonal stroke across them |
 | Baseline | A dial with a counter-clockwise arrow around it |
@@ -193,8 +196,12 @@ ships.
 
 1. Reuse the component's own path data for an icon, so the drawing cannot drift from the
    code it draws
-2. Interface strings are drawn in Czech, exactly as `apps/web/src/strings.ts` has them;
-   annotations are English, per the repository rule
+2. A window is drawn twice. `<name>.cs.svg` carries the interface strings in Czech,
+   exactly as `apps/web/src/strings.ts` has them; `<name>.svg` is the same drawing with
+   those strings translated, so an English reader of the documentation can follow it.
+   Geometry is identical in both — only the strings differ, and a run with an explicit
+   `textLength` keeps that value so the tint and the rule under it stay put. Annotations
+   are English in both, per the repository rule
 3. Annotations are numbered discs in `--accent` (`#2b6cb0`) with a caption column on the
    right; a leader line only where the disc cannot sit on what it marks
 4. Use the palette above for the interface, and the document's own colours for a marked
@@ -218,4 +225,4 @@ ships.
 - [ ] Spacing is on the 4px grid, or the exception is written down
 - [ ] The component is hidden or flattened in `@media print`, whichever is right for it
 - [ ] It works at half a screen's width, which is what the editor webview usually is
-- [ ] The drawing in `ui/` is re-drawn in the same commit
+- [ ] Both drawings in `ui/` — `.svg` and `.cs.svg` — are re-drawn in the same commit

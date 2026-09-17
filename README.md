@@ -1,5 +1,9 @@
 # revlens
 
+*Česky: [README.cs.md](README.cs.md).*
+
+![A document with three highlighted passages, each traced back to one point on a revision timeline](README.png)
+
 ## Overview
 
 **Repository**: `revlens`
@@ -362,7 +366,15 @@ none — and says so rather than passing quietly.
 - **No authentication, no hosting.** Local tool, local bind. Publishing it to a URL for a
   client is a separate decision with a separate issue.
 
+## The Main Window
+
+![The revlens main window: the document in the centre with the changes highlighted, the revision list on the left, and the panel on the right answering when a change happened, who caused it and on which reviewer comment](docs/architecture/ui/main-window.svg)
+
+The interface itself is Czech; the drawing above translates it. The same picture with the
+strings the reader actually sees is
+[main-window.cs.svg](docs/architecture/ui/main-window.cs.svg).
+
 ---
 
 **Created**: 2026-09-16
-**Last Updated**: 2026-09-16
+**Last Updated**: 2026-09-17
