@@ -15,6 +15,11 @@ The page in the webview is the viewer from `apps/web`, unchanged. It is handed t
 on the `__REVLENS_BUNDLE__` global — the same seam `revlens build --static` uses, because a
 page loaded from a resource URI may not fetch a local JSON file.
 
+Reading the file and assembling that page are not in this directory: they are in
+[`packages/viewer-page`](../../packages/viewer-page), because the
+[desktop application](../desktop/README.md) shows the same page from the same file and the
+part most likely to break against a host must not exist twice.
+
 ## What it contributes
 
 | Contribution | What it does | Pilot |
@@ -96,6 +101,11 @@ chrome --headless --default-background-color=00000000 --window-size=128,128 --sc
 The mark is the document the tool shows: a page with one line struck out and one inserted,
 in the deletion and insertion colours of the viewer itself.
 
+One drawing, three renderings: `icon.png` at 128×128 is what this manifest and the Pilot
+catalog point at and is also the viewer's favicon (`apps/web/src/assets/icon.png`, held
+byte-identical by `apps/web/test/icon.test.ts`); `apps/desktop/build/icon.png` is the same
+drawing at 512×512, which is the size an installer wants.
+
 ## Layout
 
 ```text
@@ -107,9 +117,7 @@ apps/vscode/
   src/
     extension.ts        # activation; registers what the host supports
     bundle-editor.ts    # the custom readonly editor and the file watch
-    bundle-file.ts      # read and validate a bundle before it is shown
     host.ts             # what this host can do
-    webview-html.ts     # the viewer page: asset URIs, CSP, the embedded bundle
   test/                 # run by the workspace suite: npm test
 ```
 

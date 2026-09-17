@@ -2,8 +2,7 @@ import { basename, dirname, join } from 'node:path';
 import { readFile } from 'node:fs/promises';
 import { randomBytes } from 'node:crypto';
 import * as vscode from 'vscode';
-import { readBundleFile } from './bundle-file.js';
-import { buildErrorPage, buildViewerPage } from './webview-html.js';
+import { buildErrorPage, buildViewerPage, readBundleFile } from '@revlens/viewer-page';
 import type { HostCapabilities } from './host.js';
 
 /**

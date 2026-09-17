@@ -3,6 +3,7 @@
   "references": [
     { "path": "./packages/core" },
     { "path": "./packages/adapters" },
+    { "path": "./packages/viewer-page" },
     { "path": "./apps/server" },
     { "path": "./apps/cli" }
   ]

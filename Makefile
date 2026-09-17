@@ -27,18 +27,20 @@ REPO    = $(OUT)/analysis-repo
 BUNDLE  = $(OUT)/bundle.json
 REPORT  = $(OUT)/report.json
 STATIC  = $(OUT)/static
+# The desktop application opens a file, not a URL, and the association is on `.revlens`
+DESKTOP = $(OUT)/example.revlens
 
 NPM     = npm run --silent
 REVLENS = $(NPM) revlens --
 
 .DEFAULT_GOAL := help
-.PHONY: help install build seed bundle validate contracts report static serve demo debug check clean
+.PHONY: help install build seed bundle validate contracts report static serve demo debug desktop package-desktop check clean
 
 help: ## Show this help
 	@echo "revlens - build the tool and run it against an example"
 	@echo ""
 	@echo "Targets:"
-	@grep -E '^[a-z-]+:.*?## ' $(MAKEFILE_LIST) | sed -e 's/:.*## /|/' | awk -F'|' '{printf "  %-10s %s\n", $$1, $$2}'
+	@grep -E '^[a-z-]+:.*?## ' $(MAKEFILE_LIST) | sed -e 's/:.*## /|/' | awk -F'|' '{printf "  %-16s %s\n", $$1, $$2}'
 	@echo ""
 	@echo "Settings:"
 	@echo "  EXAMPLE  = $(EXAMPLE)"
@@ -101,6 +103,21 @@ demo: build contracts bundle validate serve ## Everything: compile, build the ex
 # target is the quick look, without one.
 debug: node_modules ## The example in an Extension Development Host, no debugger attached
 	@$(NPM) demo:vscode -- --example $(EXAMPLE) --language $(LANGUAGE) --out $(OUT) --open
+
+# The third target of the same viewer. It opens a file rather than a URL, like the
+# extension, so this one also stops before `serve` - and writes the bundle under the name
+# the operating system association claims.
+desktop: build seed ## Run the desktop application from source, against the example bundle
+	@$(REVLENS) build \
+		--source engagement \
+		--repo $(REPO) \
+		--records $(RECORDS) \
+		--from baseline \
+		--out $(DESKTOP)
+	@$(NPM) dev:desktop -- $(DESKTOP)
+
+package-desktop: build ## Build installers for this platform into dist/desktop/
+	@$(NPM) package:desktop
 
 check: node_modules ## What has to pass before anything is reported as done
 	npm run lint

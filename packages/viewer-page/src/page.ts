@@ -1,5 +1,9 @@
 /**
- * The viewer page, prepared for a webview instead of a browser tab.
+ * The viewer page, prepared for a host that embeds it instead of a browser tab.
+ *
+ * Two hosts ask for it: the editor webview in `apps/vscode`, and the desktop window in
+ * `apps/desktop`. They differ in one thing - the scheme their assets are served from -
+ * so they are one function with an `assetUri`, not two pages.
  *
  * Nothing here knows the viewer's internals. The `index.html` that `apps/web` builds is
  * taken as it is, its asset URLs are rewritten to the host's resource scheme, and the
@@ -20,7 +24,7 @@ export interface ViewerPageOptions {
   readonly indexHtml: string;
   /** Maps an asset path from the built viewer onto a URI the webview is allowed to load. */
   readonly assetUri: (relativePath: string) => string;
-  /** The host's `webview.cspSource`. */
+  /** Where the page's own assets come from: `webview.cspSource`, or the desktop scheme. */
   readonly cspSource: string;
   /** A per-render nonce, so the page may run its own scripts and nothing else. */
   readonly nonce: string;
@@ -174,7 +178,8 @@ function jsStringLiteral(json: string): string {
     .replace(JS_LINE_SEPARATORS, (match) => `\\u${match.charCodeAt(0).toString(16)}`);
 }
 
-function escapeHtml(text: string): string {
+/** Exported because every host that draws a page of its own needs exactly this. */
+export function escapeHtml(text: string): string {
   return text
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')

@@ -10,13 +10,16 @@ related:
   - docs/DESIGN-PRINCIPLES.md
   - docs/architecture/ui/main-window.svg
   - docs/architecture/ui/main-window.cs.svg
+  - docs/architecture/ui/desktop-window.svg
+  - docs/architecture/ui/desktop-window.cs.svg
 ---
 
 # GUI Design Guidelines
 
 This document defines the visual conventions for everything revlens shows a reader: the
-viewer in `apps/web`, the same viewer inside the Visual Studio Code and Pilot webview, and
-the SVG drawings under [`ui/`](ui/) that document a window.
+viewer in `apps/web`, the same viewer inside the Visual Studio Code and Pilot webview, the
+same viewer again in the desktop window, and the SVG drawings under [`ui/`](ui/) that
+document a window.
 
 `apps/web/src/styles.css` is the source of truth. Where this document and the stylesheet
 disagree, the stylesheet is right and this document is stale.
@@ -28,8 +31,13 @@ disagree, the stylesheet is right and this document is stale.
 - [`ui/main-window.svg`](ui/main-window.svg) — the main window, drawn from the code, with
   the interface strings in English; [`ui/main-window.cs.svg`](ui/main-window.cs.svg) is the
   same drawing with the strings the reader actually sees
+- [`ui/desktop-window.svg`](ui/desktop-window.svg) — the desktop application: the same
+  viewer in a window with a file life-cycle around it, the empty window, the File menu and
+  the build form; [`ui/desktop-window.cs.svg`](ui/desktop-window.cs.svg) is its translation
 - [ADR-006](../adr/ADR-006-standalone-product-and-editor-extensions.md) — why one viewer
   runs in three places and may not be forked for any of them
+- [ADR-007](../adr/ADR-007-desktop-application-for-readers.md) — why there is a fourth
+  place, and why it is held to the same rule
 
 ---
 

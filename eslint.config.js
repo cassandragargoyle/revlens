@@ -8,8 +8,10 @@ export default tseslint.config(
       '**/dist/**',
       '**/node_modules/**',
       'apps/web/dist/**',
-      // The built viewer, copied in when the extension is packaged - not our source.
+      // The built viewer, copied in when the extension and the desktop application are
+      // packaged - not our source.
       'apps/vscode/media/**',
+      'apps/desktop/media/**',
       'out/**',
     ],
   },

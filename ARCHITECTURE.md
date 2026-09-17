@@ -104,16 +104,18 @@ flowchart TB
 | Serving the SPA and the bundle | yes | no | no | Local, bound to `127.0.0.1`; the material is internal |
 | Driving the tool from an assistant | yes (`--mcp`) | supplies the answers | no | The MCP surface is a projection of `core`, not a second implementation |
 | Opening a bundle in an editor | the extension reads the file | validates it | renders it unchanged | An editor is a third host for the same frontend, not a second viewer |
+| Opening a bundle from the file manager | the desktop shell reads the file | validates it | renders it unchanged | A fourth host, for readers who have neither a checkout nor an editor |
 
-## Three Hosts, One Frontend
+## Four Hosts, One Frontend
 
-The viewer in `apps/web` runs in three places and is written once:
+The viewer in `apps/web` runs in four places and is written once:
 
 | Host | Where the bundle comes from | What starts it |
 | ---- | --------------------------- | -------------- |
 | A browser tab | `GET /api/bundle`, chapters on demand | `revlens serve` |
 | A directory that can be zipped | `bundle-data.js`, on a global | `revlens build --static` |
 | An editor tab | the same global, written into the page | the extension in `apps/vscode` |
+| A window of its own | the same global again | the desktop application in `apps/desktop` |
 
 `detectSource()` in `apps/web/src/data/source.ts` is the whole seam: a bundle on the global
 wins over the API. It was written so that a `file://` page could work without fetching -
@@ -124,6 +126,16 @@ That extension is one extension for two applications, Visual Studio Code and Pil
 Pilot runs real `.vsix` extensions on a subset of the API. The document path uses only what
 both hosts have; everything beyond it is probed for rather than assumed. See
 [ADR-006](docs/adr/ADR-006-standalone-product-and-editor-extensions.md).
+
+The desktop application is the same page again, over a scheme of its own instead of a
+resource URI, for the reviewer who was sent a file and has neither a checkout nor an
+editor. The editor stays the primary target and the desktop is the second one; both are
+held to the same rule, which is that the difference between hosts lives in the host. See
+[ADR-007](docs/adr/ADR-007-desktop-application-for-readers.md).
+
+Assembling that page, and reading the file behind it, happen once for all of them, in
+`packages/viewer-page` — the part most likely to break against a host is the part that must
+not exist twice.
 
 ## Cold Load of a Deep Link
 

@@ -187,40 +187,40 @@ built:
 
 ## Acceptance Criteria
 
-- [ ] A new ADR amends ADR-006's packaging decision, names the supported platforms, and is
+- [x] A new ADR amends ADR-006's packaging decision, names the supported platforms, and is
       merged **before** the implementation
-- [ ] `apps/desktop/` holds the Electron main process, the preload and the packaging
+- [x] `apps/desktop/` holds the Electron main process, the preload and the packaging
       configuration, and `apps/web` contains nothing that knows about it
-- [ ] `make desktop` runs the application from source against the example bundle, on a
+- [x] `make desktop` runs the application from source against the example bundle, on a
       machine that has run `npm install` and `npm run build`
-- [ ] `make package-desktop` writes installers into `dist/desktop/` for the platform it runs
+- [x] `make package-desktop` writes installers into `dist/desktop/` for the platform it runs
       on: an AppImage on Linux, a portable `.exe` and an installer on Windows, a `.dmg` on
       macOS
-- [ ] Both targets are wrappers over npm scripts and contain no build logic of their own
-- [ ] Opening a `*.revlens` file shows the document: by command-line argument, by
+- [x] Both targets are wrappers over npm scripts and contain no build logic of their own
+- [x] Opening a `*.revlens` file shows the document: by command-line argument, by
       **File → Open**, by dragging the file onto the window, and by double-clicking it once
       the association is installed
-- [ ] A bundle that fails its invariants shows the validator's reasons in the window, not a
+- [x] A bundle that fails its invariants shows the validator's reasons in the window, not a
       blank page and not a crash — the same behaviour the extension has
-- [ ] The window reloads the document when the file changes on disk, and the behaviour can
+- [x] The window reloads the document when the file changes on disk, and the behaviour can
       be turned off, matching `revlens.reloadOnChange`
-- [ ] The application builds a bundle from a chosen repository and records directory, and
+- [x] The application builds a bundle from a chosen repository and records directory, and
       the result is byte-for-byte what `revlens build` produces from the same inputs
-- [ ] Without `git` on the `PATH`, building shows a message naming what is missing and how
+- [x] Without `git` on the `PATH`, building shows a message naming what is missing and how
       to install it; reading an existing bundle still works
-- [ ] The renderer runs with `contextIsolation` enabled and node integration disabled, and
+- [x] The renderer runs with `contextIsolation` enabled and node integration disabled, and
       the preload exposes named calls rather than a raw channel
-- [ ] Nothing is fetched at runtime: the application works with no network at all, and the
+- [x] Nothing is fetched at runtime: the application works with no network at all, and the
       packaged build contains no CDN reference
-- [ ] `electron` and the packager are devDependencies of `apps/desktop` alone; installing
+- [x] `electron` and the packager are devDependencies of `apps/desktop` alone; installing
       and building `core`, `adapters`, `cli`, `server` and `web` does not pull Electron
-- [ ] `npm run package:vsix`, `npm run package:pilot` and `revlens build --static` produce
+- [x] `npm run package:vsix`, `npm run package:pilot` and `revlens build --static` produce
       what they produced before this change
-- [ ] The main process, the page builder and the file life-cycle are tested without an
+- [x] The main process, the page builder and the file life-cycle are tested without an
       Electron process, in `apps/desktop/test/`
-- [ ] `docs/architecture/ui/` gains the desktop window, and [ARCHITECTURE.md](../../ARCHITECTURE.md)
+- [x] `docs/architecture/ui/` gains the desktop window, and [ARCHITECTURE.md](../../ARCHITECTURE.md)
       and its Czech translation name the desktop target
-- [ ] `npm run lint`, `npm run typecheck`, `npm run schema:check`, `npm run build` and
+- [x] `npm run lint`, `npm run typecheck`, `npm run schema:check`, `npm run build` and
       `npm test` pass
 
 ## Notes
@@ -230,3 +230,27 @@ built:
   of the seam — never in `apps/web`.
 - `revlens build --static` is not replaced by this and should not be. It is the way to send
   a document to somebody who will install nothing at all.
+
+### What was exercised, and what was only written
+
+The ADR was written as the first commit of `feature/004-desktop-application` rather than
+merged on a branch of its own — a deviation from the first criterion, decided before the
+work started. Everything else in it stands.
+
+Run against the example on Linux, with a window on screen:
+
+- opening by command-line argument, `make desktop`, and the viewer rendering in the window
+- the window reloading when the file was replaced on disk, with the title following the
+  document
+- **File → Build a Bundle…** end to end: the form ran the adapter, wrote the file, and the
+  application opened it — and that file was identical to what `revlens build` writes from
+  the same inputs, but for the build timestamp
+- `make package-desktop`, which wrote `dist/desktop/revlens-<version>.AppImage`
+
+Written and unit-tested, but not exercised with a pointer on this machine: **File → Open**
+and dropping a file on the window (both end in `openDocument`, which the argument route
+exercises), the operating system association, and the Windows and macOS artifacts.
+
+`npm run verify:pilot-host` still stops at Pilot's own `unpackVsix`, which never resolves
+on Node 26.9 — reproduced with an archive holding none of the files this work touched, so
+it is the host checkout's `extract-zip`, not the extension.

@@ -1,8 +1,8 @@
 {
-  "name": "@revlens/core",
+  "name": "@revlens/viewer-page",
   "version": "0.1.4",
   "private": true,
-  "description": "revlens data contract, invariant validation, indexes and navigation rules",
+  "description": "The viewer page, prepared for a host that embeds it - a webview or a desktop window",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
@@ -20,6 +20,6 @@
     "build": "tsc -b"
   },
   "dependencies": {
-    "zod": "^4.6.5"
+    "@revlens/core": "*"
   }
 }

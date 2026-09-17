@@ -3,8 +3,10 @@ node_modules/
 dist/
 *.tsbuildinfo
 
-# The viewer copied into the extension at build time; the source of truth is apps/web
+# The viewer copied into the extension and into the desktop application at build time;
+# the source of truth is apps/web
 apps/vscode/media/
+apps/desktop/media/
 
 # Bundles and static exports produced by `revlens build`
 /out/

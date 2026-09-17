@@ -1,7 +1,11 @@
-import type { BuildReport } from '@revlens/adapters';
+import type { BuildReport } from './build.js';
 
 /**
  * The build report as a person reads it.
+ *
+ * It sits beside the build rather than in the command line, because two programs print
+ * it now - `revlens build` and the desktop application - and a reader comparing the two
+ * should not have to work out whether they mean the same thing by "unexplained".
  *
  * The number that matters is `unexplained` - how much of the document the join could not
  * account for. It is printed whether it is zero or not, because a report that only

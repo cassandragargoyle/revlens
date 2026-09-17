@@ -122,16 +122,18 @@ flowchart TB
 | Servírování SPA a bundle | ano | ne | ne | Lokálně, navázané na `127.0.0.1`; materiál je interní |
 | Řízení nástroje z asistenta | ano (`--mcp`) | dodává odpovědi | ne | MCP rozhraní je projekcí `core`, ne druhou implementací |
 | Otevření bundlu v editoru | extension čte soubor | validuje ho | vykreslí ho bez úprav | Editor je třetí hostitel téhož frontendu, ne druhý prohlížeč |
+| Otevření bundlu ze správce souborů | desktopová aplikace čte soubor | validuje ho | vykreslí ho bez úprav | Čtvrtý hostitel, pro čtenáře, kteří nemají ani checkout, ani editor |
 
-## Tři hostitelé, jeden frontend
+## Čtyři hostitelé, jeden frontend
 
-Prohlížeč z `apps/web` běží na třech místech a je napsaný jednou:
+Prohlížeč z `apps/web` běží na čtyřech místech a je napsaný jednou:
 
 | Hostitel | Odkud bere bundle | Co ho spustí |
 | -------- | ----------------- | ------------ |
 | Záložka prohlížeče | `GET /api/bundle`, kapitoly na vyžádání | `revlens serve` |
 | Adresář, který se dá zazipovat | `bundle-data.js`, na globální proměnné | `revlens build --static` |
 | Záložka editoru | tatáž globální proměnná, zapsaná do stránky | extension v `apps/vscode` |
+| Vlastní okno | opět tatáž globální proměnná | desktopová aplikace v `apps/desktop` |
 
 Celý spoj je `detectSource()` v `apps/web/src/data/source.ts`: bundle na globální proměnné
 vyhrává nad API. Vzniklo to, aby stránka z `file://` fungovala bez fetchování — a přesně to
@@ -141,6 +143,16 @@ Ta extension je jedna pro dvě aplikace, Visual Studio Code a Pilot, protože Pi
 skutečné `.vsix` extensiony na podmnožině API. Cesta k dokumentu používá jen to, co mají
 oba hostitelé; cokoli nad ní se zjišťuje, nepředpokládá. Viz
 [ADR-006](docs/adr/ADR-006-standalone-product-and-editor-extensions.md).
+
+Desktopová aplikace je tatáž stránka ještě jednou, jen přes vlastní schéma místo resource
+URI — pro recenzenta, kterému někdo poslal soubor a který nemá ani checkout, ani editor.
+Editor zůstává primárním cílem, desktop je druhý; oba platí totéž pravidlo, totiž že rozdíl
+mezi hostiteli patří do hostitele. Viz
+[ADR-007](docs/adr/ADR-007-desktop-application-for-readers.md).
+
+Sestavení té stránky a čtení souboru za ní se dějí pro všechny jednou, v
+`packages/viewer-page` — část, která se nejspíš rozbije proti hostiteli, je ta, která nesmí
+existovat dvakrát.
 
 ## Studený start deep linku
 

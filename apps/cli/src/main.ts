@@ -1,8 +1,13 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { Command } from 'commander';
-import { formatIssue, validateBundle } from '@revlens/core';
-import { buildBundle, findSourceAdapter, listSourceAdapters } from '@revlens/adapters';
+import { formatIssue, serializeBundle, validateBundle } from '@revlens/core';
+import {
+  buildBundle,
+  findSourceAdapter,
+  formatReport,
+  listSourceAdapters,
+} from '@revlens/adapters';
 import type { RebuildSource } from '@revlens/server';
 import {
   BundleState,
@@ -12,7 +17,6 @@ import {
   serveMcpOverStdio,
 } from '@revlens/server';
 import { findWebRoot } from './paths.js';
-import { formatReport } from './report.js';
 import { writeStaticExport } from './static-export.js';
 
 /**
@@ -105,7 +109,7 @@ export function createProgram(): Command {
 
       const out = resolve(options.out);
       await mkdir(dirname(out), { recursive: true });
-      await writeFile(out, `${JSON.stringify(bundle, null, 2)}\n`, 'utf8');
+      await writeFile(out, serializeBundle(bundle), 'utf8');
       say(`wrote ${out}`);
 
       if (options.report !== undefined) {

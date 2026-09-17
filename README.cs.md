@@ -105,6 +105,25 @@ npm run verify:pilot-host  # spustí zabalené rozšíření na vlastním hostit
 Co rozšíření přispívá, je v [`apps/vscode/README.md`](apps/vscode/README.md); instalace do
 Pilota je v [`apps/pilot/README.md`](apps/pilot/README.md).
 
+## Čtení bez editoru
+
+Pro recenzenta, kterému někdo poslal soubor a který nemá ani checkout, ani editor, se
+tentýž dokument otevře ve vlastní aplikaci:
+
+```bash
+make package-desktop   # dist/desktop/: AppImage na Linuxu, přenosné .exe a instalátor na Windows
+```
+
+Po instalaci si aplikace nárokuje `*.revlens`, takže se soubor otevře dvojklikem. Okno
+soubor sleduje stejně jako záložka v editoru a **File → Build a Bundle…** spouští to, co
+spouští `revlens build` — analytik, který připravuje kolo, vybere repozitář v dialogu
+místo psaní šesti přepínačů a pošle jeden soubor místo adresářového stromu.
+
+Stránka v okně je opět prohlížeč z `apps/web`, beze změny. Viz
+[`apps/desktop/README.md`](apps/desktop/README.md) a
+[ADR-007](docs/adr/ADR-007-desktop-application-for-readers.md), kde je vysvětleno, proč
+primárním cílem zůstává editor.
+
 ## Příkazy
 
 | Příkaz | Co dělá |
@@ -267,12 +286,14 @@ revlens/
   packages/
     core/                     # kontrakt, validace, indexy, navigace, filtry
     adapters/                 # git a Markdown, token blame, spojení se záznamy
+    viewer-page/              # stránka, kterou hostitel vloží, a soubor za ní
   apps/
     cli/                      # revlens build | validate | serve | sources
     server/                   # read-only API nad Fastify, statické hostování, MCP server
     web/                      # prohlížeč v Reactu a Vite
     vscode/                   # rozšíření editoru, pro VS Code i pro Pilota
     pilot/                    # cíl Pilot: katalog, balení, ověření hostitele
+    desktop/                  # obal v Electronu: okno, soubor, instalátor
   docs/
     adr/                      # rozhodnutí, ze kterých vzešel tvar nástroje
     issues/                   # INT-002, specifikace
@@ -383,6 +404,14 @@ přeskočí — a řekne to, místo aby tiše prošel.
 
 Obrázek ukazuje rozhraní tak, jak ho čtenář vidí. Táž kresba s popisky přeloženými do
 angličtiny je [main-window.svg](docs/architecture/ui/main-window.svg).
+
+## Desktopové okno
+
+![Desktopové okno revlens: tentýž prohlížeč uvnitř okna aplikace, jehož titulkem je dokument, prázdné okno před otevřením souboru, menu File s celým životním cyklem souboru a formulář, který postaví bundle z repozitáře](docs/architecture/ui/desktop-window.cs.svg)
+
+Obal kolem prohlížeče je anglicky, stejně jako chybová stránka v editoru; prohlížeč uvnitř
+je česky. Anglická kresba je
+[desktop-window.svg](docs/architecture/ui/desktop-window.svg).
 
 ---
 

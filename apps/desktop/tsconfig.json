@@ -5,13 +5,15 @@
     "composite": false,
     "declaration": false,
     "declarationMap": false,
-    // esbuild is the bundler and emits CommonJS for the host; the sources stay ESM like
+    // esbuild is the bundler and emits CommonJS for Electron; the sources stay ESM like
     // the rest of the workspace, which is what bundler resolution describes.
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "types": ["node", "vscode"],
+    "types": ["node"],
+    "lib": ["ES2023", "DOM"],
     "paths": {
       "@revlens/core": ["../../packages/core/src/index.ts"],
+      "@revlens/adapters": ["../../packages/adapters/src/index.ts"],
       "@revlens/viewer-page": ["../../packages/viewer-page/src/index.ts"]
     }
   },

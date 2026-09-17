@@ -25,11 +25,14 @@ shape of the tool are in [docs/adr/](docs/adr/).
 
 - `/packages/core/` - The data contract, invariant validation, indexes, navigation, filters
 - `/packages/adapters/` - git and Markdown plumbing, token blame, joining the records
+- `/packages/viewer-page/` - The page a host embeds, and reading the file behind it; used
+  by the editor extension and by the desktop application, never written twice
 - `/apps/cli/` - `revlens build | validate | serve | sources`
 - `/apps/server/` - Read-only HTTP API, static hosting, MCP server
 - `/apps/web/` - The viewer (React + Vite)
 - `/apps/vscode/` - The editor extension, for Visual Studio Code **and** for Pilot
 - `/apps/pilot/` - The Pilot target: catalog, packaging, host verification
+- `/apps/desktop/` - The Electron shell: a window with a file life-cycle, and the installers
 - `/schema/` - `bundle.schema.json`, **generated** from the Zod schema in core, and
   `records/`, the hand-written contracts for the JSON an adapter reads
 - `/fixtures/` - The anonymised sample bundle the unit tests run on
@@ -144,12 +147,15 @@ npm run build
 ### Build Instructions
 
 ```bash
-npm run build          # everything: TypeScript, the schema, the viewer, the extension
-npm run build:web      # the viewer alone
-npm run build:vscode   # the extension alone, after the viewer
-npm run package:vsix   # dist/cassandragargoyle.revlens-<version>.vsix
-npm run package:pilot  # dist/pilot-plugins/{*.vsix, catalog.json}
-npm run dev            # the viewer with hot reload, against a running `serve`
+npm run build           # everything: TypeScript, the schema, the viewer, the extension, the desktop
+npm run build:web       # the viewer alone
+npm run build:vscode    # the extension alone, after the viewer
+npm run build:desktop   # the desktop application alone, after the viewer
+npm run package:vsix    # dist/cassandragargoyle.revlens-<version>.vsix
+npm run package:pilot   # dist/pilot-plugins/{*.vsix, catalog.json}
+npm run package:desktop # dist/desktop/: an AppImage, a portable .exe and an installer, a .dmg
+npm run dev             # the viewer with hot reload, against a running `serve`
+npm run dev:desktop     # the desktop application from source: `-- <bundle>` opens one
 ```
 
 ## Testing
@@ -230,6 +236,20 @@ custom readonly editor, a webview, configuration defaults and a file watcher.
 Do not add a second extension, and do not fork the viewer for a host. If one host can do
 something the other cannot, that belongs in the capability probe. The reasoning is
 [ADR-006](docs/adr/ADR-006-standalone-product-and-editor-extensions.md).
+
+### The Desktop Application
+
+The fourth host, for readers who have neither a checkout nor an editor. The editor stays
+the primary target; [ADR-007](docs/adr/ADR-007-desktop-application-for-readers.md) amends
+ADR-006's packaging decision and names which platforms are supported.
+
+- The page is the same one the webview shows, from `packages/viewer-page`. Do not write a
+  second page builder, and do not teach `apps/web` that a desktop host exists
+- `main.ts` is the only module that imports Electron, so the tests need no Electron process
+- `electron` and `electron-builder` are devDependencies of `apps/desktop` alone; a test in
+  `apps/desktop/test/packaging.test.ts` holds that line
+- Building a bundle imports `@revlens/adapters`; it never shells out to the CLI and never
+  starts `apps/server`
 
 ### Configuration
 

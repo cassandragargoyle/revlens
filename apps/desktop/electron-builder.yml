@@ -1,0 +1,60 @@
+# Installers for the desktop application.
+#
+# What is packed is `dist/` and `media/` and nothing else: esbuild has already bundled
+# every `@revlens/*` import into the two files in `dist/`, so no workspace symlink can
+# end up inside an installer and `npmRebuild` has nothing to rebuild.
+#
+# Supported: Linux (AppImage) and Windows (portable and installer). Produced but not
+# supported: macOS, which is unsigned - see ADR-007.
+
+appId: com.cassandragargoyle.revlens
+productName: revlens
+copyright: Copyright (c) CassandraGargoyle
+
+# The npm package is `@revlens/desktop`, which is not a file name anything will accept.
+# The binary, the window class and the desktop entry are all called `revlens`, the way a
+# reader would look for it.
+executableName: revlens
+
+directories:
+  output: ../../dist/desktop
+  buildResources: build
+
+files:
+  - dist/**/*
+  - media/**/*
+  - package.json
+
+asar: true
+npmRebuild: false
+
+fileAssociations:
+  - ext: revlens
+    name: revlens revision bundle
+    description: A document with its revisions, built by revlens
+    mimeType: application/x-revlens-bundle
+    role: Viewer
+
+linux:
+  target:
+    - AppImage
+  category: Office
+  synopsis: Document revision viewer
+  description: >-
+    Read a document with every change highlighted in place, and the revision and the
+    reviewer comment behind each one.
+
+win:
+  target:
+    - portable
+    - nsis
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+
+mac:
+  target:
+    - dmg
+  category: public.app-category.productivity

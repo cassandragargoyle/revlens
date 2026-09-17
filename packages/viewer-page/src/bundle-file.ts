@@ -4,6 +4,9 @@ import { formatIssue, validateBundle } from '@revlens/core';
 /**
  * Opening a bundle file, with the same verdict the CLI would give.
  *
+ * Every host that shows a bundle reads it through here, so "the editor refuses what the
+ * CLI refuses" is one implementation rather than three that agree today.
+ *
  * The editor validates before it renders, because a bundle that fails its invariants is
  * not a document with a few wrong highlights - it is a document whose attribution cannot
  * be trusted, and showing it anyway would make the tool useless as evidence. `revlens

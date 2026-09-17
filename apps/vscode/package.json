@@ -2,7 +2,7 @@
   "name": "revlens",
   "displayName": "revlens",
   "description": "Read a document with every change highlighted in place, and the revision and reviewer comment behind it",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "publisher": "CassandraGargoyle",
   "license": "MIT",
   "icon": "icon.png",

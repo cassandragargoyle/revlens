@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { parseBundleText, readBundleFile } from '../src/bundle-file.js';
+import { parseBundleText, readBundleFile } from '../src/index.js';
 
 const fixture = fileURLToPath(new URL('../../../fixtures/sample-bundle.json', import.meta.url));
 

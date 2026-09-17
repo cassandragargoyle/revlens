@@ -12,6 +12,7 @@ export default defineConfig({
       '@revlens/core': resolve('./packages/core/src/index.ts'),
       '@revlens/adapters': resolve('./packages/adapters/src/index.ts'),
       '@revlens/server': resolve('./apps/server/src/index.ts'),
+      '@revlens/viewer-page': resolve('./packages/viewer-page/src/index.ts'),
     },
   },
   test: {

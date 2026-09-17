@@ -10,3 +10,4 @@ export * from './sources/types.js';
 export * from './sources/engagement.js';
 export * from './sources/registry.js';
 export * from './build.js';
+export * from './report.js';

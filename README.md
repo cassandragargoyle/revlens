@@ -92,6 +92,25 @@ npm run verify:pilot-host  # runs the packaged extension on Pilot's own host
 See [`apps/vscode/README.md`](apps/vscode/README.md) for what the extension contributes,
 and [`apps/pilot/README.md`](apps/pilot/README.md) for installing it into Pilot.
 
+## Reading It Without an Editor
+
+For the reviewer who was sent a file and has neither a checkout nor an editor, the same
+document opens in an application of its own:
+
+```bash
+make package-desktop   # dist/desktop/: an AppImage on Linux, a portable .exe and an installer on Windows
+```
+
+Installed, it claims `*.revlens`, so the file is opened by double-clicking it. The window
+follows the file the way the editor tab does, and **File → Build a Bundle…** runs what
+`revlens build` runs — the analyst who prepares a round picks a repository in a dialog
+instead of writing six flags, and sends one file rather than a directory tree.
+
+The page in the window is the viewer from `apps/web` again, unchanged. See
+[`apps/desktop/README.md`](apps/desktop/README.md), and
+[ADR-007](docs/adr/ADR-007-desktop-application-for-readers.md) for why the editor stays the
+primary target.
+
 ## Commands
 
 | Command | What it does |
@@ -253,12 +272,14 @@ revlens/
   packages/
     core/                     # contract, validation, indexes, navigation, filters
     adapters/                 # git and Markdown plumbing, token blame, record joins
+    viewer-page/              # the page a host embeds, and the file behind it
   apps/
     cli/                      # revlens build | validate | serve | sources
     server/                   # Fastify read-only API, static hosting, MCP server
     web/                      # React + Vite viewer
     vscode/                   # the editor extension, for VS Code and for Pilot
     pilot/                    # the Pilot target: catalog, packaging, host verification
+    desktop/                  # the Electron shell: a window, a file, an installer
   docs/
     adr/                      # the decisions behind the shape of the tool
     issues/                   # INT-002, the specification
@@ -373,6 +394,14 @@ none — and says so rather than passing quietly.
 The interface itself is Czech; the drawing above translates it. The same picture with the
 strings the reader actually sees is
 [main-window.cs.svg](docs/architecture/ui/main-window.cs.svg).
+
+## The Desktop Window
+
+![The revlens desktop window: the same viewer inside an application window whose title is the document, the empty window before a file is opened, the File menu holding the file life-cycle, and the form that builds a bundle from a repository](docs/architecture/ui/desktop-window.svg)
+
+The shell around the viewer is English, like the editor's error page; the viewer inside it
+is Czech. The Czech drawing is
+[desktop-window.cs.svg](docs/architecture/ui/desktop-window.cs.svg).
 
 ---
 

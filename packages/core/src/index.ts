@@ -7,3 +7,4 @@ export * from './filter.js';
 export * from './selection.js';
 export * from './summary.js';
 export * from './validate.js';
+export * from './serialize.js';

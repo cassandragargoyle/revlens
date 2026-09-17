@@ -1,0 +1,234 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1210" width="1440" height="1210"
+     role="img" aria-labelledby="title desc">
+  <title id="title">revlens — the desktop window</title>
+  <desc id="desc">Annotated drawing of the revlens desktop application: a document window whose title is the
+    document and whose content is the viewer from apps/web unchanged, the empty window a reader sees before
+    a file is opened, the File menu with the file life-cycle in it, and the form that builds a bundle from a
+    repository without a terminal.</desc>
+
+  <style>
+    .ui   { font-family: system-ui, 'Segoe UI', Roboto, sans-serif; }
+    .mono { font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; }
+    .ink  { fill: #1c1c1a; }
+    .soft { fill: #55534e; }
+    .faint{ fill: #8a8781; }
+    .h2   { fill: #8a8781; font-size: 10px; letter-spacing: 1.1px; }
+    .h3   { fill: #1c1c1a; font-size: 11.5px; font-weight: 600; }
+    .s10  { font-size: 10px; }
+    .s105 { font-size: 10.5px; }
+    .s115 { font-size: 11.5px; }
+    .s12  { font-size: 12px; }
+    .bnum { fill: #ffffff; font-size: 10.5px; font-weight: 600; text-anchor: middle; }
+    .cap  { fill: #55534e; font-size: 11.5px; }
+    .capH { fill: #1c1c1a; font-size: 12.5px; font-weight: 600; }
+  </style>
+
+  <rect width="1440" height="1210" fill="#f2f1ee"/>
+
+  <!-- Heading -->
+  <g class="ui">
+    <text x="48" y="42" class="ink" font-size="21" font-weight="650">revlens — the desktop window</text>
+    <text x="48" y="66" class="soft" font-size="12.5">The application in <tspan class="mono">apps/desktop</tspan>: a window with a file life-cycle around the viewer from <tspan class="mono">apps/web</tspan>, which is given the bundle and is not otherwise touched.</text>
+    <text x="48" y="86" class="faint" font-size="11">The shipped viewer is Czech (<tspan class="mono">apps/web/src/strings.ts</tspan>); the shell around it is English, like the editor's error page. Czech drawing: <tspan class="mono">desktop-window.cs.svg</tspan>.</text>
+  </g>
+
+  <!-- ============ A. The document window ============ -->
+  <g class="ui">
+    <text x="48" y="128" class="h2">THE DOCUMENT WINDOW</text>
+
+    <rect x="48" y="140" width="740" height="470" rx="6" fill="#ffffff" stroke="#c9c6c0"/>
+
+    <!-- operating system title bar -->
+    <rect x="48" y="140" width="740" height="30" rx="6" fill="#e9e7e2"/>
+    <rect x="48" y="160" width="740" height="10" fill="#e9e7e2"/>
+    <line x1="48" y1="170" x2="788" y2="170" stroke="#c9c6c0"/>
+    <rect x="60" y="149" width="12" height="12" rx="3" fill="#3b82f6"/>
+    <text x="418" y="160" class="ink s115" text-anchor="middle" font-weight="600">AI competence centre readiness analysis — revlens</text>
+    <text x="735" y="160" class="faint s115">— □ ✕</text>
+
+    <!-- menu bar -->
+    <rect x="48" y="170" width="740" height="26" fill="#f7f6f3"/>
+    <line x1="48" y1="196" x2="788" y2="196" stroke="#e2e0da"/>
+    <text x="66" y="187" class="ink s115">File</text>
+    <text x="104" y="187" class="ink s115">View</text>
+    <text x="148" y="187" class="ink s115">Help</text>
+
+    <!-- the viewer, schematic -->
+    <rect x="48" y="196" width="34" height="414" fill="#f7f6f3"/>
+    <line x1="82" y1="196" x2="82" y2="610" stroke="#e2e0da"/>
+    <rect x="58" y="212" width="14" height="14" rx="3" fill="#c9c6c0"/>
+    <rect x="58" y="238" width="14" height="14" rx="3" fill="#8a8781"/>
+    <rect x="58" y="264" width="14" height="14" rx="3" fill="#c9c6c0"/>
+    <rect x="58" y="300" width="14" height="14" rx="3" fill="#c9c6c0"/>
+
+    <text x="96" y="222" class="ink s115" font-weight="600">revlens</text>
+    <text x="152" y="222" class="soft s105">AI competence centre readiness analysis · 1.6 against 1.5</text>
+    <line x1="82" y1="232" x2="788" y2="232" stroke="#e2e0da"/>
+
+    <!-- three columns -->
+    <line x1="290" y1="232" x2="290" y2="610" stroke="#e2e0da"/>
+    <line x1="590" y1="232" x2="590" y2="610" stroke="#e2e0da"/>
+
+    <text x="98" y="254" class="h2">CHAPTERS · REVISIONS</text>
+    <rect x="98" y="266" width="176" height="18" rx="4" fill="#ffffff" stroke="#c9c6c0"/>
+    <text x="106" y="279" class="faint s10">e.g. CTO, PLAN, K2-004</text>
+    <rect x="98" y="296" width="176" height="10" rx="3" fill="#ecebe6"/>
+    <rect x="98" y="314" width="176" height="10" rx="3" fill="#ecebe6"/>
+    <rect x="98" y="332" width="176" height="10" rx="3" fill="#ecebe6"/>
+    <rect x="98" y="362" width="176" height="24" rx="4" fill="#eef3f8" stroke="#c9d6e4"/>
+    <text x="106" y="378" class="ink s105">1 Executive summary</text>
+    <rect x="98" y="394" width="176" height="24" rx="4" fill="#ffffff" stroke="#e2e0da"/>
+    <text x="106" y="410" class="soft s105">2 Products and their …</text>
+
+    <text x="304" y="254" class="h2">1. EXECUTIVE SUMMARY</text>
+    <text x="574" y="254" class="h2" text-anchor="end">2 CHANGES</text>
+    <text x="304" y="284" class="ink" font-size="15" font-weight="600">1 Executive summary</text>
+    <rect x="304" y="304" width="264" height="9" rx="3" fill="#bcd3ee"/>
+    <rect x="304" y="320" width="196" height="9" rx="3" fill="#bcd3ee"/>
+    <line x1="304" y1="316" x2="568" y2="316" stroke="#2b6cb0" stroke-width="1"/>
+    <line x1="304" y1="332" x2="500" y2="332" stroke="#2b6cb0" stroke-width="1"/>
+    <rect x="304" y="346" width="264" height="9" rx="3" fill="#ecebe6"/>
+    <rect x="304" y="362" width="150" height="9" rx="3" fill="#ecebe6"/>
+    <rect x="304" y="386" width="112" height="9" rx="3" fill="#ecebe6"/>
+    <rect x="424" y="386" width="52" height="9" rx="3" fill="#e2b7b0"/>
+    <line x1="422" y1="390.5" x2="478" y2="390.5" stroke="#a33a2c"/>
+    <rect x="482" y="386" width="86" height="9" rx="3" fill="#ecebe6"/>
+
+    <text x="604" y="254" class="h2">THE CHANGE</text>
+    <text x="604" y="280" class="faint s105">Pick a marked place in the text,</text>
+    <text x="604" y="296" class="faint s105">or a revision in the left column.</text>
+
+    <text x="98" y="586" class="faint s10">the page from apps/web, unchanged — drawn in full in main-window.svg</text>
+  </g>
+
+  <!-- ============ B. The empty window ============ -->
+  <g class="ui">
+    <text x="820" y="128" class="h2">BEFORE A FILE IS OPENED</text>
+
+    <rect x="820" y="140" width="572" height="230" rx="6" fill="#ffffff" stroke="#c9c6c0"/>
+    <rect x="820" y="140" width="572" height="30" rx="6" fill="#e9e7e2"/>
+    <rect x="820" y="160" width="572" height="10" fill="#e9e7e2"/>
+    <line x1="820" y1="170" x2="1392" y2="170" stroke="#c9c6c0"/>
+    <text x="1106" y="160" class="ink s115" text-anchor="middle" font-weight="600">revlens</text>
+    <rect x="820" y="170" width="572" height="26" fill="#f7f6f3"/>
+    <line x1="820" y1="196" x2="1392" y2="196" stroke="#e2e0da"/>
+    <text x="838" y="187" class="ink s115">File</text>
+    <text x="876" y="187" class="ink s115">View</text>
+    <text x="920" y="187" class="ink s115">Help</text>
+
+    <text x="852" y="232" class="ink" font-size="16" font-weight="650">revlens</text>
+    <text x="852" y="256" class="soft s115">Read a document with every change highlighted in place, and the</text>
+    <text x="852" y="272" class="soft s115">revision and the reviewer comment behind each one.</text>
+
+    <rect x="852" y="290" width="124" height="28" rx="4" fill="#1f5f4e"/>
+    <text x="914" y="308" class="s115" fill="#f7f6f3" text-anchor="middle" font-weight="600">Open Bundle…</text>
+    <rect x="988" y="290" width="124" height="28" rx="4" fill="#ffffff" stroke="#c9c6c0"/>
+    <text x="1050" y="308" class="ink s115" text-anchor="middle">Build a Bundle…</text>
+
+    <text x="852" y="340" class="faint s105">A <tspan class="mono">.revlens</tspan> file can also be dropped onto this window.</text>
+  </g>
+
+  <!-- ============ C. The File menu ============ -->
+  <g class="ui">
+    <text x="820" y="406" class="h2">THE FILE MENU — THE WHOLE LIFE-CYCLE</text>
+
+    <rect x="820" y="418" width="320" height="216" rx="5" fill="#ffffff" stroke="#c9c6c0"/>
+    <text x="838" y="440" class="ink s115">Open Bundle…</text>
+    <text x="1122" y="440" class="faint s105" text-anchor="end">Ctrl+O</text>
+    <text x="838" y="462" class="ink s115">Open Recent</text>
+    <text x="1122" y="462" class="faint s105" text-anchor="end">▸</text>
+    <line x1="828" y1="474" x2="1132" y2="474" stroke="#e2e0da"/>
+    <text x="838" y="494" class="ink s115">Build a Bundle…</text>
+    <text x="1122" y="494" class="faint s105" text-anchor="end">Ctrl+B</text>
+    <line x1="828" y1="506" x2="1132" y2="506" stroke="#e2e0da"/>
+    <text x="838" y="526" class="ink s115">Reload Document</text>
+    <text x="1122" y="526" class="faint s105" text-anchor="end">Ctrl+R</text>
+    <text x="838" y="548" class="ink s115">✓ Reload When the File Changes</text>
+    <text x="838" y="570" class="ink s115">Reveal in File Manager</text>
+    <line x1="828" y1="582" x2="1132" y2="582" stroke="#e2e0da"/>
+    <text x="838" y="602" class="ink s115">Close Window</text>
+    <text x="838" y="624" class="ink s115">Quit</text>
+
+    <text x="1160" y="440" class="cap">The checkbox is the desktop half of</text>
+    <text x="1160" y="456" class="cap"><tspan class="mono">revlens.reloadOnChange</tspan> — same name in</text>
+    <text x="1160" y="472" class="cap">the editor, same default, so a rebuild</text>
+    <text x="1160" y="488" class="cap">lands in whichever host is open.</text>
+    <text x="1160" y="516" class="cap">Recent documents are the application's</text>
+    <text x="1160" y="532" class="cap">own list <tspan class="mono">and</tspan> the operating system's.</text>
+  </g>
+
+  <!-- ============ D. The build form ============ -->
+  <g class="ui">
+    <text x="48" y="668" class="h2">BUILDING A BUNDLE, WITHOUT A TERMINAL</text>
+
+    <rect x="48" y="680" width="740" height="330" rx="6" fill="#ffffff" stroke="#c9c6c0"/>
+    <rect x="48" y="680" width="740" height="30" rx="6" fill="#e9e7e2"/>
+    <rect x="48" y="700" width="740" height="10" fill="#e9e7e2"/>
+    <line x1="48" y1="710" x2="788" y2="710" stroke="#c9c6c0"/>
+    <text x="418" y="700" class="ink s115" text-anchor="middle" font-weight="600">Build a Bundle — revlens</text>
+
+    <text x="80" y="742" class="ink" font-size="15" font-weight="650">Build a bundle</text>
+    <text x="80" y="764" class="soft s115">revlens walks the repository from the baseline to the head revision and joins</text>
+    <text x="80" y="780" class="soft s115">every commit to the record that explains it.</text>
+
+    <text x="80" y="806" class="h2">SOURCE ADAPTER</text>
+    <rect x="80" y="814" width="676" height="24" rx="4" fill="#ffffff" stroke="#c9c6c0"/>
+    <text x="90" y="830" class="ink s105">engagement — chapters from the analysis repository, records from docs/changes</text>
+    <text x="746" y="830" class="faint s105" text-anchor="end">▾</text>
+
+    <text x="80" y="858" class="h2">REPOSITORY HOLDING THE CHAPTERS</text>
+    <rect x="80" y="866" width="590" height="24" rx="4" fill="#ffffff" stroke="#c9c6c0"/>
+    <text x="90" y="882" class="faint s105 mono">/path/to/repository</text>
+    <rect x="678" y="866" width="78" height="24" rx="4" fill="#ffffff" stroke="#c9c6c0"/>
+    <text x="717" y="882" class="ink s105" text-anchor="middle">Choose…</text>
+
+    <text x="80" y="910" class="h2">RECORDS — THE CHANGE LOG AND THE COMMENT ROUNDS</text>
+    <rect x="80" y="918" width="590" height="24" rx="4" fill="#ffffff" stroke="#c9c6c0"/>
+    <text x="90" y="934" class="faint s105">the adapter's default</text>
+    <rect x="678" y="918" width="78" height="24" rx="4" fill="#ffffff" stroke="#c9c6c0"/>
+    <text x="717" y="934" class="ink s105" text-anchor="middle">Choose…</text>
+
+    <text x="80" y="962" class="h2">BASELINE REVISION</text>
+    <rect x="80" y="970" width="290" height="24" rx="4" fill="#ffffff" stroke="#c9c6c0"/>
+    <text x="90" y="986" class="faint s105">the build the reviewers received</text>
+    <text x="392" y="962" class="h2">HEAD REVISION</text>
+    <rect x="392" y="970" width="278" height="24" rx="4" fill="#ffffff" stroke="#c9c6c0"/>
+    <text x="402" y="986" class="ink s105 mono">HEAD</text>
+    <rect x="678" y="970" width="78" height="24" rx="4" fill="#1f5f4e"/>
+    <text x="717" y="986" class="s105" fill="#f7f6f3" text-anchor="middle" font-weight="600">Build</text>
+  </g>
+
+  <!-- Callout markers -->
+  <g class="ui">
+    <circle cx="418" cy="140" r="9" fill="#2b6cb0"/><text x="418" y="144" class="bnum">1</text>
+    <circle cx="64" cy="360" r="9" fill="#2b6cb0"/><text x="64" y="364" class="bnum">2</text>
+    <circle cx="418" cy="610" r="9" fill="#2b6cb0"/><text x="418" y="614" class="bnum">3</text>
+    <circle cx="1364" cy="300" r="9" fill="#2b6cb0"/><text x="1364" y="304" class="bnum">4</text>
+    <circle cx="808" cy="982" r="9" fill="#2b6cb0"/><text x="808" y="986" class="bnum">5</text>
+  </g>
+
+  <!-- Callouts -->
+  <g class="ui">
+    <text x="48" y="1054" class="capH"><tspan fill="#2b6cb0">①</tspan> The title is the document</text>
+    <text x="48" y="1072" class="cap">The viewer's own <tspan class="mono">&lt;title&gt;</tspan> is the product name, which is the</text>
+    <text x="48" y="1088" class="cap">wrong thing in a task bar with three rounds open, so the</text>
+    <text x="48" y="1104" class="cap">window takes its name from the bundle instead.</text>
+
+    <text x="380" y="1054" class="capH"><tspan fill="#2b6cb0">②③</tspan> The page is given, not rewritten</text>
+    <text x="380" y="1072" class="cap">Inside the frame is <tspan class="mono">apps/web</tspan>, built once and handed its</text>
+    <text x="380" y="1088" class="cap">bundle on <tspan class="mono">__REVLENS_BUNDLE__</tspan> — the seam the webview and</text>
+    <text x="380" y="1104" class="cap"><tspan class="mono">build --static</tspan> already use. It is served over the</text>
+    <text x="380" y="1120" class="cap"><tspan class="mono">revlens-viewer:</tspan> scheme, not <tspan class="mono">file://</tspan>, so the page keeps an</text>
+    <text x="380" y="1136" class="cap">origin, a CSP and a per-render nonce.</text>
+
+    <text x="820" y="1054" class="capH"><tspan fill="#2b6cb0">④</tspan> Four ways in, one path out</text>
+    <text x="820" y="1072" class="cap">A command-line argument, File → Open, a file dropped on the</text>
+    <text x="820" y="1088" class="cap">window, and a double-click once the association is installed.</text>
+    <text x="820" y="1104" class="cap">All four end in a path, and the path is all <tspan class="mono">main.ts</tspan> passes on.</text>
+
+    <text x="820" y="1132" class="capH"><tspan fill="#2b6cb0">⑤</tspan> The same build the command line runs</text>
+    <text x="820" y="1150" class="cap">The adapter is imported, never shelled out to; without git the</text>
+    <text x="820" y="1166" class="cap">window says what is missing and where to get it, and the file it</text>
+    <text x="820" y="1182" class="cap">writes is the file <tspan class="mono">revlens build</tspan> writes, byte for byte.</text>
+  </g>
+</svg>

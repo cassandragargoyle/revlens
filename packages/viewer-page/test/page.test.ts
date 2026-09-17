@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BUNDLE_GLOBAL, buildErrorPage, buildViewerPage } from '../src/webview-html.js';
+import { BUNDLE_GLOBAL, buildErrorPage, buildViewerPage } from '../src/index.js';
 
 /**
  * The page is assembled from our own build output, so these tests use the shape Vite

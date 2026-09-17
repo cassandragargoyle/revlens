@@ -1,0 +1,23 @@
+{
+  "name": "@revlens/desktop",
+  "version": "0.1.4",
+  "private": true,
+  "description": "revlens as a desktop application - the viewer in a window, with a file life-cycle",
+  "license": "MIT",
+  "author": "CassandraGargoyle",
+  "type": "module",
+  "main": "./dist/main.cjs",
+  "desktopName": "revlens.desktop",
+  "scripts": {
+    "build": "node esbuild.mjs",
+    "start": "electron .",
+    "package": "electron-builder --config electron-builder.yml"
+  },
+  "devDependencies": {
+    "@revlens/adapters": "*",
+    "@revlens/core": "*",
+    "@revlens/viewer-page": "*",
+    "electron": "44.4.1",
+    "electron-builder": "^26.0.12"
+  }
+}

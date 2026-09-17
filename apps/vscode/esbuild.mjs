@@ -47,6 +47,7 @@ const options = {
   logLevel: 'info',
   alias: {
     '@revlens/core': join(repoRoot, 'packages', 'core', 'src', 'index.ts'),
+    '@revlens/viewer-page': join(repoRoot, 'packages', 'viewer-page', 'src', 'index.ts'),
   },
 };
 
