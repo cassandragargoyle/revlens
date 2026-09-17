@@ -1,0 +1,44 @@
+{
+  "$schema": "../../../history.schema.json",
+  "repository": "analysis-repo",
+  "branch": "main",
+  "steps": [
+    {
+      "directory": "00-baseline",
+      "message": "baseline version 1.5 - the text sent out for review",
+      "at": "2026-02-10T09:15:00+01:00",
+      "author": { "name": "Jan Novák", "email": "jan.novak@example.invalid" },
+      "tag": "baseline"
+    },
+    {
+      "directory": "01-business-scope",
+      "message": "say what the company does, bump the version to 1.6",
+      "at": "2026-02-17T10:20:00+01:00",
+      "author": { "name": "Jan Novák", "email": "jan.novak@example.invalid" }
+    },
+    {
+      "directory": "02-module-plan",
+      "message": "add the PLAN module to the heading and to the list",
+      "at": "2026-02-18T14:05:00+01:00",
+      "author": { "name": "Jan Novák", "email": "jan.novak@example.invalid" }
+    },
+    {
+      "directory": "03-reviewer-role",
+      "message": "correct the reviewer's job title in two chapters",
+      "at": "2026-02-19T16:45:00+01:00",
+      "author": { "name": "Jan Novák", "email": "jan.novak@example.invalid" }
+    },
+    {
+      "directory": "04-audit-as-source",
+      "message": "attribute the completeness claim to the audit, name the source",
+      "at": "2026-02-20T08:25:00+01:00",
+      "author": { "name": "Jan Novák", "email": "jan.novak@example.invalid" }
+    },
+    {
+      "directory": "05-sentence-dropped",
+      "message": "drop the sentence about roadmap ownership",
+      "at": "2026-02-23T09:40:00+01:00",
+      "author": { "name": "Petra Dvořáková", "email": "petra.dvorakova@example.invalid" }
+    }
+  ]
+}

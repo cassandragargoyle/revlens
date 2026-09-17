@@ -1,0 +1,32 @@
+{
+  // The build step behind F5. It is the same script `make debug` runs, so the two
+  // cannot drift apart.
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "revlens: build the example bundle",
+      "type": "shell",
+      "command": "npm run demo:vscode",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true }
+    },
+    {
+      // Rebuilds the extension on every edit; leave it running and use the
+      // "no rebuild" configuration to restart the host quickly.
+      "label": "revlens: watch the extension",
+      "type": "shell",
+      "command": "npm run watch:vscode",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
+      "label": "revlens: check",
+      "type": "shell",
+      "command": "npm run lint && npm run typecheck && npm run schema:check && npm test",
+      "group": "test",
+      "problemMatcher": []
+    }
+  ]
+}

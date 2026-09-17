@@ -1,0 +1,15 @@
+# Node dependencies and build output of the revlens workspace
+node_modules/
+dist/
+*.tsbuildinfo
+
+# The viewer copied into the extension at build time; the source of truth is apps/web
+apps/vscode/media/
+
+# Bundles and static exports produced by `revlens build`
+/out/
+
+# The licence copied next to the extension when it is packaged; LICENSE at the root is
+# the source of truth
+apps/vscode/LICENSE
+CLAUDE.local.md

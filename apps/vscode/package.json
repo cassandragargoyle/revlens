@@ -1,0 +1,90 @@
+{
+  "name": "revlens",
+  "displayName": "revlens",
+  "description": "Read a document with every change highlighted in place, and the revision and reviewer comment behind it",
+  "version": "0.1.2",
+  "publisher": "CassandraGargoyle",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CassandraGargoyle/revlens"
+  },
+  "engines": {
+    "vscode": "^1.80.0",
+    "node": ">=20.11"
+  },
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
+  "keywords": [
+    "revision",
+    "review",
+    "diff",
+    "attribution",
+    "markdown"
+  ],
+  "activationEvents": [
+    "onCustomEditor:revlens.bundle"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "customEditors": [
+      {
+        "viewType": "revlens.bundle",
+        "displayName": "revlens revision viewer",
+        "selector": [
+          {
+            "filenamePattern": "*.revlens"
+          },
+          {
+            "filenamePattern": "*.revlens.json"
+          }
+        ],
+        "priority": "default"
+      }
+    ],
+    "commands": [
+      {
+        "command": "revlens.openBundle",
+        "title": "Open Revision Bundle",
+        "category": "revlens"
+      },
+      {
+        "command": "revlens.showBundleSource",
+        "title": "Show Bundle Source",
+        "category": "revlens"
+      },
+      {
+        "command": "revlens.reloadBundle",
+        "title": "Reload Open Bundles",
+        "category": "revlens"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "revlens.openBundle",
+          "when": "resourceFilename =~ /\\.revlens(\\.json)?$/",
+          "group": "navigation"
+        },
+        {
+          "command": "revlens.showBundleSource",
+          "when": "resourceFilename =~ /\\.revlens(\\.json)?$/",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "revlens",
+      "properties": {
+        "revlens.reloadOnChange": {
+          "type": "boolean",
+          "default": true,
+          "description": "Re-render an open bundle when the file changes, so a rebuild lands in the editor."
+        }
+      }
+    }
+  },
+  "scripts": {}
+}

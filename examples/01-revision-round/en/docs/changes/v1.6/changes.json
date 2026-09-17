@@ -1,0 +1,81 @@
+{
+  "$schema": "../../../../../../schema/records/changes.schema.json",
+  "version": "1.6",
+  "entries": [
+    {
+      "id": "CH-001",
+      "received": "2026-02-17 08:30",
+      "author": "Jan Novák",
+      "summary": "Say in the summary what the company actually does.",
+      "verbatim": "A reader from the bank has no idea what we do. Let the first sentence of the summary say it.",
+      "changes": [
+        {
+          "target": "analysis/chapters/01-summary.md",
+          "what": "opening sentence about the line of business added",
+          "why": "the document is read outside the company as well"
+        }
+      ]
+    },
+    {
+      "id": "CH-002",
+      "received": "2026-02-18 11:10",
+      "author": "Jan Novák",
+      "summary": "The list of modules on top of the CORE core is missing PLAN.",
+      "verbatim": "PLAN has been part of the family since last year, add it to chapter 2.1.",
+      "changes": [
+        {
+          "target": "analysis/chapters/02-products.md",
+          "what": "PLAN added to heading 2.1 and to the list of modules",
+          "why": "the list did not match the actual portfolio"
+        }
+      ]
+    },
+    {
+      "id": "CH-003",
+      "received": "2026-02-19 15:00",
+      "author": "Jan Novák",
+      "summary": "Correct Martin Svoboda's job title everywhere it appears.",
+      "verbatim": "Comment K2-004 is fair, correct it in chapter 3 as well.",
+      "changes": [
+        {
+          "target": "analysis/chapters/01-summary.md",
+          "what": "CTO replaced with head of Technology",
+          "why": "answers comment K2-004"
+        },
+        {
+          "target": "analysis/chapters/03-data.md",
+          "what": "CTO replaced with head of Technology",
+          "why": "answers comment K2-004"
+        }
+      ]
+    },
+    {
+      "id": "CH-004",
+      "received": "2026-02-20 07:50",
+      "author": "Jan Novák",
+      "summary": "Soften the completeness claim and say where it comes from.",
+      "verbatim": "We accept comment K2-005 in part: the claim is attributed to its source, but the source stays in the document.",
+      "changes": [
+        {
+          "target": "analysis/chapters/03-data.md",
+          "what": "completeness claim attributed to the audit, source of the finding named",
+          "why": "answers comment K2-005"
+        }
+      ]
+    },
+    {
+      "id": "CH-005",
+      "received": "2026-02-23 09:00",
+      "author": "Petra Dvořáková",
+      "summary": "The sentence about roadmap ownership belongs to the product strategy, not here.",
+      "verbatim": "Roadmap ownership is covered by another document, drop it from here.",
+      "changes": [
+        {
+          "target": "analysis/chapters/02-products.md",
+          "what": "closing sentence of chapter 2 removed",
+          "why": "the content belongs to another document"
+        }
+      ]
+    }
+  ]
+}

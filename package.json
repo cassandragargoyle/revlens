@@ -1,0 +1,64 @@
+{
+  "name": "revlens",
+  "version": "0.1.2",
+  "private": true,
+  "description": "Document revision viewer - the final text with every change highlighted in place, and the revision and reviewer comment behind it",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CassandraGargoyle/revlens"
+  },
+  "engines": {
+    "node": ">=20.11"
+  },
+  "workspaces": [
+    "packages/core",
+    "packages/adapters",
+    "apps/cli",
+    "apps/server",
+    "apps/web"
+  ],
+  "scripts": {
+    "build": "npm run build:ts && npm run schema && npm run build:web && npm run build:vscode",
+    "build:ts": "tsc -b",
+    "build:web": "npm run build --workspace @revlens/web",
+    "build:vscode": "node apps/vscode/esbuild.mjs",
+    "watch:vscode": "node apps/vscode/esbuild.mjs --watch",
+    "package:vsix": "tsx scripts/package-extension.ts",
+    "package:pilot": "tsx apps/pilot/build.ts",
+    "schema": "tsx scripts/generate-schema.ts",
+    "schema:check": "tsx scripts/generate-schema.ts --check",
+    "clean": "tsc -b --clean && rimraf apps/web/dist apps/vscode/dist apps/vscode/media dist",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "bench": "tsx scripts/bench-bundle.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc -b && tsc --noEmit -p apps/vscode/tsconfig.json && tsc --noEmit -p apps/pilot/tsconfig.json",
+    "dev": "npm run dev --workspace @revlens/web",
+    "revlens": "tsx apps/cli/src/cli.ts",
+    "example:seed": "tsx scripts/seed-example.ts",
+    "example:check": "tsx scripts/validate-records.ts",
+    "demo:vscode": "tsx scripts/demo-vscode.ts",
+    "verify:pilot-host": "tsx apps/pilot/verify-host.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
+    "@types/node": "^22.20.3",
+    "@types/vscode": "^1.80.0",
+    "ajv": "^8.20.0",
+    "esbuild": "^0.25.12",
+    "eslint": "^10.10.0",
+    "globals": "^17.12.0",
+    "jsdom": "^30.0.1",
+    "rimraf": "^6.1.3",
+    "tsx": "^4.23.13",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.70.0",
+    "vitest": "^5.0.1"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "$schema": "../../../../../../schema/records/changes.schema.json",
+  "version": "1.6",
+  "entries": [
+    {
+      "id": "CH-001",
+      "received": "2026-02-17 08:30",
+      "author": "Jan Novák",
+      "summary": "Do shrnutí doplnit, čím se firma zabývá.",
+      "verbatim": "Čtenář z banky netuší, co děláme. První věta shrnutí ať to řekne.",
+      "changes": [
+        {
+          "target": "analysis/chapters/01-shrnuti.md",
+          "what": "doplněna úvodní věta o předmětu podnikání",
+          "why": "dokument čtou i lidé mimo firmu"
+        }
+      ]
+    },
+    {
+      "id": "CH-002",
+      "received": "2026-02-18 11:10",
+      "author": "Jan Novák",
+      "summary": "Ve výčtu modulů nad jádrem CORE chybí modul PLAN.",
+      "verbatim": "PLAN je součástí rodiny od loňska, doplňte ho do kapitoly 2.1.",
+      "changes": [
+        {
+          "target": "analysis/chapters/02-produkty.md",
+          "what": "PLAN doplněn do nadpisu 2.1 a do výčtu modulů",
+          "why": "výčet neodpovídal skutečnému portfoliu"
+        }
+      ]
+    },
+    {
+      "id": "CH-003",
+      "received": "2026-02-19 15:00",
+      "author": "Jan Novák",
+      "summary": "Opravit funkci Martina Svobody všude, kde je uvedena.",
+      "verbatim": "Připomínka K2-004 je oprávněná, opravte to i v kapitole 3.",
+      "changes": [
+        {
+          "target": "analysis/chapters/01-shrnuti.md",
+          "what": "CTO nahrazeno funkcí vedoucí oblasti Technology",
+          "why": "vyřizuje připomínku K2-004"
+        },
+        {
+          "target": "analysis/chapters/03-data.md",
+          "what": "CTO nahrazeno funkcí vedoucí oblasti Technology",
+          "why": "vyřizuje připomínku K2-004"
+        }
+      ]
+    },
+    {
+      "id": "CH-004",
+      "received": "2026-02-20 07:50",
+      "author": "Jan Novák",
+      "summary": "Zmírnit tvrzení o úplnosti odečtů a uvést, odkud pochází.",
+      "verbatim": "Připomínku K2-005 přijímáme částečně: tvrzení zmírníme a doplníme zdroj, podklad z dokumentu nevypouštíme.",
+      "changes": [
+        {
+          "target": "analysis/chapters/03-data.md",
+          "what": "tvrzení o kompletní historii zmírněno a doplněn zdroj zjištění",
+          "why": "vyřizuje připomínku K2-005"
+        }
+      ]
+    },
+    {
+      "id": "CH-005",
+      "received": "2026-02-23 09:00",
+      "author": "Petra Dvořáková",
+      "summary": "Věta o vlastníkovi roadmapy patří do produktové strategie, ne sem.",
+      "verbatim": "Vlastnictví roadmapy řeší jiný dokument, odsud to vypusťte.",
+      "changes": [
+        {
+          "target": "analysis/chapters/02-produkty.md",
+          "what": "vypuštěna závěrečná věta kapitoly 2",
+          "why": "obsah patří do jiného dokumentu"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "../../../../../../schema/records/structure.schema.json",
+  "document": {
+    "id": "ai-competence-centre-readiness",
+    "title": "AI competence centre readiness analysis",
+    "subtitle": "Output of the analysis phase, Acme Systems",
+    "language": "en",
+    "version": "1.5"
+  },
+  "chapters": [
+    {
+      "id": "ch-01",
+      "number": "1",
+      "file": "chapters/01-summary.md",
+      "title": "Executive summary",
+      "order": 1
+    },
+    {
+      "id": "ch-02",
+      "number": "2",
+      "file": "chapters/02-products.md",
+      "title": "Products and their boundaries",
+      "order": 2
+    },
+    {
+      "id": "ch-03",
+      "number": "3",
+      "file": "chapters/03-data.md",
+      "title": "Data and its availability",
+      "order": 3
+    }
+  ]
+}

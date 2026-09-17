@@ -1,0 +1,38 @@
+{
+  "$schema": "../../../../../../schema/records/comment-round.schema.json",
+  "round": {
+    "id": "K1",
+    "author": "Petra Dvořáková",
+    "role": "garantka produktové oblasti; schvaluje popis produktů",
+    "received": "2026-01-20 09:12",
+    "reviewed_version": "1.4",
+    "source": "Komentáře ve Wordu, verze 1.4"
+  },
+  "comments": [
+    {
+      "id": "K1-002",
+      "scope": ["ch-02"],
+      "priority": "P2",
+      "title": "Modul TINA je popsán příliš úzce",
+      "source_section": "Komentář ve Wordu, kapitola 2.1",
+      "verbatim": "TINA není jen evidence majetku, ale to na tuto úroveň dokumentu stačí.",
+      "summary": "Popis modulu TINA je zjednodušený, recenzentce to však vyhovuje.",
+      "check": {
+        "verdict": "potvrzeno",
+        "note": "zjednodušení je pro manažerskou úroveň dokumentu záměrné"
+      },
+      "decision": {
+        "status": "prijato",
+        "by": "Jan Novák",
+        "at": "2026-01-27"
+      },
+      "resolution": {
+        "state": "hotovo",
+        "changes": [
+          "02-produkty.md :: popis modulu TINA upřesněn"
+        ],
+        "at": "2026-01-28 13:20"
+      }
+    }
+  ]
+}

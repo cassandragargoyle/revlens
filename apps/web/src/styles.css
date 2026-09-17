@@ -1,0 +1,1094 @@
+/*
+ * One stylesheet, no framework. The page is three columns of text; a dependency that
+ * generates utility classes would weigh more than the rules it replaced.
+ */
+
+:root {
+  --bg: #fbfbfa;
+  --surface: #ffffff;
+  --ink: #1c1c1a;
+  --ink-soft: #55534e;
+  --ink-faint: #8a8781;
+  --line: #e2e0db;
+  --line-strong: #c9c6c0;
+  --accent: #2b6cb0;
+  --accent-soft: #eaf1f9;
+  --inserted: #1a7f5a;
+  --inserted-soft: #e6f4ee;
+  --deleted: #a33a2c;
+  --deleted-soft: #fbecea;
+  --selected: #f6e2a8;
+  --font-ui: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-text: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  --font-mono: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 3px 8px;
+}
+
+button:hover {
+  background: var(--accent-soft);
+}
+
+button[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+input,
+select {
+  font: inherit;
+  padding: 4px 6px;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  background: var(--surface);
+  color: inherit;
+  width: 100%;
+}
+
+/* Layout -------------------------------------------------------------------- */
+
+.app {
+  display: grid;
+  /* The rail has two widths, not a dragged one; `data-rail` on the container picks one. */
+  --rail: 48px;
+  /* The side columns are draggable; their widths come from usePaneWidths. */
+  grid-template-columns: var(--rail) var(--pane-left, 290px) 4px minmax(0, 1fr) 4px var(--pane-right, 360px);
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100%;
+}
+
+.app[data-rail='wide'] {
+  --rail: 184px;
+}
+
+.app__header {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.app__title {
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+.app__document {
+  color: var(--ink-soft);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app__meta {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink-faint);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.pane {
+  overflow-y: auto;
+  padding: 14px;
+}
+
+.pane--left {
+  grid-row: 2;
+  grid-column: 2;
+  border-right: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.pane--right {
+  grid-row: 2;
+  grid-column: 6;
+  border-left: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.pane--document {
+  grid-row: 2;
+  grid-column: 4;
+  padding: 0;
+}
+
+.pane h2 {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  margin: 18px 0 8px;
+}
+
+.pane h2:first-child {
+  margin-top: 0;
+}
+
+/* Chapters ------------------------------------------------------------------ */
+
+.chapter-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.chapter-list__item {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  text-align: left;
+  padding: 5px 6px;
+  border-radius: 4px;
+}
+
+.chapter-list__item[aria-current='true'] {
+  background: var(--accent-soft);
+  font-weight: 600;
+}
+
+.chapter-list__number {
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+  min-width: 1.4em;
+}
+
+.chapter-list__title {
+  flex: 1;
+  min-width: 0;
+}
+
+.chapter-list__count {
+  font-size: 11px;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+.chapter-list__count--none {
+  font-style: italic;
+}
+
+/* Timeline ------------------------------------------------------------------ */
+
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.revision {
+  width: 100%;
+  text-align: left;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  padding: 7px 8px;
+  display: block;
+}
+
+.revision[aria-pressed='true'] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: inherit;
+}
+
+.revision__head {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+
+.revision__id {
+  font-family: var(--font-mono);
+}
+
+.revision__swatch {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  flex: none;
+  align-self: center;
+}
+
+.revision__title {
+  margin-top: 2px;
+  line-height: 1.35;
+}
+
+.revision__foot {
+  margin-top: 3px;
+  font-size: 11px;
+  color: var(--ink-faint);
+  display: flex;
+  gap: 8px;
+}
+
+/* Document ------------------------------------------------------------------ */
+
+.document {
+  max-width: 44em;
+  margin: 0 auto;
+  padding: 28px 32px 120px;
+  font-family: var(--font-text);
+  font-size: 16.5px;
+  line-height: 1.62;
+}
+
+.document__chapter-title {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  margin-bottom: 18px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.block {
+  margin: 0 0 0.85em;
+  /*
+   * Browser-native virtualization: a block outside the viewport is not laid out at all.
+   * This is what keeps a 150-page chapter fast without a windowing library, and it costs
+   * one line of CSS rather than a dependency.
+   */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 3em;
+}
+
+/* The scroll target is measured, so it must not stand in at a placeholder height. */
+.block--target {
+  content-visibility: visible;
+}
+
+.block--heading1,
+.block--heading2,
+.block--heading3,
+.block--heading4 {
+  font-weight: 650;
+  line-height: 1.25;
+  margin-top: 1.5em;
+}
+
+.block--heading1 {
+  font-size: 1.7em;
+}
+
+.block--heading2 {
+  font-size: 1.4em;
+}
+
+.block--heading3 {
+  font-size: 1.15em;
+}
+
+.block--listItem {
+  margin-left: 1.3em;
+  list-style: disc;
+  display: list-item;
+}
+
+.block--quote {
+  border-left: 3px solid var(--line-strong);
+  padding-left: 1em;
+  color: var(--ink-soft);
+}
+
+.block--code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  white-space: pre-wrap;
+  background: #f4f3f0;
+  padding: 0.7em 0.9em;
+  border-radius: 4px;
+}
+
+.block--introduced,
+.block--removed {
+  position: relative;
+  padding-left: 12px;
+}
+
+.block--introduced::before,
+.block--removed::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  bottom: 0.15em;
+  width: 3px;
+  border-radius: 2px;
+}
+
+.block--introduced::before {
+  background: var(--inserted);
+}
+
+.block--removed::before {
+  background: var(--deleted);
+}
+
+.block--removed {
+  opacity: 0.75;
+}
+
+/* Runs ---------------------------------------------------------------------- */
+
+.run {
+  border-radius: 2px;
+}
+
+.run--inserted {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--revision-color, var(--inserted));
+  background: var(--revision-tint, var(--inserted-soft));
+  cursor: pointer;
+}
+
+.run--deleted {
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+  text-decoration-color: var(--revision-color, var(--deleted));
+  color: var(--ink-faint);
+  background: var(--revision-tint, var(--deleted-soft));
+  cursor: pointer;
+}
+
+.run--dimmed {
+  background: none;
+  text-decoration-color: var(--line-strong);
+  opacity: 0.45;
+}
+
+.run--selected {
+  background: var(--selected);
+  outline: 2px solid var(--selected);
+}
+
+/* Inspector ----------------------------------------------------------------- */
+
+.inspector__empty {
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+.inspector section {
+  margin-bottom: 18px;
+}
+
+.inspector h3 {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  margin: 0 0 6px;
+}
+
+.verbatim {
+  font-family: var(--font-text);
+  font-size: 15px;
+  line-height: 1.5;
+  border-left: 3px solid var(--line-strong);
+  padding: 2px 0 2px 10px;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.change {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.change__row {
+  display: grid;
+  grid-template-columns: 5.5em 1fr;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.change__label {
+  font-size: 11px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.change__inserted {
+  background: var(--inserted-soft);
+  color: var(--inserted);
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+.change__removed {
+  background: var(--deleted-soft);
+  color: var(--deleted);
+  text-decoration: line-through;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: 6.5em 1fr;
+  gap: 3px 8px;
+  margin: 0;
+}
+
+.facts dt {
+  color: var(--ink-faint);
+  font-size: 12px;
+}
+
+.facts dd {
+  margin: 0;
+}
+
+.siblings {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.siblings__item {
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 5px 7px;
+  font-size: 12.5px;
+  line-height: 1.35;
+}
+
+.siblings__item[aria-current='true'] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.siblings__where {
+  color: var(--ink-faint);
+  font-size: 11px;
+  font-family: var(--font-mono);
+}
+
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 9px;
+  background: #efeee9;
+  color: var(--ink-soft);
+}
+
+.badge--accepted {
+  background: var(--inserted-soft);
+  color: var(--inserted);
+}
+
+.badge--partial {
+  background: #fdf2dc;
+  color: #8a6212;
+}
+
+.badge--rejected {
+  background: var(--deleted-soft);
+  color: var(--deleted);
+}
+
+.toolbar {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.field {
+  margin-bottom: 8px;
+}
+
+.field label {
+  display: block;
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-bottom: 2px;
+}
+
+.field--inline {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.hint {
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin: 4px 0 0;
+}
+
+.status {
+  padding: 40px;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+.status--error {
+  color: var(--deleted);
+}
+
+/* The left rail ------------------------------------------------------------- */
+
+/*
+ * Two widths and no handle. The entries carry an icon and a label; the narrow state hides
+ * the label from the eye and not from the accessibility tree, so every entry keeps its
+ * name where there is nothing to read but a glyph.
+ */
+
+.rail {
+  grid-row: 2;
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 6px;
+  border-right: 1px solid var(--line);
+  background: var(--surface);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.rail__toggle {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  margin-bottom: 8px;
+  color: var(--ink-faint);
+}
+
+.rail__group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rail__entry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 7px;
+  color: var(--ink-soft);
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.rail__icon {
+  flex: none;
+}
+
+.rail__divider {
+  width: 100%;
+  margin: 8px 0;
+  border: none;
+  border-top: 1px solid var(--line);
+}
+
+.rail--narrow .rail__entry {
+  justify-content: center;
+  padding: 7px 0;
+}
+
+/* Hidden from the eye, present for a screen reader: the entry is never an unnamed glyph. */
+.rail--narrow .rail__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.rail__entry:focus-visible,
+.rail__toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+/* Print --------------------------------------------------------------------- */
+
+@media print {
+  .app {
+    display: block;
+    height: auto;
+  }
+
+  .rail,
+  .pane--left,
+  .pane--right,
+  .app__meta,
+  .toolbar {
+    display: none;
+  }
+
+  .app__header {
+    border-bottom: 1px solid #000;
+  }
+
+  .document {
+    max-width: none;
+    padding: 0;
+  }
+
+  .block {
+    content-visibility: visible;
+    break-inside: avoid;
+  }
+
+  .run--inserted {
+    background: none;
+    text-decoration-color: #000;
+  }
+
+  .run--deleted {
+    background: none;
+  }
+}
+
+/* Views and the review list ------------------------------------------------- */
+
+.tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.tabs__tab {
+  flex: 1;
+  border-radius: 4px 4px 0 0;
+  padding: 5px 4px;
+  font-size: 12.5px;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.tabs__tab[aria-selected='true'] {
+  border-bottom-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.checkbox input {
+  width: auto;
+  margin: 0;
+}
+
+.comment-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.comment {
+  width: 100%;
+  text-align: left;
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 6px 8px;
+}
+
+.comment[aria-pressed='true'] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: inherit;
+}
+
+.comment__head {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+
+.comment__id {
+  font-family: var(--font-mono);
+}
+
+.comment__author {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A comment that changed nothing in the text is the one worth finding, so it is marked
+   in the list rather than only in the panel. */
+.comment__flag {
+  color: var(--deleted);
+  font-size: 13px;
+  line-height: 1;
+}
+
+.comment__text {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 3px 0 5px;
+  line-height: 1.35;
+}
+
+.comment__gates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.revision__gates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.revision__comment {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+}
+
+.badge--small {
+  font-size: 10px;
+  padding: 0 5px;
+}
+
+.badge--open {
+  background: #eaf1f9;
+  color: var(--accent);
+}
+
+.badge--muted {
+  background: #efeee9;
+  color: var(--ink-faint);
+}
+
+.resolution {
+  margin: 0;
+  padding-left: 1.1em;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+
+.resolution li {
+  margin-bottom: 3px;
+}
+
+/* About --------------------------------------------------------------------- */
+
+.about {
+  grid-row: 2;
+  grid-column: 2 / -1;
+  overflow-y: auto;
+  background: var(--bg);
+}
+
+.about__inner {
+  max-width: 52em;
+  margin: 0 auto;
+  padding: 24px 32px 96px;
+}
+
+.about__back {
+  margin-bottom: 18px;
+}
+
+.about__title {
+  font-size: 1.7em;
+  font-weight: 650;
+  margin: 0 0 8px;
+}
+
+.about__lead {
+  font-family: var(--font-text);
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0 0 22px;
+}
+
+.about__figure {
+  margin: 0 0 26px;
+}
+
+.about__cover {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+}
+
+.about__figure figcaption {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink-faint);
+  margin-top: 8px;
+}
+
+.about section {
+  margin-bottom: 26px;
+}
+
+.about h2 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  margin: 0 0 8px;
+}
+
+.about p {
+  margin: 0 0 8px;
+  line-height: 1.55;
+}
+
+.about__keysHeading {
+  margin: 12px 0 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.about__keys {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+
+.about__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.about__table th {
+  text-align: left;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  font-weight: 500;
+  padding: 0 10px 5px 0;
+}
+
+.about__table td {
+  padding: 6px 10px 6px 0;
+  border-top: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.about__values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.about__facts {
+  display: grid;
+  grid-template-columns: 13em 1fr;
+  gap: 4px 12px;
+  margin: 0;
+  font-size: 13.5px;
+}
+
+.about__facts dt {
+  color: var(--ink-faint);
+}
+
+.about__facts dd {
+  margin: 0;
+}
+
+@media print {
+  .about {
+    overflow: visible;
+  }
+
+  .about__back {
+    display: none;
+  }
+}
+
+.comment__flag--scope {
+  color: var(--ink-faint);
+}
+
+/* Resizable panes ----------------------------------------------------------- */
+
+/*
+ * Every child of the second row names its column.
+ *
+ * Without that, the grid placed these by hand: an item with a definite row and an
+ * automatic column is positioned in an earlier pass than a fully automatic one, so the two
+ * resizers claimed columns 1 and 2 and pushed the three panes one place right - leaving the
+ * document in a four-pixel column with nothing readable in it.
+ */
+.resizer {
+  grid-row: 2;
+  cursor: col-resize;
+  background: var(--line);
+  border: none;
+  padding: 0;
+  position: relative;
+}
+
+/* The visible line is one pixel; the hit area is wide enough to grab. */
+.resizer--left {
+  grid-column: 3;
+}
+
+.resizer--right {
+  grid-column: 5;
+}
+
+.resizer::after {
+  content: '';
+  position: absolute;
+  inset: 0 -3px;
+}
+
+.resizer:hover,
+.resizer:focus-visible,
+.resizer--dragging {
+  background: var(--accent);
+  outline: none;
+}
+
+.resizer:focus-visible::before {
+  content: '';
+  position: absolute;
+  inset: 0 -2px;
+  border: 2px solid var(--accent);
+  border-radius: 2px;
+}
+
+@media print {
+  .resizer {
+    display: none;
+  }
+}
+
+/* Which chapters a revision touched ------------------------------------------ */
+
+.shares {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.shares__item {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 4px 7px;
+  font-size: 12.5px;
+}
+
+.shares__item[aria-current='true'] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.shares__item:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.shares__title {
+  flex: 1;
+  min-width: 0;
+}
+
+.shares__count {
+  color: var(--ink-faint);
+  white-space: nowrap;
+}

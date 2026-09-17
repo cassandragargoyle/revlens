@@ -1,0 +1,90 @@
+{
+  "$schema": "../../../../../../schema/records/comment-round.schema.json",
+  "round": {
+    "id": "K2",
+    "author": "Martin Svoboda",
+    "role": "head of Technology; owns architecture and operations",
+    "received": "2026-02-13 18:03",
+    "reviewed_version": "1.5",
+    "source": "E-mail of 13 February 2026"
+  },
+  "comments": [
+    {
+      "id": "K2-004",
+      "scope": ["ch-01", "ch-03"],
+      "priority": "P1",
+      "title": "Wrong job title next to the name",
+      "source_section": "E-mail, paragraph 2",
+      "verbatim": "I am not the CTO, I am the head of Technology.",
+      "summary": "The document gives the reviewer a job title he does not hold.",
+      "check": {
+        "verdict": "confirmed",
+        "note": "the org chart has no CTO role"
+      },
+      "decision": {
+        "status": "accepted",
+        "by": "Jan Novák",
+        "at": "2026-02-18"
+      },
+      "resolution": {
+        "state": "done",
+        "changes": [
+          "01-summary.md :: job title corrected",
+          "03-data.md :: job title corrected"
+        ],
+        "at": "2026-02-19 16:40"
+      }
+    },
+    {
+      "id": "K2-005",
+      "scope": ["ch-03"],
+      "priority": "P2",
+      "title": "The claim about complete meter readings is too strong",
+      "source_section": "E-mail, paragraph 4",
+      "verbatim": "The claim about a complete history of meter readings rests on one source only, and it is written far too firmly.",
+      "summary": "A claim about data completeness is written as established fact but rests on a single source.",
+      "check": {
+        "verdict": "confirmed-with-qualification",
+        "note": "the source is the data audit of January 2026; no other source exists"
+      },
+      "decision": {
+        "status": "accepted-in-part",
+        "by": "Jan Novák",
+        "at": "2026-02-19"
+      },
+      "resolution": {
+        "state": "in-progress",
+        "changes": [
+          "03-data.md :: claim attributed to the audit and the source of the finding named"
+        ],
+        "at": "2026-02-20 08:20"
+      },
+      "answer": "The claim now names its source; the source itself stays in the document."
+    },
+    {
+      "id": "K2-006",
+      "scope": ["ch-03"],
+      "priority": "P3",
+      "title": "No chapter on the cost of running the centre",
+      "source_section": "E-mail, paragraph 6",
+      "verbatim": "I would expect a chapter on what it costs to run the competence centre.",
+      "summary": "The reviewer misses a chapter on operating cost.",
+      "check": {
+        "verdict": "confirmed",
+        "note": "the chapter is indeed absent"
+      },
+      "decision": {
+        "status": "rejected",
+        "by": "Jan Novák",
+        "at": "2026-02-20",
+        "note": "cost is the subject of the follow-up study; the scope of the analysis phase is closed"
+      },
+      "resolution": {
+        "state": "dropped",
+        "changes": [],
+        "at": "2026-02-20 09:00"
+      },
+      "answer": "Operating cost will be covered by the follow-up study; it is not added to version 1.6."
+    }
+  ]
+}

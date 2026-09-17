@@ -1,0 +1,8 @@
+# What stays out of the .vsix: sources, configuration and tests. What ships is
+# dist/extension.js with its source map - debugging a host surprise is hard enough
+# without one - and the built viewer in media/viewer.
+src/**
+test/**
+tsconfig.json
+esbuild.mjs
+.vscodeignore

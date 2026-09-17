@@ -1,0 +1,522 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://infinitesolution.cz/schemas/revlens-bundle.schema.json",
+  "title": "revlens bundle",
+  "description": "One reviewed document with its revision history flattened onto the final text. The viewer reads nothing else - every adapter (change log, comment rounds, git history, Word tracked changes) produces this shape.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "description": "Contract version the bundle was written against; the viewer refuses a major it does not know"
+    },
+    "document": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string",
+          "description": "Version of the final text the bundle renders"
+        },
+        "baseline": {
+          "type": "object",
+          "properties": {
+            "version": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            },
+            "at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "commit": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "version"
+          ],
+          "additionalProperties": false,
+          "description": "Version the history is measured against - usually the build the reviewers received. Text present in the baseline and still present carries no revision."
+        },
+        "generated": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "generator": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "version",
+        "generated"
+      ],
+      "additionalProperties": false
+    },
+    "chapters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "number": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string",
+            "description": "Path of the chapter file the blocks were parsed from, relative to the analysed repository"
+          },
+          "blocks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/block"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "blocks"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "revisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "instruction",
+              "comment-resolution",
+              "merge",
+              "editorial",
+              "unknown"
+            ]
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "author": {
+            "$ref": "#/$defs/person"
+          },
+          "title": {
+            "type": "string",
+            "description": "What the revision did, one line"
+          },
+          "verbatim": {
+            "type": "string",
+            "description": "The instruction as it was given, never rewritten. Empty when the revision has no verbatim source."
+          },
+          "why": {
+            "type": "string"
+          },
+          "commit": {
+            "type": "string",
+            "description": "Git revision the change was committed in"
+          },
+          "origin": {
+            "type": "string",
+            "description": "Where the record comes from - path plus fragment, so the reader can open the source of truth"
+          },
+          "comments": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Ids of comments this revision answers"
+          },
+          "edits": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Ids of the edits this revision produced, in document order"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "at",
+          "author",
+          "title"
+        ],
+        "additionalProperties": false
+      },
+      "description": "One entry per act that changed the text - an instruction from the author, a comment resolution, a merge of a delivered draft. This is the unit the viewer navigates by."
+    },
+    "comments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "round": {
+            "type": "string"
+          },
+          "author": {
+            "$ref": "#/$defs/person"
+          },
+          "received": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "reviewedVersion": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "sourceSection": {
+            "type": "string"
+          },
+          "verbatim": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          },
+          "check": {
+            "type": "object",
+            "properties": {
+              "verdict": {
+                "type": "string"
+              },
+              "note": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "decision": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string"
+              },
+              "by": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "note": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "resolution": {
+            "type": "object",
+            "properties": {
+              "state": {
+                "type": "string",
+                "description": "How far the comment has actually been worked into the text - hotovo, rozpracovano, nezahajeno, odpada"
+              },
+              "changes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "What the processor recorded as done, one line each"
+              },
+              "at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "description": "The third gate. A comment can be confirmed and accepted and still not worked in, and nothing in the document shows that - only this field does."
+          },
+          "answer": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "revisions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Revisions that answered this comment; empty means decided but not yet worked in"
+          }
+        },
+        "required": [
+          "id",
+          "author",
+          "verbatim"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Reviewer input the revisions answer. Absent for a document changed only by instructions."
+    },
+    "edits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "revision": {
+            "type": "string"
+          },
+          "chapter": {
+            "type": "string"
+          },
+          "block": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "insert",
+              "delete",
+              "replace",
+              "insert-block",
+              "delete-block",
+              "move"
+            ]
+          },
+          "insertedChars": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "removedChars": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "movedFrom": {
+            "type": "string",
+            "description": "Block id the text came from, for kind move"
+          },
+          "summary": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "revision",
+          "chapter",
+          "block",
+          "kind"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Navigable list of changes in document order. One edit is one contiguous change in one block; a replace is a single edit carrying both a deleted and an inserted run."
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "document",
+    "chapters",
+    "revisions",
+    "edits"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "block": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "heading",
+            "paragraph",
+            "listItem",
+            "quote",
+            "code",
+            "table",
+            "image"
+          ]
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 6
+        },
+        "introducedBy": {
+          "type": "string",
+          "description": "Revision that added the whole block; the viewer marks such a block as new rather than marking every run"
+        },
+        "removedBy": {
+          "type": "string",
+          "description": "Revision that removed the whole block; the block is shown only in review mode"
+        },
+        "runs": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "kept"
+                  },
+                  "text": {
+                    "type": "string"
+                  },
+                  "edit": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "text"
+                ],
+                "additionalProperties": false,
+                "description": "Text present in the baseline and still present; carries no revision"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "inserted"
+                  },
+                  "text": {
+                    "type": "string"
+                  },
+                  "revision": {
+                    "type": "string"
+                  },
+                  "edit": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "text",
+                  "revision"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "deleted"
+                  },
+                  "text": {
+                    "type": "string"
+                  },
+                  "revision": {
+                    "type": "string"
+                  },
+                  "edit": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "text",
+                  "revision"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "description": "The block text split by attribution. Concatenating kept and inserted runs gives the final text; deleted runs sit where the text was removed."
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "runs"
+      ],
+      "additionalProperties": false
+    },
+    "person": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "side": {
+          "type": "string",
+          "enum": [
+            "processor",
+            "reviewer",
+            "client",
+            "unknown"
+          ],
+          "description": "Which side of the review the person stands on"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

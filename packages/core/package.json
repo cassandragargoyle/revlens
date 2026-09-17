@@ -1,0 +1,25 @@
+{
+  "name": "@revlens/core",
+  "version": "0.1.2",
+  "private": true,
+  "description": "revlens data contract, invariant validation, indexes and navigation rules",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
+  }
+}

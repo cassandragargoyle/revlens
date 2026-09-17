@@ -1,0 +1,12 @@
+{
+  "_comment": "Curated metadata for the Pilot viewer-plugin catalog. The version, the file name and the sha256 are facts about the built .vsix and are filled in by `npm run package:pilot`; everything here is an assertion we make about the plugin and have to keep true.",
+  "id": "cassandragargoyle.revlens",
+  "displayName": "revlens revision viewer",
+  "fileTypes": ["revlens"],
+  "compat": {
+    "verdict": "supported",
+    "availableFeatures": ["customEditor", "webview", "configuration", "fileSystemWatcher"],
+    "unavailableFeatures": [],
+    "notes": "The document renders from the bundle embedded in the webview, so the viewer needs nothing beyond the State A surface. The command palette entries and the output channel exist only in Visual Studio Code and are absent here by design."
+  }
+}

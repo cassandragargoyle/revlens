@@ -1,0 +1,38 @@
+{
+  "$schema": "../../../../../../schema/records/comment-round.schema.json",
+  "round": {
+    "id": "K1",
+    "author": "Petra Dvořáková",
+    "role": "product area owner; signs off the product description",
+    "received": "2026-01-20 09:12",
+    "reviewed_version": "1.4",
+    "source": "Word comments, version 1.4"
+  },
+  "comments": [
+    {
+      "id": "K1-002",
+      "scope": ["ch-02"],
+      "priority": "P2",
+      "title": "The TINA module is described too narrowly",
+      "source_section": "Word comment, chapter 2.1",
+      "verbatim": "TINA is more than an asset register, but at this level of the document that will do.",
+      "summary": "The description of TINA is simplified, which the reviewer accepts.",
+      "check": {
+        "verdict": "confirmed",
+        "note": "the simplification is deliberate at the management level of the document"
+      },
+      "decision": {
+        "status": "accepted",
+        "by": "Jan Novák",
+        "at": "2026-01-27"
+      },
+      "resolution": {
+        "state": "done",
+        "changes": [
+          "02-products.md :: description of the TINA module made precise"
+        ],
+        "at": "2026-01-28 13:20"
+      }
+    }
+  ]
+}

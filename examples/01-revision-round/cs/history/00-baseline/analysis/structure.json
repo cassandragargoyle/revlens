@@ -1,0 +1,33 @@
+{
+  "$schema": "../../../../../../schema/records/structure.schema.json",
+  "document": {
+    "id": "analyza-kompetencni-centrum",
+    "title": "Analýza připravenosti na kompetenční centrum AI",
+    "subtitle": "Výstup analytické fáze, Acme Systems",
+    "language": "cs",
+    "version": "1.5"
+  },
+  "chapters": [
+    {
+      "id": "ch-01",
+      "number": "1",
+      "file": "chapters/01-shrnuti.md",
+      "title": "Manažerské shrnutí",
+      "order": 1
+    },
+    {
+      "id": "ch-02",
+      "number": "2",
+      "file": "chapters/02-produkty.md",
+      "title": "Produkty a jejich hranice",
+      "order": 2
+    },
+    {
+      "id": "ch-03",
+      "number": "3",
+      "file": "chapters/03-data.md",
+      "title": "Data a jejich dostupnost",
+      "order": 3
+    }
+  ]
+}

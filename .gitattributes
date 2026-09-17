@@ -1,0 +1,10 @@
+# One line ending in the repository, whatever the checkout does.
+#
+# The tool is developed on Windows and Linux, and `apps/cli/bin/revlens.js` is a script
+# with a shebang: a CRLF there makes it unrunnable on Linux. Normalising on commit keeps
+# every diff about content rather than about endings.
+* text=auto eol=lf
+
+# Binary, said explicitly - the heuristic already gets these right, but a corrupted PNG
+# fails silently
+*.png binary

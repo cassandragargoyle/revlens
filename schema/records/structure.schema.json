@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://infinitesolution.cz/schemas/revlens-structure.schema.json",
+  "title": "revlens analysis structure",
+  "description": "analysis/structure.json in the analysis repository: what the document is and which files are its chapters, in reading order. The engagement adapter reads it at the baseline revision and at the head, which is how a bundle can say it compares version 1.6 against version 1.5.",
+  "type": "object",
+  "required": ["document", "chapters"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "document": {
+      "type": "object",
+      "required": ["id", "title", "version"],
+      "properties": {
+        "id": { "type": "string", "description": "Stable id of the document" },
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "language": { "type": "string", "description": "ISO 639-1 code, e.g. cs or en" },
+        "version": {
+          "type": "string",
+          "description": "Version of the text at this commit; the baseline's value becomes document.baseline.version in the bundle"
+        }
+      },
+      "additionalProperties": false
+    },
+    "chapters": {
+      "type": "array",
+      "description": "Chapters in reading order; a file not listed here is not part of the document",
+      "items": {
+        "type": "object",
+        "required": ["id", "file", "title"],
+        "properties": {
+          "id": { "type": "string", "description": "Chapter id the bundle and the comments refer to" },
+          "number": { "type": "string", "description": "Number as printed, e.g. 2 or 2.1" },
+          "file": {
+            "type": "string",
+            "pattern": "\\.md$",
+            "description": "Path of the chapter file relative to analysis/"
+          },
+          "title": { "type": "string" },
+          "order": { "type": "integer", "minimum": 1, "description": "Reading order; ties fall back to file order" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

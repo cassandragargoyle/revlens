@@ -1,0 +1,51 @@
+{
+  // Debugging the editor extension. The first configuration is `make demo` for the
+  // editor: it builds everything, turns the example into a bundle, and opens an
+  // Extension Development Host on it with the debugger attached.
+  //
+  // Breakpoints land in apps/vscode/src - esbuild writes a source map beside the bundle.
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Extension: the example bundle",
+      "type": "extensionHost",
+      "request": "launch",
+      "preLaunchTask": "revlens: build the example bundle",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/apps/vscode",
+        "--disable-extensions",
+        "${workspaceFolder}/out/example",
+        "${workspaceFolder}/out/example/example.revlens"
+      ],
+      "outFiles": ["${workspaceFolder}/apps/vscode/dist/**/*.js"],
+      "sourceMaps": true
+    },
+    {
+      // The same host without the build in front of it: what to use after an edit that
+      // `npm run watch:vscode` has already rebuilt.
+      "name": "Extension: as it stands, no rebuild",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/apps/vscode",
+        "--disable-extensions",
+        "${workspaceFolder}/out/example",
+        "${workspaceFolder}/out/example/example.revlens"
+      ],
+      "outFiles": ["${workspaceFolder}/apps/vscode/dist/**/*.js"],
+      "sourceMaps": true
+    },
+    {
+      // An empty host, for the commands and for opening a bundle by hand.
+      "name": "Extension: empty host",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/apps/vscode",
+        "--disable-extensions"
+      ],
+      "outFiles": ["${workspaceFolder}/apps/vscode/dist/**/*.js"],
+      "sourceMaps": true
+    }
+  ]
+}

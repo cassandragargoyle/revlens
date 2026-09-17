@@ -1,0 +1,44 @@
+{
+  "$schema": "../../../history.schema.json",
+  "repository": "analysis-repo",
+  "branch": "main",
+  "steps": [
+    {
+      "directory": "00-baseline",
+      "message": "baseline verze 1.5 - zneni rozeslane k revizi",
+      "at": "2026-02-10T09:15:00+01:00",
+      "author": { "name": "Jan Novák", "email": "jan.novak@example.invalid" },
+      "tag": "baseline"
+    },
+    {
+      "directory": "01-predmet-podnikani",
+      "message": "doplnena veta o predmetu podnikani, verze zvysena na 1.6",
+      "at": "2026-02-17T10:20:00+01:00",
+      "author": { "name": "Jan Novák", "email": "jan.novak@example.invalid" }
+    },
+    {
+      "directory": "02-modul-plan",
+      "message": "doplnen modul PLAN do nadpisu a do vyctu",
+      "at": "2026-02-18T14:05:00+01:00",
+      "author": { "name": "Jan Novák", "email": "jan.novak@example.invalid" }
+    },
+    {
+      "directory": "03-funkce-svoboda",
+      "message": "opravena funkce recenzenta ve dvou kapitolach",
+      "at": "2026-02-19T16:45:00+01:00",
+      "author": { "name": "Jan Novák", "email": "jan.novak@example.invalid" }
+    },
+    {
+      "directory": "04-doklad-uplnosti",
+      "message": "zmekceno tvrzeni o uplnosti odectu, doplnen zdroj zjisteni",
+      "at": "2026-02-20T08:25:00+01:00",
+      "author": { "name": "Jan Novák", "email": "jan.novak@example.invalid" }
+    },
+    {
+      "directory": "05-vypusteni-vety",
+      "message": "vypustena veta o vlastnikovi roadmapy",
+      "at": "2026-02-23T09:40:00+01:00",
+      "author": { "name": "Petra Dvořáková", "email": "petra.dvorakova@example.invalid" }
+    }
+  ]
+}

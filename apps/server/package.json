@@ -1,0 +1,30 @@
+{
+  "name": "@revlens/server",
+  "version": "0.1.2",
+  "private": true,
+  "description": "revlens read-only HTTP API, static hosting and MCP server",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@fastify/static": "^10.1.3",
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@revlens/adapters": "*",
+    "@revlens/core": "*",
+    "fastify": "^5.12.5",
+    "zod": "^4.6.5"
+  }
+}

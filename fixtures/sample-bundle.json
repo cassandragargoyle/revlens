@@ -1,0 +1,537 @@
+{
+  "$schema": "../schema/bundle.schema.json",
+  "schemaVersion": "1.0",
+  "document": {
+    "id": "analyza-kc-vzor",
+    "title": "Analýza kompetenčního centra",
+    "subtitle": "Výstup analytické fáze",
+    "language": "cs",
+    "version": "1.2",
+    "baseline": {
+      "version": "1.0",
+      "label": "verze rozeslaná k revizi",
+      "at": "2026-09-08T08:00:00+02:00"
+    },
+    "generated": "2026-09-12T10:00:00+02:00",
+    "generator": "revlens build (fixture, hand-written)"
+  },
+  "chapters": [
+    {
+      "id": "ch-01",
+      "number": "1",
+      "title": "Manažerské shrnutí",
+      "source": "analysis/chapters/01-manazerske-shrnuti.md",
+      "blocks": [
+        {
+          "id": "ch-01/b-01",
+          "kind": "heading",
+          "level": 2,
+          "runs": [
+            {
+              "kind": "kept",
+              "text": "1 Manažerské shrnutí"
+            }
+          ]
+        },
+        {
+          "id": "ch-01/b-02",
+          "kind": "paragraph",
+          "runs": [
+            {
+              "kind": "inserted",
+              "text": "Acme Systems je česká technologická a integrační firma zaměřená na digitalizaci podnikových procesů. ",
+              "revision": "R-001",
+              "edit": "E-001"
+            },
+            {
+              "kind": "kept",
+              "text": "Analýza popisuje stav přípravy kompetenčního centra a shrnuje hlavní zjištění analytické fáze."
+            }
+          ]
+        },
+        {
+          "id": "ch-01/b-03",
+          "kind": "paragraph",
+          "runs": [
+            {
+              "kind": "kept",
+              "text": "Dokument vznikl ve čtyřech pracovních balících; každý z nich má v analýze vlastní kapitolu."
+            }
+          ]
+        },
+        {
+          "id": "ch-01/b-04",
+          "kind": "paragraph",
+          "runs": [
+            {
+              "kind": "kept",
+              "text": "Zjištění o dodavatelské závislosti "
+            },
+            {
+              "kind": "deleted",
+              "text": "je doloženo napříč všemi oblastmi",
+              "revision": "R-004",
+              "edit": "E-002"
+            },
+            {
+              "kind": "inserted",
+              "text": "vychází z jednoho podkladu, a je proto vedeno jako indicie",
+              "revision": "R-004",
+              "edit": "E-002"
+            },
+            {
+              "kind": "kept",
+              "text": "; návrhová fáze s ním pracuje v tomto omezení."
+            }
+          ]
+        },
+        {
+          "id": "ch-01/b-05",
+          "kind": "paragraph",
+          "runs": [
+            {
+              "kind": "kept",
+              "text": "Za oblast Technology odpovídá "
+            },
+            {
+              "kind": "deleted",
+              "text": "CTO",
+              "revision": "R-003",
+              "edit": "E-003"
+            },
+            {
+              "kind": "inserted",
+              "text": "vedoucí oblasti Technology",
+              "revision": "R-003",
+              "edit": "E-003"
+            },
+            {
+              "kind": "kept",
+              "text": " Martin Svoboda."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch-02",
+      "number": "2",
+      "title": "Produkty a jejich hranice",
+      "source": "analysis/chapters/02-produkty.md",
+      "blocks": [
+        {
+          "id": "ch-02/b-01",
+          "kind": "heading",
+          "level": 2,
+          "runs": [
+            {
+              "kind": "kept",
+              "text": "2 Produkty a jejich hranice"
+            }
+          ]
+        },
+        {
+          "id": "ch-02/b-02",
+          "kind": "heading",
+          "level": 3,
+          "runs": [
+            {
+              "kind": "kept",
+              "text": "2.1 Rodina CORE — jádro a moduly "
+            },
+            {
+              "kind": "deleted",
+              "text": "TINA a PARO",
+              "revision": "R-002",
+              "edit": "E-004"
+            },
+            {
+              "kind": "inserted",
+              "text": "TINA, PARO a PLAN",
+              "revision": "R-002",
+              "edit": "E-004"
+            }
+          ]
+        },
+        {
+          "id": "ch-02/b-03",
+          "kind": "paragraph",
+          "runs": [
+            {
+              "kind": "kept",
+              "text": "Nad jádrem CORE staví firma vlastní moduly. Portfolio je uzavřené, nové moduly vznikají jen na zakázku."
+            }
+          ]
+        },
+        {
+          "id": "ch-02/b-04",
+          "kind": "listItem",
+          "runs": [
+            {
+              "kind": "kept",
+              "text": "TINA — evidence majetku"
+            }
+          ]
+        },
+        {
+          "id": "ch-02/b-05",
+          "kind": "listItem",
+          "runs": [
+            {
+              "kind": "kept",
+              "text": "PARO — odečty a fakturace"
+            }
+          ]
+        },
+        {
+          "id": "ch-02/b-06",
+          "kind": "listItem",
+          "introducedBy": "R-002",
+          "runs": [
+            {
+              "kind": "inserted",
+              "text": "PLAN — plánování investic a jejich realizace",
+              "revision": "R-002",
+              "edit": "E-005"
+            }
+          ]
+        },
+        {
+          "id": "ch-02/b-07",
+          "kind": "paragraph",
+          "runs": [
+            {
+              "kind": "kept",
+              "text": "Modulární skladba "
+            },
+            {
+              "kind": "deleted",
+              "text": "je hlavní výhodou portfolia",
+              "revision": "R-004",
+              "edit": "E-006"
+            },
+            {
+              "kind": "inserted",
+              "text": "patří mezi výhody portfolia",
+              "revision": "R-004",
+              "edit": "E-006"
+            },
+            {
+              "kind": "kept",
+              "text": "."
+            }
+          ]
+        },
+        {
+          "id": "ch-02/b-08",
+          "kind": "paragraph",
+          "runs": [
+            {
+              "kind": "kept",
+              "text": "Vlastníkem produktové roadmapy je "
+            },
+            {
+              "kind": "deleted",
+              "text": "CTO",
+              "revision": "R-003",
+              "edit": "E-007"
+            },
+            {
+              "kind": "inserted",
+              "text": "vedoucí oblasti Technology",
+              "revision": "R-003",
+              "edit": "E-007"
+            },
+            {
+              "kind": "kept",
+              "text": "."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "revisions": [
+    {
+      "id": "R-001",
+      "kind": "instruction",
+      "at": "2026-09-08T09:14:00+02:00",
+      "author": {
+        "name": "Jan Novák",
+        "role": "zpracovatel analýzy",
+        "side": "processor"
+      },
+      "title": "Shrnutí má začít větou o tom, čím se firma zabývá",
+      "verbatim": "dej na začátek shrnutí větu o tom, čím se firma zabývá, dokument to nikde neříká",
+      "why": "dokument nikde neuváděl předmět podnikání",
+      "commit": "a1b2c3d",
+      "origin": "docs/changes/v1.2/changes.json#IN-041",
+      "comments": [],
+      "edits": [
+        "E-001"
+      ]
+    },
+    {
+      "id": "R-002",
+      "kind": "comment-resolution",
+      "at": "2026-09-10T11:05:00+02:00",
+      "author": {
+        "name": "Jan Novák",
+        "role": "zpracovatel analýzy",
+        "side": "processor"
+      },
+      "title": "Doplněn modul PLAN do výčtu modulů nad jádrem CORE",
+      "verbatim": "doplň PLAN, podklad ho vede od července",
+      "why": "vypořádání připomínky K1-002",
+      "commit": "b2c3d4e",
+      "origin": "docs/changes/v1.2/changes.json#IN-044",
+      "comments": [
+        "K1-002"
+      ],
+      "edits": [
+        "E-004",
+        "E-005"
+      ]
+    },
+    {
+      "id": "R-003",
+      "kind": "comment-resolution",
+      "at": "2026-09-11T16:40:00+02:00",
+      "author": {
+        "name": "Jan Novák",
+        "role": "zpracovatel analýzy",
+        "side": "processor"
+      },
+      "title": "Funkce opravena na vedoucí oblasti Technology",
+      "verbatim": "oprav to všude, není to CTO",
+      "why": "vypořádání připomínky K2-004",
+      "commit": "c3d4e5f",
+      "origin": "docs/changes/v1.2/changes.json#IN-047",
+      "comments": [
+        "K2-004"
+      ],
+      "edits": [
+        "E-003",
+        "E-007"
+      ]
+    },
+    {
+      "id": "R-004",
+      "kind": "instruction",
+      "at": "2026-09-12T08:20:00+02:00",
+      "author": {
+        "name": "Jan Novák",
+        "role": "zpracovatel analýzy",
+        "side": "processor"
+      },
+      "title": "Změkčena dvě tvrzení stojící na jediném podkladu",
+      "verbatim": "to je příliš tvrdé tvrzení a je podle mě jen z jednoho zdroje, změkči to",
+      "why": "vypořádání připomínky K2-005 (přijata částečně)",
+      "commit": "d4e5f60",
+      "origin": "docs/changes/v1.2/changes.json#IN-049",
+      "comments": [
+        "K2-005"
+      ],
+      "edits": [
+        "E-002",
+        "E-006"
+      ]
+    }
+  ],
+  "comments": [
+    {
+      "id": "K1-002",
+      "round": "K1",
+      "author": {
+        "name": "Petra Dvořáková",
+        "role": "garantka produktové oblasti",
+        "side": "reviewer"
+      },
+      "received": "2026-09-09T07:42:00+02:00",
+      "reviewedVersion": "1.0",
+      "source": "docs/comments/K1-20260909-dvorakova/K1-20260909-dvorakova.json#K1-002",
+      "sourceSection": "Komentář ve Wordu, kapitola 2.1",
+      "verbatim": "Chybí zde PLAN — plánování investic a jejich realizace.",
+      "summary": "Výčet modulů nad jádrem CORE vynechává modul PLAN.",
+      "priority": "P1",
+      "check": {
+        "verdict": "potvrzeno"
+      },
+      "decision": {
+        "status": "prijato",
+        "by": "Jan Novák",
+        "at": "2026-09-10"
+      },
+      "resolution": {
+        "state": "hotovo",
+        "changes": [
+          "02-produkty.md, 2.1 :: do nadpisu a do výčtu modulů doplněn PLAN"
+        ],
+        "at": "2026-09-10 11:05"
+      },
+      "scope": [
+        "ch-02"
+      ],
+      "revisions": [
+        "R-002"
+      ]
+    },
+    {
+      "id": "K2-004",
+      "round": "K2",
+      "author": {
+        "name": "Martin Svoboda",
+        "role": "vedoucí oblasti Technology",
+        "side": "reviewer"
+      },
+      "received": "2026-09-10T18:03:00+02:00",
+      "reviewedVersion": "1.0",
+      "source": "docs/comments/K2-20260910-svoboda/K2-20260910-svoboda.json#K2-004",
+      "sourceSection": "E-mail, odstavec 2",
+      "verbatim": "Nejsem CTO, jsem vedoucí oblasti Technology.",
+      "summary": "Dokument uvádí u autora připomínky funkci, kterou nezastává.",
+      "priority": "P1",
+      "check": {
+        "verdict": "potvrzeno"
+      },
+      "decision": {
+        "status": "prijato",
+        "by": "Jan Novák",
+        "at": "2026-09-11"
+      },
+      "resolution": {
+        "state": "hotovo",
+        "changes": [
+          "01-manazerske-shrnuti.md :: funkce opravena",
+          "02-produkty.md :: funkce opravena"
+        ],
+        "at": "2026-09-11 16:40"
+      },
+      "scope": [
+        "ch-01",
+        "ch-02"
+      ],
+      "revisions": [
+        "R-003"
+      ]
+    },
+    {
+      "id": "K2-005",
+      "round": "K2",
+      "author": {
+        "name": "Martin Svoboda",
+        "role": "vedoucí oblasti Technology",
+        "side": "reviewer"
+      },
+      "received": "2026-09-10T18:03:00+02:00",
+      "reviewedVersion": "1.0",
+      "source": "docs/comments/K2-20260910-svoboda/K2-20260910-svoboda.json#K2-005",
+      "sourceSection": "E-mail, odstavec 4",
+      "verbatim": "Tohle tvrzení je podle mě jen z jednoho zdroje a je příliš tvrdé.",
+      "summary": "Dvě tvrzení stojí na jediném podkladu, ale jsou psána jako doložená.",
+      "priority": "P2",
+      "check": {
+        "verdict": "potvrzeno-s-upresnenim"
+      },
+      "decision": {
+        "status": "prijato-castecne",
+        "by": "Jan Novák",
+        "at": "2026-09-12"
+      },
+      "resolution": {
+        "state": "rozpracovano",
+        "changes": [
+          "01-manazerske-shrnuti.md :: tvrzení změkčeno na indicii"
+        ],
+        "at": "2026-09-12 08:20"
+      },
+      "answer": "Tvrzení jsou změkčena a označena jako indicie; podklad se z dokumentu nevypouští.",
+      "scope": [
+        "ch-01",
+        "ch-02"
+      ],
+      "revisions": [
+        "R-004"
+      ]
+    }
+  ],
+  "edits": [
+    {
+      "id": "E-001",
+      "revision": "R-001",
+      "chapter": "ch-01",
+      "block": "ch-01/b-02",
+      "order": 1,
+      "kind": "insert",
+      "insertedChars": 101,
+      "removedChars": 0,
+      "summary": "Před první odstavec vložena úvodní věta o předmětu podnikání"
+    },
+    {
+      "id": "E-002",
+      "revision": "R-004",
+      "chapter": "ch-01",
+      "block": "ch-01/b-04",
+      "order": 2,
+      "kind": "replace",
+      "insertedChars": 58,
+      "removedChars": 33,
+      "summary": "Tvrzení o dodavatelské závislosti změkčeno na indicii"
+    },
+    {
+      "id": "E-003",
+      "revision": "R-003",
+      "chapter": "ch-01",
+      "block": "ch-01/b-05",
+      "order": 3,
+      "kind": "replace",
+      "insertedChars": 26,
+      "removedChars": 3,
+      "summary": "CTO nahrazeno funkcí vedoucí oblasti Technology"
+    },
+    {
+      "id": "E-004",
+      "revision": "R-002",
+      "chapter": "ch-02",
+      "block": "ch-02/b-02",
+      "order": 4,
+      "kind": "replace",
+      "insertedChars": 17,
+      "removedChars": 11,
+      "summary": "Do nadpisu 2.1 doplněn modul PLAN"
+    },
+    {
+      "id": "E-005",
+      "revision": "R-002",
+      "chapter": "ch-02",
+      "block": "ch-02/b-06",
+      "order": 5,
+      "kind": "insert-block",
+      "insertedChars": 44,
+      "removedChars": 0,
+      "summary": "Do výčtu modulů přidána odrážka PLAN"
+    },
+    {
+      "id": "E-006",
+      "revision": "R-004",
+      "chapter": "ch-02",
+      "block": "ch-02/b-07",
+      "order": 6,
+      "kind": "replace",
+      "insertedChars": 27,
+      "removedChars": 27,
+      "summary": "Superlativ u modulární skladby nahrazen neutrální formulací"
+    },
+    {
+      "id": "E-007",
+      "revision": "R-003",
+      "chapter": "ch-02",
+      "block": "ch-02/b-08",
+      "order": 7,
+      "kind": "replace",
+      "insertedChars": 26,
+      "removedChars": 3,
+      "summary": "CTO nahrazeno funkcí vedoucí oblasti Technology"
+    }
+  ]
+}

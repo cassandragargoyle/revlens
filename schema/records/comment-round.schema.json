@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://infinitesolution.cz/schemas/revlens-comment-round.schema.json",
+  "title": "revlens comment round",
+  "description": "docs/comments/<round>/<round>.json in the engagement repository: one round of reviewer comments and how each of them was settled. The file name repeats the directory name, which is how the adapter finds it.",
+  "type": "object",
+  "required": ["round", "comments"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "round": {
+      "type": "object",
+      "required": ["id", "author", "received"],
+      "properties": {
+        "id": { "type": "string", "description": "Short id of the round, e.g. K2" },
+        "author": { "type": "string", "description": "Who reviewed" },
+        "role": {
+          "type": "string",
+          "description": "The reviewer's role; the viewer shows its first sentence on the comment card"
+        },
+        "received": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}(?:[ T]\\d{2}:\\d{2}(?::\\d{2})?)?$",
+          "description": "Local wall-clock time the round arrived"
+        },
+        "reviewed_version": {
+          "type": "string",
+          "description": "Version of the document the reviewer read"
+        },
+        "source": {
+          "type": "string",
+          "description": "Where the comments came from - an e-mail, Word comments, minutes"
+        }
+      },
+      "additionalProperties": false
+    },
+    "comments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "verbatim"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^K\\d+-\\d+$",
+            "description": "Comment id; a change log entry mentioning it in this form becomes a comment resolution"
+          },
+          "scope": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Chapter ids the comment is about"
+          },
+          "priority": { "enum": ["P1", "P2", "P3"] },
+          "title": { "type": "string", "description": "One line, used when there is no summary" },
+          "source_section": {
+            "type": "string",
+            "description": "Where in the source the comment sits - paragraph, chapter, page"
+          },
+          "verbatim": {
+            "type": "string",
+            "description": "The comment as the reviewer wrote it, never rewritten"
+          },
+          "summary": { "type": "string", "description": "What the comment claims, in the processor's words" },
+          "check": {
+            "type": "object",
+            "description": "The first gate: is the comment factually right?",
+            "properties": {
+              "verdict": { "type": "string" },
+              "note": { "type": "string" },
+              "evidence": { "type": "array", "items": { "type": "string" } }
+            },
+            "additionalProperties": false
+          },
+          "decision": {
+            "type": "object",
+            "description": "The second gate: is it accepted?",
+            "properties": {
+              "status": { "type": "string" },
+              "by": { "type": ["string", "null"] },
+              "at": { "type": ["string", "null"], "description": "Date, or a local wall-clock time" },
+              "note": { "type": "string" }
+            },
+            "additionalProperties": false
+          },
+          "resolution": {
+            "type": "object",
+            "description": "The third gate: how far it was actually worked into the text. A comment can be confirmed and accepted and still not worked in, and only this says so.",
+            "properties": {
+              "state": { "type": "string" },
+              "changes": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "What was done, one line each. A chapter file named here joins the comment to the commit that touched it."
+              },
+              "at": {
+                "type": ["string", "null"],
+                "description": "When it was worked in. Compared against the baseline date to decide whether the comment is in scope at all."
+              }
+            },
+            "additionalProperties": false
+          },
+          "answer": { "type": "string", "description": "What was sent back to the reviewer" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

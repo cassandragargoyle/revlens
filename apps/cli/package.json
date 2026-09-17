@@ -1,0 +1,26 @@
+{
+  "name": "@revlens/cli",
+  "version": "0.1.2",
+  "private": true,
+  "description": "revlens command line - build, validate, serve",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/main.js",
+  "types": "./dist/main.d.ts",
+  "bin": {
+    "revlens": "./bin/revlens.js"
+  },
+  "files": [
+    "dist",
+    "bin"
+  ],
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@revlens/adapters": "*",
+    "@revlens/core": "*",
+    "@revlens/server": "*",
+    "commander": "^15.0.0"
+  }
+}

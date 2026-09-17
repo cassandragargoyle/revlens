@@ -1,0 +1,90 @@
+{
+  "$schema": "../../../../../../schema/records/comment-round.schema.json",
+  "round": {
+    "id": "K2",
+    "author": "Martin Svoboda",
+    "role": "vedoucí oblasti Technology; odpovídá za architekturu a provoz",
+    "received": "2026-02-13 18:03",
+    "reviewed_version": "1.5",
+    "source": "E-mail ze dne 13. 2. 2026"
+  },
+  "comments": [
+    {
+      "id": "K2-004",
+      "scope": ["ch-01", "ch-03"],
+      "priority": "P1",
+      "title": "Chybná funkce u jména",
+      "source_section": "E-mail, odstavec 2",
+      "verbatim": "Nejsem CTO, jsem vedoucí oblasti Technology.",
+      "summary": "Dokument uvádí u recenzenta funkci, kterou nezastává.",
+      "check": {
+        "verdict": "potvrzeno",
+        "note": "organizační schéma funkci CTO nezná"
+      },
+      "decision": {
+        "status": "prijato",
+        "by": "Jan Novák",
+        "at": "2026-02-18"
+      },
+      "resolution": {
+        "state": "hotovo",
+        "changes": [
+          "01-shrnuti.md :: funkce opravena",
+          "03-data.md :: funkce opravena"
+        ],
+        "at": "2026-02-19 16:40"
+      }
+    },
+    {
+      "id": "K2-005",
+      "scope": ["ch-03"],
+      "priority": "P2",
+      "title": "Tvrzení o úplnosti odečtů je příliš tvrdé",
+      "source_section": "E-mail, odstavec 4",
+      "verbatim": "Tvrzení o kompletní historii odečtů stojí podle mě jen na jednom podkladu a je příliš tvrdé.",
+      "summary": "Tvrzení o úplnosti dat je psáno jako doložené, ale opírá se o jediný zdroj.",
+      "check": {
+        "verdict": "potvrzeno-s-upresnenim",
+        "note": "podkladem je datový audit z ledna 2026, jiný zdroj k dispozici není"
+      },
+      "decision": {
+        "status": "prijato-castecne",
+        "by": "Jan Novák",
+        "at": "2026-02-19"
+      },
+      "resolution": {
+        "state": "rozpracovano",
+        "changes": [
+          "03-data.md :: tvrzení zmírněno a doplněn zdroj zjištění"
+        ],
+        "at": "2026-02-20 08:20"
+      },
+      "answer": "Tvrzení je zmírněno a je u něj uveden zdroj; podklad z dokumentu nevypouštíme."
+    },
+    {
+      "id": "K2-006",
+      "scope": ["ch-03"],
+      "priority": "P3",
+      "title": "Chybí kapitola o nákladech provozu",
+      "source_section": "E-mail, odstavec 6",
+      "verbatim": "Očekával bych ještě kapitolu o nákladech provozu kompetenčního centra.",
+      "summary": "Recenzent postrádá kapitolu o provozních nákladech.",
+      "check": {
+        "verdict": "potvrzeno",
+        "note": "kapitola v dokumentu skutečně není"
+      },
+      "decision": {
+        "status": "zamitnuto",
+        "by": "Jan Novák",
+        "at": "2026-02-20",
+        "note": "náklady jsou předmětem navazující studie, rozsah analytické fáze je uzavřen"
+      },
+      "resolution": {
+        "state": "odpada",
+        "changes": [],
+        "at": "2026-02-20 09:00"
+      },
+      "answer": "Náklady provozu zpracuje navazující studie; do verze 1.6 je nedoplňujeme."
+    }
+  ]
+}

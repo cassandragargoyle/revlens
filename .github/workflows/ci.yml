@@ -1,0 +1,68 @@
+name: ci
+
+# Carried over from the Gitea workflow this tool had while it lived in
+# InfiniteCare-architecture, and widened to cover the editor extension: packaging the
+# .vsix is part of the product now, so a build that cannot package is a broken build.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      # The JSON Schema is generated from the Zod schema in @revlens/core. A committed
+      # file that no longer matches it is a contract drifting apart from its types, which
+      # is exactly what generating it was meant to prevent.
+      - name: Check that the generated schema is committed
+        run: npm run schema:check
+
+      - name: Test
+        run: npm test
+
+      # The record contracts in examples/contracts are hand-written, so unlike the bundle
+      # schema they can drift from the adapter that reads them. Running every example
+      # through them, then building one end to end, is what notices.
+      - name: Check the example records against their contracts
+        run: npm run example:check
+
+      - name: Build an example end to end
+        run: make bundle && make validate
+
+      # Both editors install the same file, so packaging is checked once. The host
+      # verification needs a portunix-vscode checkout and skips with exit 0 without one -
+      # it runs here to prove the script itself still works.
+      - name: Package the extension for both hosts
+        run: npm run package:pilot
+
+      - name: Verify it on the Pilot host, if one is available
+        run: npm run verify:pilot-host
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: revlens-extension
+          path: dist/pilot-plugins/
+          if-no-files-found: error
