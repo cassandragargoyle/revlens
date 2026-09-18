@@ -15,7 +15,9 @@ import { buildCatalog, buildCatalogEntry, parsePluginSeed } from './src/catalog.
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, '..', '..');
-const defaultOutputDir = join(repoRoot, 'dist', 'pilot-plugins');
+// The same directory `package:vsix` writes to: the `.vsix` is one artifact both hosts
+// install, and only `catalog.json` beside it is Pilot's.
+const defaultOutputDir = join(repoRoot, 'dist', 'extension');
 
 function outputDir(): string {
   const fromArgs = process.argv.indexOf('--out');

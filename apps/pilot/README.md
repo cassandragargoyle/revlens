@@ -16,7 +16,7 @@ account of how much of the extension that host can run.
 
 ```bash
 npm run build          # the product, including the extension
-npm run package:pilot  # dist/pilot-plugins/{*.vsix, catalog.json}
+npm run package:pilot  # dist/extension/{*.vsix, catalog.json}
 ```
 
 The build writes only under the repository. Nothing is copied into anyone's profile,
@@ -26,7 +26,7 @@ repeatable, and a plain build must never mutate a running application.
 To run Pilot against the result, point it at the directory:
 
 ```bash
-PORTUNIX_PILOT_EXTENSIONS_DIR="<repo>/dist/pilot-plugins"
+PORTUNIX_PILOT_EXTENSIONS_DIR="<repo>/dist/extension"
 ```
 
 or copy the `.vsix` and `catalog.json` into `<userData>/extensions`. Pilot re-unpacks an

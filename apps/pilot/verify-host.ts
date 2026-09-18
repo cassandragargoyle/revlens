@@ -64,7 +64,7 @@ if (pilot === undefined) {
   process.exit(0);
 }
 
-const catalogDir = join(repoRoot, 'dist', 'pilot-plugins');
+const catalogDir = join(repoRoot, 'dist', 'extension');
 if (!existsSync(join(catalogDir, 'catalog.json'))) {
   console.error(`no catalog in ${catalogDir} - run \`npm run package:pilot\` first`);
   process.exit(1);

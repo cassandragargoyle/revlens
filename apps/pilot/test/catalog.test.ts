@@ -76,7 +76,7 @@ describe('buildCatalogEntry', () => {
       ...packaged,
       // The packaging step knows where the file landed; a catalog read on another
       // machine must not.
-      path: 'C:/DEV/CassandraGargoyle/revlens/dist/pilot-plugins/x.vsix',
+      path: 'C:/DEV/CassandraGargoyle/revlens/dist/extension/x.vsix',
     } as never);
 
     expect(Object.keys(entry).sort()).toEqual([

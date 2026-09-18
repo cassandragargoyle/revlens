@@ -42,7 +42,7 @@ From the repository root:
 npm run build          # the whole product, the extension last
 npm run build:vscode   # just the extension, after apps/web has been built
 npm run watch:vscode   # rebuild on change while working on it
-npm run package:vsix   # dist/cassandragargoyle.revlens-<version>.vsix
+npm run package:vsix   # dist/extension/cassandragargoyle.revlens-<version>.vsix
 ```
 
 Install the packaged file with `code --install-extension <path to the .vsix>`.

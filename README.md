@@ -70,7 +70,7 @@ contains and why each record in it is there.
 The same document opens inside an editor, with no server running:
 
 ```bash
-npm run package:vsix                                   # dist/cassandragargoyle.revlens-<version>.vsix
+npm run package:vsix                                   # dist/extension/cassandragargoyle.revlens-<version>.vsix
 code --install-extension dist/cassandragargoyle.revlens-0.1.0.vsix
 ```
 
@@ -85,7 +85,7 @@ only that, so the document always opens and the command-palette entries appear o
 there is a command palette.
 
 ```bash
-npm run package:pilot      # dist/pilot-plugins/{*.vsix, catalog.json}
+npm run package:pilot      # dist/extension/{*.vsix, catalog.json}
 npm run verify:pilot-host  # runs the packaged extension on Pilot's own host
 ```
 

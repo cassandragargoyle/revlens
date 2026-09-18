@@ -84,7 +84,7 @@ obsahuje a proč je v něm každý záznam.
 Tentýž dokument se otevře uvnitř editoru, bez běžícího serveru:
 
 ```bash
-npm run package:vsix                                   # dist/cassandragargoyle.revlens-<verze>.vsix
+npm run package:vsix                                   # dist/extension/cassandragargoyle.revlens-<verze>.vsix
 code --install-extension dist/cassandragargoyle.revlens-0.1.0.vsix
 ```
 
@@ -98,7 +98,7 @@ ne zakompilované: rozšíření se hostitele zeptá, co umí, a zaregistruje je
 se tedy otevře vždy a položky v paletě příkazů se objeví jen tam, kde paleta příkazů je.
 
 ```bash
-npm run package:pilot      # dist/pilot-plugins/{*.vsix, catalog.json}
+npm run package:pilot      # dist/extension/{*.vsix, catalog.json}
 npm run verify:pilot-host  # spustí zabalené rozšíření na vlastním hostiteli Pilota
 ```
 

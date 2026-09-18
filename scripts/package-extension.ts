@@ -16,7 +16,11 @@ import { fileURLToPath } from 'node:url';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const extensionDir = join(repoRoot, 'apps', 'vscode');
-const defaultOutputDir = join(repoRoot, 'dist');
+// One artifact, two hosts, one directory. `dist/extension/` is named after what is in
+// it rather than after either consumer - the way `dist/desktop/` already is - and both
+// `package:vsix` and `package:pilot` write here, so the same `.vsix` is not built twice
+// into two places that can disagree.
+const defaultOutputDir = join(repoRoot, 'dist', 'extension');
 
 export interface PackagedVsix {
   readonly version: string;
@@ -82,7 +86,7 @@ function quoteForCmd(token: string): string {
   return /[\s&|<>^"]/.test(token) ? `"${token.replace(/"/g, '""')}"` : token;
 }
 
-// Running the file packages into `dist/`; importing it leaves the choice to the caller.
+// Running the file packages into `dist/extension/`; importing it leaves the choice to the caller.
 if (fileURLToPath(import.meta.url) === resolve(process.argv[1] ?? '')) {
   const packaged = packageExtension();
   console.log(`\nPackaged ${packaged.file} (sha256 ${packaged.sha256.slice(0, 12)}...)`);

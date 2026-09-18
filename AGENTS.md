@@ -2,7 +2,7 @@
 
 ## Project Information
 
-- **GitHub Repository**: https://github.com/CassandraGargoyle/revlens
+- **GitHub Repository**: <https://github.com/CassandraGargoyle/revlens>
 - **Project Name**: revlens
 - **Primary Purpose**: A document revision viewer — the final text with every change
   highlighted in place, and the revision and reviewer comment behind each one
@@ -154,8 +154,8 @@ npm run build           # everything: TypeScript, the schema, the viewer, the ex
 npm run build:web       # the viewer alone
 npm run build:vscode    # the extension alone, after the viewer
 npm run build:desktop   # the desktop application alone, after the viewer
-npm run package:vsix    # dist/cassandragargoyle.revlens-<version>.vsix
-npm run package:pilot   # dist/pilot-plugins/{*.vsix, catalog.json}
+npm run package:vsix    # dist/extension/cassandragargoyle.revlens-<version>.vsix
+npm run package:pilot   # dist/extension/{*.vsix, catalog.json}
 npm run package:desktop # dist/desktop/: an AppImage, a portable .exe and an installer, a .dmg
 npm run dev             # the viewer with hot reload, against a running `serve`
 npm run dev:desktop     # the desktop application from source: `-- <bundle>` opens one
