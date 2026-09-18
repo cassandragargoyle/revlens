@@ -40,9 +40,12 @@ describe('bundlePathsFromArgv', () => {
     expect(bundlePathsFromArgv(argv)).toEqual([resolve('out/example.revlens')]);
   });
 
+  // The expectation goes through `resolve` rather than naming the answer, the way the
+  // test above it does: an absolute POSIX path is still relative on Windows, where it
+  // picks up the drive of the working directory.
   it('reads the argument a packaged application is started with', () => {
     expect(bundlePathsFromArgv(['/opt/revlens/revlens', '/home/r/round-3.revlens'])).toEqual([
-      '/home/r/round-3.revlens',
+      resolve('/home/r/round-3.revlens'),
     ]);
   });
 
