@@ -144,3 +144,35 @@ function baseSeed(): {
     },
   };
 }
+
+/**
+ * Where the packaged extension is written, held together across the four places that
+ * have to agree about it.
+ *
+ * They drifted once: the directory was renamed and the workflow kept the old path, so CI
+ * packaged the extension successfully and then failed uploading nothing. A grep over the
+ * sources missed it because the fourth place is YAML.
+ */
+describe('the directory the packaged extension goes to', () => {
+  const OUTPUT = "join(repoRoot, 'dist', 'extension')";
+
+  async function source(relativePath: string): Promise<string> {
+    return readFile(fileURLToPath(new URL(`../../../${relativePath}`, import.meta.url)), 'utf8');
+  }
+
+  it('is the same one `package:vsix` and `package:pilot` write to', async () => {
+    expect(await source('scripts/package-extension.ts')).toContain(OUTPUT);
+    expect(await source('apps/pilot/build.ts')).toContain(OUTPUT);
+  });
+
+  it('is the one `verify:pilot-host` looks in for a catalog', async () => {
+    expect(await source('apps/pilot/verify-host.ts')).toContain(OUTPUT);
+  });
+
+  it('is the one CI uploads as the artifact', async () => {
+    const workflow = await source('.github/workflows/ci.yml');
+
+    expect(workflow).toContain('path: dist/extension/');
+    expect(workflow).not.toContain('dist/pilot-plugins');
+  });
+});
