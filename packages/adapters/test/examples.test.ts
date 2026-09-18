@@ -83,6 +83,24 @@ describe('seeding', () => {
   });
 
   /**
+   * `fs.cp` carries the source timestamps across on Windows, and git decides whether to
+   * read a file from its size and mtime. A step that rewrites a file to the same length -
+   * `03-loose-ends` fixes a one-letter typo - therefore arrives looking untouched, and
+   * the commit for it silently had nothing in it until the seeding stamped what it wrote.
+   */
+  it('commits a step that changes a file without changing its length', async () => {
+    const out = join(workspace, 'same-length');
+    const seeded = await seedExample({ example: join(examples, '03-loose-ends'), language: 'en', out });
+
+    expect(seeded.commits).toBe(4);
+
+    const subjects = execFileSync('git', ['-C', out, 'log', '--format=%s'], { encoding: 'utf8' })
+      .trim()
+      .split('\n');
+    expect(subjects).toContain('fix a typo in the risk table');
+  });
+
+  /**
    * The path is an argument, and silently removing whatever it names is the one mistake
    * here that cannot be undone.
    */

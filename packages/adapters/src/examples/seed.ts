@@ -2,7 +2,7 @@
 // One implementation, called by the command line, the editor and the desktop window
 
 import { execFileSync } from 'node:child_process';
-import { cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readFile, readdir, rm, utimes, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import type { ExampleHistory, SeedRequest, SeedResult } from './types.js';
 
@@ -47,7 +47,18 @@ export async function seedExample(request: SeedRequest): Promise<SeedResult> {
   let baseline: string | undefined;
   for (const step of history.steps) {
     await cp(join(records, 'history', step.directory), out, { recursive: true });
+    await touch(out);
     git(out, ['add', '-A']);
+
+    // A step that stages nothing is a broken example, not an empty commit: git would
+    // refuse with "nothing to commit" and the caller would see a failed command with no
+    // cause in it.
+    if (git(out, ['diff', '--cached', '--name-only']).trim() === '') {
+      throw new Error(
+        `step ${step.directory} of the example changes nothing - its snapshot is identical to the revision before it`,
+      );
+    }
+
     git(
       out,
       [
@@ -117,6 +128,26 @@ async function prepare(out: string, force: boolean): Promise<void> {
 
   await rm(out, { recursive: true, force: true });
   await mkdir(out, { recursive: true });
+}
+
+/**
+ * Give every copied file the time it was copied, so git looks at it.
+ *
+ * `fs.cp` carries the source timestamps across on Windows, and git decides whether to
+ * read a file at all from its size and mtime. A step that rewrites a file to the same
+ * length - fixing a typo, correcting a name - therefore arrives looking untouched, and
+ * the commit for it silently has nothing in it. Which files those are is a property of
+ * the example, so the seeding cannot afford to be clever about it: everything it just
+ * wrote is stamped now.
+ */
+async function touch(directory: string): Promise<void> {
+  const now = new Date();
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    if (entry.name === '.git') continue;
+    const path = join(directory, entry.name);
+    if (entry.isDirectory()) await touch(path);
+    else await utimes(path, now, now);
+  }
 }
 
 function git(repo: string, args: string[], env: Record<string, string> = {}): string {
