@@ -1,0 +1,38 @@
+{
+  "$schema": "../../../../../../schema/records/comment-round.schema.json",
+  "round": {
+    "id": "K1",
+    "author": "Klára Holubová",
+    "role": "data steward; answers for the register once it is handed over",
+    "received": "2026-03-04 11:05",
+    "reviewed_version": "1.0",
+    "source": "e-mail, 4 March"
+  },
+  "comments": [
+    {
+      "id": "K1-001",
+      "scope": ["ch-01"],
+      "priority": "P1",
+      "title": "“The project team” will not exist after handover",
+      "source_section": "chapter 1, last paragraph",
+      "verbatim": "Once the project ends there is no project team. Somebody has to own this register by name, and it should be clear who may add a row to it.",
+      "summary": "The register names no owner that survives the project.",
+      "check": {
+        "verdict": "confirmed",
+        "note": "the project team is dissolved at handover; the register outlives it"
+      },
+      "decision": {
+        "status": "accepted",
+        "by": "Tomáš Beran",
+        "at": "2026-03-06"
+      },
+      "resolution": {
+        "state": "done",
+        "changes": [
+          "01-scope.md :: the data steward named, approval of new entries stated"
+        ],
+        "at": "2026-03-09 09:10"
+      }
+    }
+  ]
+}

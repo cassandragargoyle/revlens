@@ -1,0 +1,62 @@
+{
+  "$schema": "../../../../../../schema/records/comment-round.schema.json",
+  "round": {
+    "id": "K1",
+    "author": "Marek Veselý",
+    "role": "operations director; the waves are run by his people",
+    "received": "2026-04-08 14:40",
+    "reviewed_version": "2.0",
+    "source": "steering group minutes, 8 April"
+  },
+  "comments": [
+    {
+      "id": "K1-001",
+      "scope": ["ch-01"],
+      "priority": "P1",
+      "title": "Nobody is named as signing a wave off",
+      "source_section": "chapter 1, last paragraph",
+      "verbatim": "“The approach is reviewed” - reviewed by whom, and who says the next wave may start? In practice that is me, and the document should say so.",
+      "summary": "The approach names no one who authorises the next wave.",
+      "check": {
+        "verdict": "confirmed",
+        "note": "the operations director already gives the go-ahead at the wave review"
+      },
+      "decision": {
+        "status": "accepted",
+        "by": "Alena Říhová",
+        "at": "2026-04-10"
+      },
+      "resolution": {
+        "state": "done",
+        "changes": [
+          "01-approach.md :: sign-off by the operations director written down"
+        ],
+        "at": "2026-04-13 10:20"
+      }
+    },
+    {
+      "id": "K1-002",
+      "scope": ["ch-02"],
+      "priority": "P2",
+      "title": "The risk table needs the mitigation beside each row",
+      "source_section": "chapter 2, table",
+      "verbatim": "A likelihood and an impact tell me nothing on their own. What do we do about each of these?",
+      "summary": "The risks carry no response, so the table cannot be acted on.",
+      "check": {
+        "verdict": "confirmed"
+      },
+      "decision": {
+        "status": "accepted",
+        "by": "Alena Říhová",
+        "at": "2026-04-10"
+      },
+      "resolution": {
+        "state": "done",
+        "changes": [
+          "03-mitigations.md :: a response written for each live risk"
+        ],
+        "at": "2026-04-20 09:20"
+      }
+    }
+  ]
+}

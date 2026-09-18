@@ -1,0 +1,34 @@
+{
+  "$schema": "../../../../../../schema/records/changes.schema.json",
+  "version": "2.1",
+  "entries": [
+    {
+      "id": "CH-001",
+      "received": "2026-04-13 09:30",
+      "author": "Alena Říhová",
+      "summary": "Napsat, kdo etapu schvaluje před zahájením té další.",
+      "verbatim": "Připomínka K1-001 je oprávněná. Zapsat, že každou etapu schvaluje ředitel provozu – stejně to tak chodí.",
+      "changes": [
+        {
+          "target": "analysis/chapters/01-postup.md",
+          "what": "k větě o revizi doplněno schválení ředitelem provozu",
+          "why": "odpovídá na připomínku K1-001"
+        }
+      ]
+    },
+    {
+      "id": "CH-002",
+      "received": "2026-04-20 08:20",
+      "author": "Alena Říhová",
+      "summary": "Přepsat kapitolu o rizicích kolem tří, která jsou stále živá.",
+      "verbatim": "Tabulka má pět řádků, z nichž dva něco znamenají. Uzavřít ty, které zbyly ze studie proveditelnosti, a zbytek napsat souvisle i s tím, co s ním děláme.",
+      "changes": [
+        {
+          "target": "analysis/chapters/02-rizika.md",
+          "what": "tabulka nahrazena třemi riziky v souvislém textu, u každého odpověď na ně",
+          "why": "tabulka nesla řádky, ke kterým se od studie proveditelnosti nikdo nevrátil"
+        }
+      ]
+    }
+  ]
+}

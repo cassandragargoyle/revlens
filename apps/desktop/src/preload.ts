@@ -19,6 +19,8 @@ export interface RevlensBridge {
   openBundle(): Promise<void>;
   /** Open the form that builds a bundle from a repository. */
   buildBundle(): Promise<void>;
+  /** Write a complete example into a chosen folder, build it, and open the result. */
+  tryExample(): Promise<void>;
   /** Show the open document in the file manager. */
   reveal(): Promise<void>;
   /** Re-read the file behind this window. */
@@ -32,6 +34,7 @@ export interface RevlensBridge {
 const bridge: RevlensBridge = {
   openBundle: () => ipcRenderer.invoke('revlens:open-bundle'),
   buildBundle: () => ipcRenderer.invoke('revlens:build-bundle'),
+  tryExample: () => ipcRenderer.invoke('revlens:try-example'),
   reveal: () => ipcRenderer.invoke('revlens:reveal'),
   reload: () => ipcRenderer.invoke('revlens:reload'),
   chooseDirectory: () => ipcRenderer.invoke('revlens:choose-directory'),

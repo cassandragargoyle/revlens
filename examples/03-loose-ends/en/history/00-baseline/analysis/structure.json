@@ -1,0 +1,26 @@
+{
+  "$schema": "../../../../../../schema/records/structure.schema.json",
+  "document": {
+    "id": "warehouse-consolidation-approach",
+    "title": "Warehouse consolidation: the proposed approach",
+    "subtitle": "Meridian Logistics, steering group draft",
+    "language": "en",
+    "version": "2.0"
+  },
+  "chapters": [
+    {
+      "id": "ch-01",
+      "number": "1",
+      "file": "chapters/01-approach.md",
+      "title": "The approach",
+      "order": 1
+    },
+    {
+      "id": "ch-02",
+      "number": "2",
+      "file": "chapters/02-risks.md",
+      "title": "Risks",
+      "order": 2
+    }
+  ]
+}

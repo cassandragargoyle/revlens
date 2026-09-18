@@ -1,6 +1,6 @@
 {
   "name": "@revlens/adapters",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "private": true,
   "description": "revlens source adapters - git and Markdown plumbing, token blame, record joins",
   "license": "MIT",

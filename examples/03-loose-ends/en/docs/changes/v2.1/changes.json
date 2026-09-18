@@ -1,0 +1,34 @@
+{
+  "$schema": "../../../../../../schema/records/changes.schema.json",
+  "version": "2.1",
+  "entries": [
+    {
+      "id": "CH-001",
+      "received": "2026-04-13 09:30",
+      "author": "Alena Říhová",
+      "summary": "Say who signs a wave off before the next one starts.",
+      "verbatim": "Comment K1-001 is fair. Write down that the operations director signs each wave off - it is what happens anyway.",
+      "changes": [
+        {
+          "target": "analysis/chapters/01-approach.md",
+          "what": "sign-off by the operations director added to the review sentence",
+          "why": "answers comment K1-001"
+        }
+      ]
+    },
+    {
+      "id": "CH-002",
+      "received": "2026-04-20 08:20",
+      "author": "Alena Říhová",
+      "summary": "Rewrite the risk chapter around the three risks that are still live.",
+      "verbatim": "The table is five rows of which two matter. Close the ones the feasibility study left behind and write the rest as prose, with what we actually do about each.",
+      "changes": [
+        {
+          "target": "analysis/chapters/02-risks.md",
+          "what": "table replaced by three risks in prose, each with the response to it",
+          "why": "the table carried rows nobody had revisited since the feasibility study"
+        }
+      ]
+    }
+  ]
+}

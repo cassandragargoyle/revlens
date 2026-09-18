@@ -10,6 +10,22 @@ built *from*, so that `revlens build` can be watched doing its work.
 | Example | What it shows |
 | ---------- | ---------- |
 | [`01-revision-round/`](01-revision-round/README.md) | One review round folded into version 1.6: five instructions, four reviewer comments, three chapters |
+| `02-first-bundle/` | The smallest thing that works: one chapter, one instruction, one comment, two commits |
+| `03-loose-ends/` | What the report warns about: a commit with no instruction behind it, a comment that joins to nothing, a chapter rewritten past recognition |
+
+## Running one without a checkout
+
+An example is not only material for `make demo`. Both hosts offer **Try an Example**,
+which writes one into a folder you choose, seeds the repository, builds the bundle and
+opens it:
+
+- Visual Studio Code: `revlens: Try an Example…` in the command palette
+- The desktop window: the third button on the welcome page, or File → Try an Example…
+
+Both copy `examples/` next to the viewer when they are built, so an installed extension
+or a packaged window carries them and needs nothing from this repository. What you are
+left with on disk is the shape of an engagement, which is the fastest answer to "what do I
+put where".
 
 ## Running one
 
@@ -38,6 +54,7 @@ npm run revlens -- serve out/example/bundle.json
 
 ```text
 01-revision-round/
+  example.json         what a picker says about it, per language, and what building it needs
   en/                  one language variant - the same engagement, told in English
     docs/
       changes/v1.6/changes.json              the instructions that produced version 1.6
@@ -55,6 +72,12 @@ of each revision and a manifest saying when it was made and by whom;
 repository under `out/`, with the dates the manifest gives. The commit dates are fixed
 there rather than taken from the clock, because the change log joins to the commits by
 target path and day — a history seeded "now" would join to nothing.
+
+`example.json` is what `Try an Example` reads to offer the example at all: a title and a
+sentence per language, and the source adapter and baseline a build of it needs.
+[`example.schema.json`](example.schema.json) is its contract and
+[`history.schema.json`](history.schema.json) the manifest's; both are checked by
+`npm run example:check` along with the records.
 
 Everything under `out/` is generated and ignored by git. Nothing in an example is real:
 invented company, invented people, invented text.

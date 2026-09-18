@@ -185,6 +185,77 @@ renders a script, so a change to the mark is one edit and one command.
 > guarantees. Proposed: the script uses a browser if it finds one and says clearly what to
 > install if it does not, and the committed PNGs stay committed.
 
+### 6. Starting from nothing: an example the reader can generate
+
+Everything above assumes the reader already has the material — a repository of chapters, a
+change log under `docs/changes/`, comment rounds under `docs/comments/`. A first-time
+reader has none of it, and the build form asks six questions about a shape nobody has
+described to them. The honest answer to "what do I put where" is not a paragraph of
+documentation; it is a working engagement they can open and read.
+
+So both hosts offer **Try an Example…**:
+
+| Host | Where |
+| ---- | ----- |
+| Visual Studio Code | `revlens: Try an Example…` in the palette |
+| The desktop window | A third button on the welcome page, beside Open Bundle and Build a Bundle |
+
+It asks which example and, when the example has more than one language, which language.
+Then it asks for a folder — an empty one, or one it may write into — and does what a
+reader would otherwise do by hand:
+
+1. writes the example's `docs/` there, so the change log and the comment rounds are on
+   disk where the reader can open them,
+2. replays the committed snapshots into a real git repository beside it, with the dates
+   the manifest gives,
+3. runs the same `runBuild` the build command runs,
+4. opens the bundle in the viewer.
+
+What the reader is left with is a directory whose shape is the answer to their question,
+and a document in front of them that was built from it. The next build is the same six
+questions over their own material, and they have now seen what each one meant.
+
+> **Judgement call — where it writes.** A temporary directory would make this one click
+> instead of two. It is rejected: the point is that the reader *finds* the material
+> afterwards and reads it, and a path under `%TEMP%` is a path nobody opens twice.
+
+**The seeding moves into a package.** `scripts/seed-example.ts` is the only implementation
+of "replay the snapshots into a repository", and make is its only caller. The editor and
+the window need the same thing, so it moves beside `runBuild` in `packages/adapters` and
+the script becomes the thin command-line wrapper it should have been — the same move §1
+makes for the build wrapper, and for the same reason.
+
+**The examples ship with the application.** They live in `examples/` and are not in the
+`.vsix` or the packaged window today. Both bundlers copy them next to the viewer they
+already copy, so `media/examples/` travels with `media/viewer/`. They are text and they
+are small.
+
+**An example says what it is.** A picker needs a title and a sentence per language, and an
+example has neither in a form anything can read — `README.md` is for people. Each example
+grows an `example.json`, with a contract in `examples/example.schema.json` beside the
+`history.schema.json` already there, and `npm run example:check` validates it with the
+rest.
+
+**Three examples, because one is not a choice.** One example teaches its own shape; three
+teach which parts are essential and which were that engagement's:
+
+| Example | What a reader takes from it |
+| ------- | --------------------------- |
+| `01-revision-round` | A full round: five instructions, four comments, three chapters — the tool doing its job |
+| `02-first-bundle` | The smallest thing that works: one chapter, one instruction, one comment. The shape with nothing else in it |
+| `03-loose-ends` | The awkward one: a comment that never joins, a commit with no instruction behind it, a chapter rewritten past recognition — so the warnings in the report mean something before the reader meets them on their own material |
+
+### The two corrections §2 needs
+
+Building from the editor already exists and two things in it are wrong:
+
+- the save dialog offers `bundle.revlens.json`. A compound extension is exactly what
+  `AGENTS.md` says never to write: Pilot matches a plain `path.extname`, so a
+  `*.revlens.json` file is one Pilot cannot open. The default is `*.revlens`.
+- the explorer context menu pre-fills the folder as the **records**. The folder a reader
+  right-clicks is the repository; that is what this issue said and what the menu's own
+  label promises.
+
 ## Acceptance Criteria
 
 - [ ] `revlens: Build a Bundle…` runs a build from Visual Studio Code and opens the written
@@ -212,5 +283,21 @@ renders a script, so a change to the mark is one edit and one command.
       name and the Pilot catalog entry are the same string
 - [ ] One drawing produces all three PNGs through a script, and the existing icon test
       still holds the viewer's copy identical to the extension's
+- [ ] `revlens: Try an Example…` writes an example into a folder the reader chose, seeds
+      the repository, builds the bundle and opens it — without the reader having any
+      material of their own
+- [ ] The desktop welcome page offers the same, as a third button
+- [ ] What is written is readable afterwards: `docs/changes/` and `docs/comments/` on
+      disk, a git repository beside them, and the bundle built from both
+- [ ] Three examples are offered, and each says what it is in the language the reader
+      picked
+- [ ] `example.json` has a contract beside `history.schema.json`, and
+      `npm run example:check` validates every example against it
+- [ ] The seeding has one implementation: `scripts/seed-example.ts` calls it rather than
+      owning it, and `make seed` still produces the repository it produced before
+- [ ] The examples travel in the `.vsix` and in the packaged window, beside the viewer
+- [ ] The build command's save dialog offers `*.revlens`, not the compound extension
+      Pilot cannot match
+- [ ] **Build Revision Bundle** on a folder pre-fills it as the repository
 - [ ] `npm run lint`, `npm run typecheck`, `npm run schema:check`, `npm test`,
       `npm run build`, `npm run package:pilot` and `npm run verify:pilot-host` all pass

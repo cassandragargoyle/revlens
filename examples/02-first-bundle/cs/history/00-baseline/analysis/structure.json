@@ -1,0 +1,19 @@
+{
+  "$schema": "../../../../../../schema/records/structure.schema.json",
+  "document": {
+    "id": "data-source-register",
+    "title": "Registr datových zdrojů",
+    "subtitle": "Meridian Logistics, analytická fáze",
+    "language": "cs",
+    "version": "1.0"
+  },
+  "chapters": [
+    {
+      "id": "ch-01",
+      "number": "1",
+      "file": "chapters/01-rozsah.md",
+      "title": "Co registr pokrývá",
+      "order": 1
+    }
+  ]
+}

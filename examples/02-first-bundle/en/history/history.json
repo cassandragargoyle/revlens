@@ -1,0 +1,20 @@
+{
+  "$schema": "../../../history.schema.json",
+  "repository": "analysis-repo",
+  "branch": "main",
+  "steps": [
+    {
+      "directory": "00-baseline",
+      "message": "baseline version 1.0 - the register as it was circulated",
+      "at": "2026-03-02T09:00:00+01:00",
+      "author": { "name": "Tomáš Beran", "email": "tomas.beran@example.invalid" },
+      "tag": "baseline"
+    },
+    {
+      "directory": "01-name-the-steward",
+      "message": "name who keeps the register and who approves an entry",
+      "at": "2026-03-09T08:40:00+01:00",
+      "author": { "name": "Tomáš Beran", "email": "tomas.beran@example.invalid" }
+    }
+  ]
+}

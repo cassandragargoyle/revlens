@@ -1,6 +1,6 @@
 {
   "name": "@revlens/viewer-page",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "private": true,
   "description": "The viewer page, prepared for a host that embeds it - a webview or a desktop window",
   "license": "MIT",

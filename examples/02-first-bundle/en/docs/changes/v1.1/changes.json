@@ -1,0 +1,20 @@
+{
+  "$schema": "../../../../../../schema/records/changes.schema.json",
+  "version": "1.1",
+  "entries": [
+    {
+      "id": "CH-001",
+      "received": "2026-03-09 08:15",
+      "author": "Tomáš Beran",
+      "summary": "Say who keeps the register and who approves an entry.",
+      "verbatim": "Comment K1-001 is right - “the project team” is nobody. Name the steward and say that she approves new entries.",
+      "changes": [
+        {
+          "target": "analysis/chapters/01-scope.md",
+          "what": "the maintaining team replaced with the named data steward, approval of new entries added",
+          "why": "answers comment K1-001"
+        }
+      ]
+    }
+  ]
+}

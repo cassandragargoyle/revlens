@@ -1,0 +1,26 @@
+{
+  "$schema": "../../../../../../schema/records/structure.schema.json",
+  "document": {
+    "id": "warehouse-consolidation-approach",
+    "title": "Sloučení skladů: navržený postup",
+    "subtitle": "Meridian Logistics, podklad pro řídicí výbor",
+    "language": "cs",
+    "version": "2.0"
+  },
+  "chapters": [
+    {
+      "id": "ch-01",
+      "number": "1",
+      "file": "chapters/01-postup.md",
+      "title": "Postup",
+      "order": 1
+    },
+    {
+      "id": "ch-02",
+      "number": "2",
+      "file": "chapters/02-rizika.md",
+      "title": "Rizika",
+      "order": 2
+    }
+  ]
+}

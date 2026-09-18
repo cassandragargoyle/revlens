@@ -1,0 +1,20 @@
+{
+  "$schema": "../../../../../../schema/records/changes.schema.json",
+  "version": "1.1",
+  "entries": [
+    {
+      "id": "CH-001",
+      "received": "2026-03-09 08:15",
+      "author": "Tomáš Beran",
+      "summary": "Napsat, kdo registr vede a kdo schvaluje záznam.",
+      "verbatim": "Připomínka K1-001 je oprávněná – „projektový tým“ není nikdo. Pojmenovat správkyni a napsat, že schvaluje nové záznamy.",
+      "changes": [
+        {
+          "target": "analysis/chapters/01-rozsah.md",
+          "what": "vedoucí tým nahrazen jmenovanou správkyní dat, doplněno schvalování nových záznamů",
+          "why": "odpovídá na připomínku K1-001"
+        }
+      ]
+    }
+  ]
+}

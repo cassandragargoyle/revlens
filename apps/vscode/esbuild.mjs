@@ -19,6 +19,8 @@ const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = join(here, '..', '..');
 const viewerSource = join(repoRoot, 'apps', 'web', 'dist');
 const viewerTarget = join(here, 'media', 'viewer');
+const examplesSource = join(repoRoot, 'examples');
+const examplesTarget = join(here, 'media', 'examples');
 const watch = process.argv.includes('--watch');
 
 async function copyViewer() {
@@ -33,6 +35,21 @@ async function copyViewer() {
   await mkdir(viewerTarget, { recursive: true });
   await cp(viewerSource, viewerTarget, { recursive: true });
   console.log(`viewer copied into ${viewerTarget}`);
+}
+
+/**
+ * The examples travel with the extension.
+ *
+ * `Try an Example` writes one into a folder the reader chose, and an installed extension
+ * has no checkout to read it from - so the material ships beside the viewer. It is text
+ * and it is small; what it saves is the reader having to find this repository before
+ * they can see what a change log looks like.
+ */
+async function copyExamples() {
+  await rm(examplesTarget, { recursive: true, force: true });
+  await mkdir(examplesTarget, { recursive: true });
+  await cp(examplesSource, examplesTarget, { recursive: true });
+  console.log(`examples copied into ${examplesTarget}`);
 }
 
 const options = {
@@ -55,6 +72,7 @@ const options = {
 };
 
 await copyViewer();
+await copyExamples();
 
 if (watch) {
   const context = await esbuild.context(options);

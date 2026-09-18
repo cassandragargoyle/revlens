@@ -1,6 +1,6 @@
 {
   "name": "@revlens/core",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "private": true,
   "description": "revlens data contract, invariant validation, indexes and navigation rules",
   "license": "MIT",

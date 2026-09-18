@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { BundleEditorProvider } from './bundle-editor.js';
 import { buildBundleCommand } from './build-command.js';
 import type { BuildLog } from './build-command.js';
+import { tryExampleCommand } from './example-command.js';
 import { describeCapabilities, detectCapabilities } from './host.js';
 
 /**
@@ -48,6 +49,12 @@ export function activate(context: vscode.ExtensionContext): void {
     // command line; this is the same build, asked for from inside the host
     vscode.commands.registerCommand('revlens.buildBundle', async (uri?: vscode.Uri) => {
       await buildBundleCommand(channel, uri);
+    }),
+    // The first build is the hard one: it asks six questions about a shape nobody has
+    // described. This writes one of each onto disk and builds it, so the shape is
+    // something the reader can open rather than something they have to imagine
+    vscode.commands.registerCommand('revlens.tryExample', async () => {
+      await tryExampleCommand(channel, context.extensionPath);
     }),
   );
 }

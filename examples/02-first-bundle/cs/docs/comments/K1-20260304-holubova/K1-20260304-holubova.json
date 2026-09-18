@@ -1,0 +1,38 @@
+{
+  "$schema": "../../../../../../schema/records/comment-round.schema.json",
+  "round": {
+    "id": "K1",
+    "author": "Klára Holubová",
+    "role": "správkyně dat; po předání za registr odpovídá",
+    "received": "2026-03-04 11:05",
+    "reviewed_version": "1.0",
+    "source": "e-mail, 4. března"
+  },
+  "comments": [
+    {
+      "id": "K1-001",
+      "scope": ["ch-01"],
+      "priority": "P1",
+      "title": "„Projektový tým“ po předání nebude existovat",
+      "source_section": "kapitola 1, poslední odstavec",
+      "verbatim": "Až projekt skončí, žádný projektový tým nebude. Někdo musí registr vlastnit jménem a musí být jasné, kdo do něj smí přidat řádek.",
+      "summary": "Registr nejmenuje vlastníka, který projekt přežije.",
+      "check": {
+        "verdict": "confirmed",
+        "note": "projektový tým se při předání rozpouští; registr ho přežívá"
+      },
+      "decision": {
+        "status": "accepted",
+        "by": "Tomáš Beran",
+        "at": "2026-03-06"
+      },
+      "resolution": {
+        "state": "done",
+        "changes": [
+          "01-rozsah.md :: pojmenována správkyně dat, doplněno schvalování nových záznamů"
+        ],
+        "at": "2026-03-09 09:10"
+      }
+    }
+  ]
+}

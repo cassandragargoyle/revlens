@@ -1,0 +1,20 @@
+{
+  "$schema": "../../../history.schema.json",
+  "repository": "analysis-repo",
+  "branch": "main",
+  "steps": [
+    {
+      "directory": "00-baseline",
+      "message": "výchozí verze 1.0 - registr tak, jak byl rozeslán",
+      "at": "2026-03-02T09:00:00+01:00",
+      "author": { "name": "Tomáš Beran", "email": "tomas.beran@example.invalid" },
+      "tag": "baseline"
+    },
+    {
+      "directory": "01-name-the-steward",
+      "message": "pojmenovat, kdo registr vede a kdo schvaluje záznam",
+      "at": "2026-03-09T08:40:00+01:00",
+      "author": { "name": "Tomáš Beran", "email": "tomas.beran@example.invalid" }
+    }
+  ]
+}

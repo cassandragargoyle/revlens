@@ -1,0 +1,62 @@
+{
+  "$schema": "../../../../../../schema/records/comment-round.schema.json",
+  "round": {
+    "id": "K1",
+    "author": "Marek Veselý",
+    "role": "ředitel provozu; etapy běží pod jeho lidmi",
+    "received": "2026-04-08 14:40",
+    "reviewed_version": "2.0",
+    "source": "zápis z řídicího výboru, 8. dubna"
+  },
+  "comments": [
+    {
+      "id": "K1-001",
+      "scope": ["ch-01"],
+      "priority": "P1",
+      "title": "Není napsáno, kdo etapu schvaluje",
+      "source_section": "kapitola 1, poslední odstavec",
+      "verbatim": "„Postup se reviduje“ – reviduje kým a kdo řekne, že další etapa může začít? V praxi jsem to já a v dokumentu by to mělo stát.",
+      "summary": "Postup nejmenuje nikoho, kdo další etapu povoluje.",
+      "check": {
+        "verdict": "confirmed",
+        "note": "ředitel provozu dává pokyn k pokračování už dnes, na revizi etapy"
+      },
+      "decision": {
+        "status": "accepted",
+        "by": "Alena Říhová",
+        "at": "2026-04-10"
+      },
+      "resolution": {
+        "state": "done",
+        "changes": [
+          "01-postup.md :: zapsáno schválení ředitelem provozu"
+        ],
+        "at": "2026-04-13 10:20"
+      }
+    },
+    {
+      "id": "K1-002",
+      "scope": ["ch-02"],
+      "priority": "P2",
+      "title": "U rizik chybí opatření",
+      "source_section": "kapitola 2, tabulka",
+      "verbatim": "Pravděpodobnost a dopad mi samy o sobě neřeknou nic. Co s každým z nich děláme?",
+      "summary": "Rizika nenesou odpověď, takže se podle tabulky nedá jednat.",
+      "check": {
+        "verdict": "confirmed"
+      },
+      "decision": {
+        "status": "accepted",
+        "by": "Alena Říhová",
+        "at": "2026-04-10"
+      },
+      "resolution": {
+        "state": "done",
+        "changes": [
+          "03-opatreni.md :: ke každému živému riziku napsána odpověď"
+        ],
+        "at": "2026-04-20 09:20"
+      }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "../example.schema.json",
+  "id": "03-loose-ends",
+  "languages": ["en", "cs"],
+  "title": {
+    "en": "The awkward round",
+    "cs": "Kolo, které nevyšlo hladce"
+  },
+  "description": {
+    "en": "What the report warns about, on purpose: a commit nobody wrote an instruction for, a comment that joins to nothing, and a chapter rewritten past recognition.",
+    "cs": "Záměrně to, na co hlásí zpráva varování: commit bez pokynu, připomínka, která se nespáruje, a kapitola přepsaná k nepoznání."
+  },
+  "build": {
+    "source": "engagement",
+    "from": "baseline"
+  }
+}

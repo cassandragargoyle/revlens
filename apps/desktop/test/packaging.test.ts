@@ -145,6 +145,33 @@ describe('the window icon', () => {
   });
 });
 
+describe('the examples a packaged window carries', () => {
+  /**
+   * `Try an Example` exists for the reader who has nothing of their own, and that reader
+   * has no checkout either. The material travels inside the application or the button is
+   * a button that fails.
+   */
+  it('are copied next to the viewer when the application is built', async () => {
+    const esbuild = await readFile(join(repoRoot, 'apps/desktop/esbuild.mjs'), 'utf8');
+
+    expect(esbuild).toContain("join(repoRoot, 'examples')");
+    expect(esbuild).toContain("join(here, 'media', 'examples')");
+    expect(esbuild).toContain('await copyExamples();');
+  });
+
+  it('are packed, because the installer takes all of media/', async () => {
+    const config = await readFile(join(repoRoot, 'apps/desktop/electron-builder.yml'), 'utf8');
+
+    expect(config).toContain('- media/**/*');
+  });
+
+  it('are looked for beside the viewer, under the application directory', async () => {
+    const main = await readFile(join(repoRoot, 'apps/desktop/src/main.ts'), 'utf8');
+
+    expect(main).toContain("join(app.getAppPath(), 'media', 'examples')");
+  });
+});
+
 describe('the installer configuration', () => {
   it('ships the two bundled files and the viewer, and nothing else', async () => {
     const config = await readFile(join(repoRoot, 'apps/desktop/electron-builder.yml'), 'utf8');

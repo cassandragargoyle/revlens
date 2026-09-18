@@ -12,3 +12,7 @@ export * from './sources/registry.js';
 export * from './build.js';
 export * from './report.js';
 export * from './run-build.js';
+export * from './examples/types.js';
+export * from './examples/catalog.js';
+export * from './examples/seed.js';
+export * from './examples/try-example.js';

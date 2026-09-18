@@ -45,29 +45,33 @@ export function sourceChoices(): string[] {
 
 /** Ask for everything a build requires; undefined means the user backed out */
 async function collectAnswers(folder: vscode.Uri | undefined): Promise<BuildAnswers | undefined> {
-    const records =
+    // The folder arrives from the explorer context menu, whose label says **Build
+    // Revision Bundle** on a directory. What a reader right-clicks there is the
+    // repository they want analysed, so that is the question it answers.
+    const repo =
         folder ??
         (
             await vscode.window.showOpenDialog({
                 canSelectFolders: true,
                 canSelectFiles: false,
                 canSelectMany: false,
-                openLabel: 'Use as records',
-                title: 'Records: the change log and the comment rounds',
+                openLabel: 'Use as repository',
+                title: 'Repository holding the chapters',
             })
         )?.[0];
-    if (records === undefined) return undefined;
+    if (repo === undefined) return undefined;
 
-    const repo = (
+    const records = (
         await vscode.window.showOpenDialog({
             canSelectFolders: true,
             canSelectFiles: false,
             canSelectMany: false,
-            openLabel: 'Use as repository',
-            title: 'Repository holding the chapters',
+            openLabel: 'Use as records',
+            title: 'Records: the change log and the comment rounds',
+            defaultUri: repo,
         })
     )?.[0];
-    if (repo === undefined) return undefined;
+    if (records === undefined) return undefined;
 
     const choices = sourceChoices();
     // One adapter is not a choice worth making; more than one is
@@ -90,10 +94,11 @@ async function collectAnswers(folder: vscode.Uri | undefined): Promise<BuildAnsw
     const out = await vscode.window.showSaveDialog({
         title: 'Write the bundle to',
         saveLabel: 'Build',
-        // The compound suffix is the one to prefer: it is what the host's own sidecars
-        // look like, and the viewer claims it
-        defaultUri: vscode.Uri.file(join(repo.fsPath, 'bundle.revlens.json')),
-        filters: { 'Revision bundle': ['json'] },
+        // The plain suffix, never the compound one. Pilot matches a bare
+        // `path.extname`, so a `*.revlens.json` file is one of the two hosts cannot
+        // open - and a bundle that only opens here is not what this extension is for
+        defaultUri: vscode.Uri.file(join(repo.fsPath, 'bundle.revlens')),
+        filters: { 'Revision bundle': ['revlens'] },
     });
     if (out === undefined) return undefined;
 

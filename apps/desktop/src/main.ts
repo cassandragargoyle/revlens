@@ -4,7 +4,7 @@ import { pathToFileURL } from 'node:url';
 import type { MenuItemConstructorOptions, WebContents } from 'electron';
 import { BrowserWindow, Menu, app, dialog, ipcMain, net, protocol, shell } from 'electron';
 import type { BuildRequest } from '@revlens/adapters';
-import { listSources, runBuild } from '@revlens/adapters';
+import { listExamples, listSources, runBuild, tryExample } from '@revlens/adapters';
 import type { FileWatch } from './open.js';
 import { bundlePathsFromArgv, isBundlePath, watchBundleFile } from './open.js';
 import type { DesktopSettings } from './settings.js';
@@ -60,6 +60,16 @@ let settings: DesktopSettings = DEFAULT_SETTINGS;
 
 function viewerRoot(): string {
   return join(app.getAppPath(), 'media', 'viewer');
+}
+
+/**
+ * The examples, copied next to the viewer by `esbuild.mjs`.
+ *
+ * A packaged window has no checkout to read them from, and the reader who most needs one
+ * is exactly the reader who has never seen this repository.
+ */
+function examplesRoot(): string {
+  return join(app.getAppPath(), 'media', 'examples');
 }
 
 function settingsFile(): string {
@@ -272,6 +282,70 @@ async function openBuildForm(): Promise<void> {
   await entry.window.loadURL(buildFormUrl());
 }
 
+/**
+ * Try an Example: a complete engagement written out, built, and opened.
+ *
+ * The build form asks six questions about a shape nobody has described to a first-time
+ * reader. This writes one of each into a folder they chose - the change log, the comment
+ * round, the repository - and builds the bundle from it, so the shape is a directory
+ * they can open afterwards rather than a paragraph they have to believe.
+ */
+async function chooseAndTryExample(): Promise<void> {
+  const root = examplesRoot();
+  const choices = await listExamples(root, app.getLocale().slice(0, 2));
+
+  if (choices.length === 0) {
+    await dialog.showMessageBox({
+      type: 'info',
+      title: 'No examples in this build',
+      message: 'This build of RevLens carries no examples.',
+      detail: `Looked in ${root}.`,
+    });
+    return;
+  }
+
+  const picked = await dialog.showMessageBox({
+    type: 'question',
+    title: 'Try an example',
+    message: 'Which example would you like to see?',
+    detail: choices
+      .map((choice) => `${choice.title} — ${choice.description}`)
+      .join('\n\n'),
+    buttons: [...choices.map((choice) => choice.title), 'Cancel'],
+    cancelId: choices.length,
+    defaultId: 0,
+  });
+  const choice = choices[picked.response];
+  if (choice === undefined) return;
+
+  const chosen = await dialog.showOpenDialog({
+    title: 'An empty folder for the example',
+    properties: ['openDirectory', 'createDirectory'],
+    buttonLabel: 'Write it here',
+  });
+  const target = chosen.filePaths[0];
+  if (chosen.canceled || target === undefined) return;
+
+  const outcome = await tryExample({
+    root,
+    id: choice.id,
+    language: choice.language,
+    target,
+  });
+
+  if (!outcome.ok) {
+    await dialog.showMessageBox({
+      type: 'error',
+      title: 'The example could not be built',
+      message: outcome.problem,
+      detail: outcome.detail.join('\n'),
+    });
+    return;
+  }
+
+  await openDocument(outcome.out);
+}
+
 async function openWelcome(): Promise<void> {
   const entry = createWindow();
   await entry.window.loadURL(welcomeUrl());
@@ -324,6 +398,12 @@ function buildMenu(): void {
           accelerator: 'CmdOrCtrl+B',
           click: (): void => {
             void openBuildForm();
+          },
+        },
+        {
+          label: 'Try an Example…',
+          click: (): void => {
+            void chooseAndTryExample();
           },
         },
         { type: 'separator' },
@@ -397,6 +477,7 @@ function buildMenu(): void {
 function registerIpc(): void {
   ipcMain.handle('revlens:open-bundle', () => chooseAndOpen());
   ipcMain.handle('revlens:build-bundle', () => openBuildForm());
+  ipcMain.handle('revlens:try-example', () => chooseAndTryExample());
   ipcMain.handle('revlens:choose-directory', async () => {
     const chosen = await dialog.showOpenDialog({ properties: ['openDirectory'] });
     return chosen.canceled ? undefined : chosen.filePaths[0];

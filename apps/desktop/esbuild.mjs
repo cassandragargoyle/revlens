@@ -24,6 +24,8 @@ const viewerSource = join(repoRoot, 'apps', 'web', 'dist');
 const viewerTarget = join(here, 'media', 'viewer');
 const iconSource = join(here, 'build', 'icon.png');
 const iconTarget = join(here, 'media', 'icon.png');
+const examplesSource = join(repoRoot, 'examples');
+const examplesTarget = join(here, 'media', 'examples');
 const watch = process.argv.includes('--watch');
 
 /**
@@ -36,6 +38,20 @@ async function copyIcon() {
   await mkdir(dirname(iconTarget), { recursive: true });
   await cp(iconSource, iconTarget);
   console.log(`icon copied into ${iconTarget}`);
+}
+
+/**
+ * The examples travel with the application, for the same reason the viewer does.
+ *
+ * `Try an Example` writes one into a folder the reader chose; a packaged window has no
+ * checkout to read it from. `electron-builder.yml` packs `media/**`, so this is all that
+ * is needed for them to arrive in an installer.
+ */
+async function copyExamples() {
+  await rm(examplesTarget, { recursive: true, force: true });
+  await mkdir(examplesTarget, { recursive: true });
+  await cp(examplesSource, examplesTarget, { recursive: true });
+  console.log(`examples copied into ${examplesTarget}`);
 }
 
 async function copyViewer() {
@@ -72,6 +88,7 @@ const options = {
 
 await copyViewer();
 await copyIcon();
+await copyExamples();
 
 if (watch) {
   const context = await esbuild.context(options);

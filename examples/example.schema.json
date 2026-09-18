@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://infinitesolution.cz/schemas/revlens-example.schema.json",
+  "title": "revlens example manifest",
+  "description": "example.json of an example: what a picker needs to offer it. Like history.schema.json this is not an engagement record - it describes the example itself, so that Try an Example can list what a build ships without a hard-coded table, and README.md can stay written for people.",
+  "type": "object",
+  "required": ["id", "languages", "title", "description", "build"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": {
+      "type": "string",
+      "description": "Directory name of the example; a picker returns it and the seeding resolves it"
+    },
+    "languages": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "pattern": "^[a-z]{2}$" },
+      "description": "ISO 639-1 codes of the variants, in the order a picker should show them. The first is the fallback when the reader's language is not among them."
+    },
+    "title": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "string" },
+      "description": "One line per language, keyed by code - what the picker's row says"
+    },
+    "description": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "string" },
+      "description": "A sentence per language, keyed by code - what this example teaches"
+    },
+    "build": {
+      "type": "object",
+      "required": ["source", "from"],
+      "description": "What building this example needs, declared rather than assumed by the caller",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "Source adapter that reads these records, see `revlens sources`"
+        },
+        "from": {
+          "type": "string",
+          "description": "Baseline revision; a tag the history carries, because a hash differs on every seeding"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

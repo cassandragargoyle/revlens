@@ -1,0 +1,17 @@
+{
+  "$schema": "../example.schema.json",
+  "id": "02-first-bundle",
+  "languages": ["en", "cs"],
+  "title": {
+    "en": "The smallest bundle that works",
+    "cs": "Nejmenší bundle, který funguje"
+  },
+  "description": {
+    "en": "One chapter, one instruction, one comment, two commits. The shape with nothing else in it - what a change log and a comment round have to contain, and no more.",
+    "cs": "Jedna kapitola, jeden pokyn, jedna připomínka, dva commity. Tvar bez čehokoli navíc - co musí obsahovat změnový list a kolo připomínek, a nic víc."
+  },
+  "build": {
+    "source": "engagement",
+    "from": "baseline"
+  }
+}

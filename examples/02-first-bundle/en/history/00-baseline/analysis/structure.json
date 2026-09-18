@@ -1,0 +1,19 @@
+{
+  "$schema": "../../../../../../schema/records/structure.schema.json",
+  "document": {
+    "id": "data-source-register",
+    "title": "Register of data sources",
+    "subtitle": "Meridian Logistics, analysis phase",
+    "language": "en",
+    "version": "1.0"
+  },
+  "chapters": [
+    {
+      "id": "ch-01",
+      "number": "1",
+      "file": "chapters/01-scope.md",
+      "title": "What the register covers",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "../example.schema.json",
+  "id": "01-revision-round",
+  "languages": ["en", "cs"],
+  "title": {
+    "en": "A review round, worked in",
+    "cs": "Kolo připomínek, zapracované"
+  },
+  "description": {
+    "en": "One review round folded into version 1.6: five instructions, four reviewer comments, three chapters. The tool doing the job it exists for.",
+    "cs": "Jedno kolo připomínek zapracované do verze 1.6: pět pokynů, čtyři připomínky, tři kapitoly. Nástroj při práci, pro kterou vznikl."
+  },
+  "build": {
+    "source": "engagement",
+    "from": "baseline"
+  }
+}

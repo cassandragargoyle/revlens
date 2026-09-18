@@ -208,12 +208,18 @@ export function renderWelcome(nonce: string = createNonce()): string {
       <div class="row">
         <button id="open" class="primary" type="button">Open Bundle&#8230;</button>
         <button id="build" type="button">Build a Bundle&#8230;</button>
+        <button id="example" type="button">Try an Example&#8230;</button>
       </div>
-      <p class="hint">A <code>.revlens</code> file can also be dropped onto this window.</p>
+      <p class="hint">
+        A <code>.revlens</code> file can also be dropped onto this window. With nothing to
+        open yet, Try an Example writes a complete engagement into a folder of your
+        choosing and builds it, so there is something to read and something to copy.
+      </p>
     `,
     script: `
       document.getElementById('open').addEventListener('click', () => revlens.openBundle());
       document.getElementById('build').addEventListener('click', () => revlens.buildBundle());
+      document.getElementById('example').addEventListener('click', () => revlens.tryExample());
     `,
   });
 }

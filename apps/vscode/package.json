@@ -2,7 +2,7 @@
   "name": "revlens",
   "displayName": "RevLens",
   "description": "Read a document with every change highlighted in place, and the revision and reviewer comment behind it",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "publisher": "CassandraGargoyle",
   "license": "MIT",
   "icon": "icon.png",
@@ -65,6 +65,11 @@
       {
         "command": "revlens.buildBundle",
         "title": "New Revision Bundle...",
+        "category": "revlens"
+      },
+      {
+        "command": "revlens.tryExample",
+        "title": "Try an Example...",
         "category": "revlens"
       }
     ],

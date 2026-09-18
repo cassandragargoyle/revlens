@@ -13,9 +13,10 @@ import { Ajv2020 } from 'ajv/dist/2020.js';
  * is what keeps them honest: an example that stops matching them is a real mismatch,
  * either in the records or in the contract.
  *
- * `history.schema.json` is the one contract that is not the tool's: it describes an
- * example's own manifest, which only `seed-example.ts` reads, so it lives with the
- * examples rather than with the schema the adapters answer to.
+ * `history.schema.json` and `example.schema.json` are the two contracts that are not the
+ * tool's: they describe an example's own manifests - how to replay it, and what a picker
+ * should say about it - so they live with the examples rather than with the schema the
+ * adapters answer to.
  */
 
 const root = fileURLToPath(new URL('..', import.meta.url));
@@ -23,8 +24,10 @@ const examples = join(root, 'examples');
 const contracts = join(root, 'schema', 'records');
 
 /** Where a contract lives; everything but the examples' own manifest is the tool's. */
+const OWN_CONTRACTS = new Set(['history.schema.json', 'example.schema.json']);
+
 function contract(name: string): string {
-  return name === 'history.schema.json' ? join(examples, name) : join(contracts, name);
+  return OWN_CONTRACTS.has(name) ? join(examples, name) : join(contracts, name);
 }
 
 interface Case {
@@ -81,6 +84,16 @@ async function main(): Promise<void> {
 /** Every record file of every example, paired with the contract it has to satisfy. */
 async function collect(): Promise<Case[]> {
   const cases: Case[] = [];
+
+  // The manifest sits at the example's root rather than inside a language variant: it is
+  // what `Try an Example` reads to offer the example at all, in every language it has.
+  for (const example of await readdir(examples, { withFileTypes: true })) {
+    if (!example.isDirectory()) continue;
+    const manifest = join(examples, example.name, 'example.json');
+    if (await readFile(manifest, 'utf8').then(() => true, () => false)) {
+      cases.push({ file: manifest, schema: 'example.schema.json' });
+    }
+  }
 
   for (const variant of await variants()) {
     for (const file of await walk(variant)) {
