@@ -53,7 +53,11 @@ export interface Catalog {
 
 const CATALOG_VERSION = 1;
 const PLUGIN_ID = /^[a-z0-9][a-z0-9-]*\.[a-z0-9][a-z0-9-]*$/;
-const FILE_TYPE = /^[a-z0-9][a-z0-9-]*$/;
+// A file type is a suffix Pilot matches against a file name: a plain extension
+// ("revlens") or a compound one ("revlens.json"), like Pilot's own .graph.json and
+// .glens.json sidecars. Pilot matches the longest suffix, so a compound type claims
+// its own bundles without claiming every plain .json (portunix-vscode issue 120)
+const FILE_TYPE = /^[a-z0-9][a-z0-9-]*(\.[a-z0-9][a-z0-9-]*)*$/;
 const SHA256 = /^[0-9a-f]{64}$/;
 const VERDICTS: readonly CompatVerdict[] = ['supported', 'partial', 'unsupported'];
 
@@ -112,8 +116,8 @@ export function parsePluginSeed(value: unknown): PluginSeed {
   for (const fileType of fileTypes) {
     if (!FILE_TYPE.test(fileType)) {
       throw new Error(
-        `fileTypes must be lower-case extensions without a dot and without a compound` +
-          ` suffix, got "${fileType}"`,
+        `fileTypes must be lower-case extensions, plain ("revlens") or compound` +
+          ` ("revlens.json"), got "${fileType}"`,
       );
     }
     if (fileType === 'json') {

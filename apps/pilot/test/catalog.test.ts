@@ -21,14 +21,18 @@ describe('parsePluginSeed', () => {
     const seed = parsePluginSeed(await shippedSeed());
 
     expect(seed.id).toBe('cassandragargoyle.revlens');
-    expect(seed.fileTypes).toEqual(['revlens']);
+    expect(seed.fileTypes).toEqual(['revlens', 'revlens.json']);
     expect(seed.compat.verdict).toBe('supported');
   });
 
-  it('refuses a compound suffix, which Pilot would never match', () => {
-    expect(() => parsePluginSeed({ ...baseSeed(), fileTypes: ['revlens.json'] })).toThrow(
-      /compound/,
-    );
+  it('accepts a compound suffix, which Pilot matches as the longest one', () => {
+    const seed = parsePluginSeed({ ...baseSeed(), fileTypes: ['revlens', 'revlens.json'] });
+    expect(seed.fileTypes).toEqual(['revlens', 'revlens.json']);
+  });
+
+  it('refuses a malformed suffix', () => {
+    expect(() => parsePluginSeed({ ...baseSeed(), fileTypes: ['.revlens'] })).toThrow(/fileTypes/);
+    expect(() => parsePluginSeed({ ...baseSeed(), fileTypes: ['revlens..json'] })).toThrow(/fileTypes/);
   });
 
   it('refuses to claim every JSON file in the application', () => {
@@ -63,7 +67,7 @@ describe('buildCatalogEntry', () => {
       version: '0.1.0',
       file: 'cassandragargoyle.revlens-0.1.0.vsix',
       sha256,
-      fileTypes: ['revlens'],
+      fileTypes: ['revlens', 'revlens.json'],
     });
   });
 

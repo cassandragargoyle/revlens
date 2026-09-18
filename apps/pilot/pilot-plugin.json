@@ -1,8 +1,8 @@
 {
   "_comment": "Curated metadata for the Pilot viewer-plugin catalog. The version, the file name and the sha256 are facts about the built .vsix and are filled in by `npm run package:pilot`; everything here is an assertion we make about the plugin and have to keep true.",
   "id": "cassandragargoyle.revlens",
-  "displayName": "revlens revision viewer",
-  "fileTypes": ["revlens"],
+  "displayName": "RevLens",
+  "fileTypes": ["revlens", "revlens.json"],
   "compat": {
     "verdict": "supported",
     "availableFeatures": ["customEditor", "webview", "configuration", "fileSystemWatcher"],

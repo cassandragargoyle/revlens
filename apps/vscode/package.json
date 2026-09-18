@@ -1,8 +1,8 @@
 {
   "name": "revlens",
-  "displayName": "revlens",
+  "displayName": "RevLens",
   "description": "Read a document with every change highlighted in place, and the revision and reviewer comment behind it",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "publisher": "CassandraGargoyle",
   "license": "MIT",
   "icon": "icon.png",
@@ -33,7 +33,7 @@
     "customEditors": [
       {
         "viewType": "revlens.bundle",
-        "displayName": "revlens revision viewer",
+        "displayName": "RevLens revision viewer",
         "selector": [
           {
             "filenamePattern": "*.revlens"
