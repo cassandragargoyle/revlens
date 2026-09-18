@@ -5,8 +5,9 @@
 # file only adds the one thing they do not cover - turning an example's committed
 # snapshots into a real git history and driving the CLI over it.
 #
-# Needs GNU make, Node 26.9+ (`.nvmrc`) and git on the PATH. On Windows, run it from Git Bash
-# (`make demo`) or install make with `choco install make`.
+# Needs GNU make, Node 26.9+ (`.nvmrc`) and git on the PATH. No recipe here needs a POSIX
+# shell - every one of them is an `npm run` or a `node` - so on Windows it runs from
+# PowerShell and cmd.exe as well as from Git Bash. Install make with `choco install make`.
 #
 # Override any of these on the command line:
 #   make demo LANGUAGE=cs PORT=5000
@@ -37,16 +38,7 @@ REVLENS = $(NPM) revlens --
 .PHONY: help install build seed bundle validate contracts report static serve demo debug desktop package-desktop check clean
 
 help: ## Show this help
-	@echo "revlens - build the tool and run it against an example"
-	@echo ""
-	@echo "Targets:"
-	@grep -E '^[a-z-]+:.*?## ' $(MAKEFILE_LIST) | sed -e 's/:.*## /|/' | awk -F'|' '{printf "  %-16s %s\n", $$1, $$2}'
-	@echo ""
-	@echo "Settings:"
-	@echo "  EXAMPLE  = $(EXAMPLE)"
-	@echo "  LANGUAGE = $(LANGUAGE)   (the example is written in en and cs)"
-	@echo "  OUT      = $(OUT)"
-	@echo "  PORT     = $(PORT)"
+	@node scripts/make-help.mjs --example $(EXAMPLE) --language $(LANGUAGE) --out $(OUT) --port $(PORT)
 
 install: ## Install the workspace dependencies
 	npm install
@@ -60,7 +52,7 @@ build: node_modules ## Compile everything - TypeScript, the schema, the viewer, 
 	npm run build
 
 seed: node_modules ## Replay the example's snapshots into a real git repository under out/
-	@echo "seeding $(REPO) from $(RECORDS)"
+	@echo seeding $(REPO) from $(RECORDS)
 	@$(NPM) example:seed -- --example $(EXAMPLE) --language $(LANGUAGE) --out $(REPO)
 
 bundle: seed ## Build the bundle from the seeded repository and the example's records
@@ -80,7 +72,7 @@ contracts: node_modules ## Check the examples' records against schema/records
 	@$(NPM) example:check
 
 report: ## Print the build report of the last build
-	@cat $(REPORT)
+	@node -e "process.stdout.write(require('node:fs').readFileSync(process.argv[1],'utf8'))" $(REPORT)
 
 static: build bundle ## Write a self-contained copy of the viewer that needs no server
 	@$(REVLENS) build \
@@ -90,7 +82,7 @@ static: build bundle ## Write a self-contained copy of the viewer that needs no 
 		--from baseline \
 		--out $(BUNDLE) \
 		--static $(STATIC)
-	@echo "open $(STATIC)/index.html"
+	@echo open $(STATIC)/index.html
 
 serve: ## Serve the built bundle and the viewer on the loopback interface
 	@$(REVLENS) serve $(BUNDLE) --host $(HOST) --port $(PORT)
@@ -125,6 +117,8 @@ check: node_modules ## What has to pass before anything is reported as done
 	npm run schema:check
 	npm test
 
+# `rimraf` rather than `rm -rf`: it is already a devDependency, and it is the same tool
+# `npm run clean` uses on the workspace build, so the removal stays written once.
 clean: ## Remove what the example produced; the workspace build is left alone
-	@echo "removing $(OUT)"
-	@rm -rf $(OUT)
+	@echo removing $(OUT)
+	@npx rimraf $(OUT)
