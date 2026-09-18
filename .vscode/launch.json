@@ -1,9 +1,15 @@
 {
-  // Debugging the editor extension. The first configuration is `make demo` for the
-  // editor: it builds everything, turns the example into a bundle, and opens an
-  // Extension Development Host on it with the debugger attached.
+  // Debugging what revlens is made of. There are four targets of the same viewer, and
+  // each one is started here the way the Makefile starts it, so the two cannot drift:
   //
-  // Breakpoints land in apps/vscode/src - esbuild writes a source map beside the bundle.
+  //   Extension   an Extension Development Host over out/example/example.revlens
+  //   Desktop     the Electron shell over the same file - `make desktop`
+  //   CLI         `revlens <arguments>` from source through tsx - `npm run revlens`
+  //   Server      `revlens serve`, the read-only API the viewer talks to
+  //   Viewer      the web application with hot reload, in Chrome - `npm run dev`
+  //
+  // Breakpoints land in the sources: esbuild writes a source map beside every bundle,
+  // `tsc` writes one beside every `dist/`, and tsx carries one inline.
   "version": "0.2.0",
   "configurations": [
     {
@@ -46,6 +52,133 @@
       ],
       "outFiles": ["${workspaceFolder}/apps/vscode/dist/**/*.js"],
       "sourceMaps": true
+    },
+    {
+      // `make desktop` with the debugger attached. Electron is run out of the workspace
+      // rather than off the PATH, and `.` is the application directory, so the argument
+      // after it is the one `bundlePathsFromArgv` keeps.
+      //
+      // This is the main process. The renderer is the viewer, and it has its own window:
+      // View -> Toggle Developer Tools, or the "Viewer" configuration below for React
+      // code with source maps.
+      "name": "Desktop: the example bundle",
+      "type": "node",
+      "request": "launch",
+      "preLaunchTask": "revlens: build the example bundle",
+      "cwd": "${workspaceFolder}/apps/desktop",
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+      "windows": {
+        "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
+      },
+      "args": [".", "${workspaceFolder}/out/example/example.revlens"],
+      "outFiles": ["${workspaceFolder}/apps/desktop/dist/**/*.cjs"],
+      "sourceMaps": true,
+      "console": "integratedTerminal"
+    },
+    {
+      // The same window without the build in front of it: what to use after an edit that
+      // `revlens: watch the desktop application` has already rebuilt.
+      "name": "Desktop: as it stands, no rebuild",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/apps/desktop",
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+      "windows": {
+        "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
+      },
+      "args": [".", "${workspaceFolder}/out/example/example.revlens"],
+      "outFiles": ["${workspaceFolder}/apps/desktop/dist/**/*.cjs"],
+      "sourceMaps": true,
+      "console": "integratedTerminal"
+    },
+    {
+      // An empty window, for File -> Open and for the build form.
+      "name": "Desktop: empty window",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/apps/desktop",
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+      "windows": {
+        "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
+      },
+      "args": ["."],
+      "outFiles": ["${workspaceFolder}/apps/desktop/dist/**/*.cjs"],
+      "sourceMaps": true,
+      "console": "integratedTerminal"
+    },
+    {
+      // `npm run revlens -- <arguments>`, which is the CLI from source: tsx transpiles
+      // on the way in and carries the source map inline, so breakpoints land in
+      // apps/cli/src and in packages/*/src as compiled by `npm run build:ts`.
+      //
+      // The arguments are typed when the configuration starts. VS Code 1.78 and newer
+      // splits them the way a shell would; on an older one, edit `args` into a list.
+      "name": "CLI: revlens <arguments>",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "program": "${workspaceFolder}/apps/cli/src/cli.ts",
+      "runtimeArgs": ["--import", "tsx"],
+      "args": "${input:revlensArguments}",
+      "console": "integratedTerminal",
+      "sourceMaps": true,
+      "skipFiles": ["<node_internals>/**", "**/node_modules/tsx/**"]
+    },
+    {
+      // The read-only API and the static hosting, over the example bundle. `serve` is a
+      // command of the same CLI, so this is the configuration above with its arguments
+      // already filled in - and it is what the viewer's `/api` proxy expects on 4173.
+      //
+      // `@revlens/server` resolves through its package exports to apps/server/dist, so
+      // breakpoints in apps/server/src need `npm run build:ts` - which the pre-launch
+      // task runs.
+      "name": "Server: serve the example bundle",
+      "type": "node",
+      "request": "launch",
+      "preLaunchTask": "revlens: build the example bundle",
+      "cwd": "${workspaceFolder}",
+      "program": "${workspaceFolder}/apps/cli/src/cli.ts",
+      "runtimeArgs": ["--import", "tsx"],
+      "args": [
+        "serve",
+        "${workspaceFolder}/out/example/example.revlens",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "4173"
+      ],
+      "console": "integratedTerminal",
+      "sourceMaps": true,
+      "skipFiles": ["<node_internals>/**", "**/node_modules/tsx/**"]
+    },
+    {
+      // The viewer with hot reload, in Chrome. Vite serves apps/web on 5173 and proxies
+      // `/api` to 4173, so this one wants a `serve` behind it - the compound below
+      // starts both.
+      "name": "Viewer: the web application",
+      "type": "chrome",
+      "request": "launch",
+      "preLaunchTask": "revlens: the viewer with hot reload",
+      "url": "http://127.0.0.1:5173/",
+      "webRoot": "${workspaceFolder}/apps/web",
+      "sourceMaps": true
+    }
+  ],
+  "compounds": [
+    {
+      // What `make demo` shows, with both halves under the debugger: the API on 4173 and
+      // the viewer on 5173, which is what the proxy in apps/web/vite.config.ts assumes.
+      "name": "Viewer with the API behind it",
+      "configurations": ["Server: serve the example bundle", "Viewer: the web application"],
+      "stopAll": true
+    }
+  ],
+  "inputs": [
+    {
+      "id": "revlensArguments",
+      "type": "promptString",
+      "description": "revlens arguments, e.g. `validate out/example/example.revlens`",
+      "default": "sources"
     }
   ]
 }

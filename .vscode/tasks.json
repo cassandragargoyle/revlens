@@ -1,6 +1,6 @@
 {
-  // The build step behind F5. It is the same script `make debug` runs, so the two
-  // cannot drift apart.
+  // The build steps behind F5. Each one is an npm script this repository already has, so
+  // a configuration in launch.json and the Makefile cannot drift apart.
   "version": "2.0.0",
   "tasks": [
     {
@@ -19,6 +19,34 @@
       "command": "npm run watch:vscode",
       "isBackground": true,
       "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
+      // The same for the desktop application. It copies the built viewer first, so
+      // `npm run build:web` has to have run at least once.
+      "label": "revlens: watch the desktop application",
+      "type": "shell",
+      "command": "npm run build:desktop -- --watch",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
+      // Vite, for the "Viewer" configuration. The debugger waits for the line Vite
+      // prints when the server is up, rather than for the task to end - it never does.
+      "label": "revlens: the viewer with hot reload",
+      "type": "shell",
+      "command": "npm run dev",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": { "regexp": "^$" },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "VITE",
+          "endsPattern": "ready in"
+        }
+      },
       "presentation": { "reveal": "always", "panel": "dedicated" }
     },
     {
