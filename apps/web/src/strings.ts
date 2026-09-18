@@ -94,6 +94,7 @@ export const cs = {
     generated: 'Sestaveno',
     generator: 'Čím',
     unknownGenerator: 'neuvedeno',
+    tool: 'Verze nástroje',
     totals: 'Rozsah',
     totalsValue: (chapters: number, blocks: number): string =>
       `${chapters} kapitol, ${blocks} bloků`,

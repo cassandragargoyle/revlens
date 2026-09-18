@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
@@ -6,7 +7,16 @@ const resolve = (relative: string): string =>
 
 // Tests run against the sources, not against the build output, so `npm test` needs no
 // prior `npm run build`. Production resolution goes through the package exports.
+// The same substitution `apps/web/vite.config.ts` makes, so a test reads the version the
+// reader will see rather than the fallback.
+const { version } = JSON.parse(
+  readFileSync(new URL('./package.json', import.meta.url), 'utf8'),
+) as { version: string };
+
 export default defineConfig({
+  define: {
+    __REVLENS_VERSION__: JSON.stringify(version),
+  },
   resolve: {
     alias: {
       '@revlens/core': resolve('./packages/core/src/index.ts'),

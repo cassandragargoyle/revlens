@@ -3,6 +3,7 @@ import type { BundleIndex } from '@revlens/core';
 import { computeStats, distinctGateValues } from '@revlens/core';
 import cover from '../assets/revlens-cover.png';
 import { cs } from '../strings.js';
+import { VERSION } from '../version.js';
 import { formatDateTime } from './Sidebar.js';
 
 /**
@@ -148,6 +149,13 @@ export function About({ index, onClose }: AboutProps): ReactElement {
             <dt>{cs.about.generator}</dt>
             <dd>
               <code>{bundle.document.generator ?? cs.about.unknownGenerator}</code>
+            </dd>
+
+            {/* What wrote the file and what is showing it are two facts, and a reader
+                reporting a problem needs the second one as much as the first. */}
+            <dt>{cs.about.tool}</dt>
+            <dd>
+              <code>RevLens {VERSION}</code>
             </dd>
 
             <dt>{cs.about.totals}</dt>
