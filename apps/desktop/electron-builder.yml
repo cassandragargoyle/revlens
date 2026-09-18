@@ -8,7 +8,7 @@
 # supported: macOS, which is unsigned - see ADR-007.
 
 appId: com.cassandragargoyle.revlens
-productName: revlens
+productName: RevLens
 copyright: Copyright (c) CassandraGargoyle
 
 # The npm package is `@revlens/desktop`, which is not a file name anything will accept.
@@ -30,8 +30,8 @@ npmRebuild: false
 
 fileAssociations:
   - ext: revlens
-    name: revlens revision bundle
-    description: A document with its revisions, built by revlens
+    name: RevLens revision bundle
+    description: A document with its revisions, built by RevLens
     mimeType: application/x-revlens-bundle
     role: Viewer
 

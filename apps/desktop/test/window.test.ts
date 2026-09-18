@@ -210,6 +210,8 @@ describe('the shell’s own pages', () => {
 
     expect(page).toContain('Open Bundle');
     expect(page).toContain('Build a Bundle');
+    // The product is RevLens to a reader; `revlens` is the command and the extension.
+    expect(page).toContain('<h1>RevLens</h1>');
     expect(page).toContain("default-src 'none'");
     expect(page).toContain('<script nonce="n0nce">');
   });

@@ -6,7 +6,7 @@
  * module is the seam between the two.
  */
 export const cs = {
-  appTitle: 'revlens',
+  appTitle: 'RevLens',
 
   mode: {
     label: 'Zobrazení',

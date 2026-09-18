@@ -102,15 +102,29 @@ describe('how the renderer is opened', () => {
 
 describe('the window icon', () => {
   /**
-   * On Linux this is the whole of it. Electron sets `_NET_WM_ICON` from the window's
-   * `icon` option and from nothing else; without it the window manager matches
-   * `WM_CLASS` against an installed `.desktop` entry, which a checkout does not have.
+   * Linux and Windows both need it, and for different reasons. Electron sets
+   * `_NET_WM_ICON` from the window's `icon` option and from nothing else; on Windows the
+   * icon comes from the executable, which is `electron.exe` in a checkout. Only macOS
+   * finds one on its own, in the bundle.
    */
-  it('is given to the window where nothing else provides one', async () => {
+  it('is given to the window wherever nothing else provides one', async () => {
     const main = await readFile(join(repoRoot, 'apps/desktop/src/main.ts'), 'utf8');
 
-    expect(main).toContain("process.platform !== 'linux'");
+    expect(main).toContain("process.platform === 'darwin'");
     expect(main).toContain("join(app.getAppPath(), 'media', 'icon.png')");
+  });
+
+  /**
+   * The window icon alone leaves the Windows task bar showing the executable's, because
+   * the button is grouped by the application model id rather than by the window.
+   */
+  it('names the application to Windows, under the id the installer uses', async () => {
+    const main = await readFile(join(repoRoot, 'apps/desktop/src/main.ts'), 'utf8');
+    const config = await readFile(join(repoRoot, 'apps/desktop/electron-builder.yml'), 'utf8');
+
+    expect(main).toContain('app.setAppUserModelId(APP_USER_MODEL_ID)');
+    expect(main).toContain("const APP_USER_MODEL_ID = 'com.cassandragargoyle.revlens'");
+    expect(config).toContain('appId: com.cassandragargoyle.revlens');
   });
 
   it('travels into the packed application, because `build/` does not', async () => {
@@ -138,6 +152,19 @@ describe('the installer configuration', () => {
     expect(config).toContain('- dist/**/*');
     expect(config).toContain('- media/**/*');
     expect(config).toContain('npmRebuild: false');
+  });
+
+  /**
+   * The product is written RevLens wherever a reader sees it, the way the extension and
+   * the Pilot plugin already spell it. The binary, the window class and the desktop
+   * entry stay `revlens`: those are file names, and a capital in one of them is a
+   * different path on a case-sensitive file system.
+   */
+  it('is called RevLens, and installs a binary called revlens', async () => {
+    const config = await readFile(join(repoRoot, 'apps/desktop/electron-builder.yml'), 'utf8');
+
+    expect(config).toContain('productName: RevLens');
+    expect(config).toContain('executableName: revlens');
   });
 
   it('claims the plain extension, which is the one both hosts agree on', async () => {

@@ -9,7 +9,7 @@ const BUILT_INDEX = `<!doctype html>
 <html lang="cs">
   <head>
     <meta charset="utf-8" />
-    <title>revlens</title>
+    <title>RevLens</title>
     <script type="module" crossorigin src="./assets/index-Cm10NnmD.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-DF2RtE_r.css">
   </head>

@@ -67,16 +67,21 @@ function settingsFile(): string {
 }
 
 /**
- * The window icon, which on Linux is the only chance the window has of having one.
+ * The window icon, for the two platforms that will not find one on their own.
  *
- * Windows takes it from the executable and macOS from the bundle, both of which the
- * packager fills in. X11 has neither: without `_NET_WM_ICON` the window manager falls
+ * macOS reads the bundle and needs nothing here. The other two do:
+ *
+ * X11 has no icon in the window itself - without `_NET_WM_ICON` the window manager falls
  * back to matching `WM_CLASS` against an installed `.desktop` entry, and a bundle opened
- * from a checkout - or an AppImage nobody integrated into a menu - has none, so the task
- * bar shows whatever it uses for an application it does not recognise.
+ * from a checkout, or an AppImage nobody integrated into a menu, has none.
+ *
+ * Windows takes it from the executable, which is the right icon only once the packager
+ * has written one into it. Run from a checkout the executable is `electron.exe`, so the
+ * window carries Electron's own mark instead of ours - which is what a developer and
+ * every reviewer of a screenshot sees.
  */
 function windowIcon(): string | undefined {
-  if (process.platform !== 'linux') return undefined;
+  if (process.platform === 'darwin') return undefined;
   const icon = join(app.getAppPath(), 'media', 'icon.png');
   return existsSync(icon) ? icon : undefined;
 }
@@ -122,7 +127,7 @@ async function handleViewerRequest(request: Request): Promise<Response> {
         console.warn(`${basename(entry.fsPath)}: ${warning}`);
       }
       if (!entry.window.isDestroyed()) {
-        entry.window.setTitle(`${rendered.title} — revlens`);
+        entry.window.setTitle(`${rendered.title} — RevLens`);
       }
       return html(rendered.html);
     }
@@ -139,7 +144,7 @@ function createWindow(): DocumentWindow {
     height: 860,
     minWidth: 720,
     minHeight: 480,
-    title: 'revlens',
+    title: 'RevLens',
     backgroundColor: '#f2f1ee',
     show: false,
     ...(icon === undefined ? {} : { icon }),
@@ -211,7 +216,7 @@ export async function openDocument(candidate: string): Promise<void> {
       type: 'info',
       title: 'Not a revision bundle',
       message: `${basename(fsPath)} is not a revision bundle.`,
-      detail: 'revlens opens files written by `revlens build`, named *.revlens.',
+      detail: 'RevLens opens files written by `revlens build`, named *.revlens.',
     });
     return;
   }
@@ -245,7 +250,7 @@ async function chooseAndOpen(): Promise<void> {
     title: 'Open a revision bundle',
     properties: ['openFile'],
     filters: [
-      { name: 'revlens bundle', extensions: ['revlens', 'revlens.json'] },
+      { name: 'RevLens bundle', extensions: ['revlens', 'revlens.json'] },
       { name: 'All files', extensions: ['*'] },
     ],
   });
@@ -263,7 +268,7 @@ async function openBuildForm(): Promise<void> {
   }
 
   const entry = createWindow();
-  entry.window.setTitle('Build a Bundle — revlens');
+  entry.window.setTitle('Build a Bundle — RevLens');
   await entry.window.loadURL(buildFormUrl());
 }
 
@@ -364,12 +369,12 @@ function buildMenu(): void {
       label: 'Help',
       submenu: [
         {
-          label: 'About revlens',
+          label: 'About RevLens',
           click: (): void => {
             dialog.showMessageBox({
               type: 'info',
-              title: 'About revlens',
-              message: `revlens ${app.getVersion()}`,
+              title: 'About RevLens',
+              message: `RevLens ${app.getVersion()}`,
               detail:
                 'A document revision viewer: the final text with every change highlighted in place, and the revision and the reviewer comment behind each one.',
             });
@@ -400,7 +405,7 @@ function registerIpc(): void {
     const chosen = await dialog.showSaveDialog({
       title: 'Write the bundle to',
       defaultPath: 'bundle.revlens',
-      filters: [{ name: 'revlens bundle', extensions: ['revlens'] }],
+      filters: [{ name: 'RevLens bundle', extensions: ['revlens'] }],
     });
     return chosen.canceled ? undefined : chosen.filePath;
   });
@@ -447,7 +452,18 @@ function claimSingleInstance(): boolean {
   return true;
 }
 
+/**
+ * Who Windows thinks is running.
+ *
+ * Without it the task bar groups the window under whichever executable started it, and
+ * from a checkout that is `electron.exe` - the window gets our icon from `windowIcon`
+ * and the task bar button keeps Electron's. The string is `appId` in
+ * `electron-builder.yml`, and a test holds the two together.
+ */
+const APP_USER_MODEL_ID = 'com.cassandragargoyle.revlens';
+
 function start(): void {
+  if (process.platform === 'win32') app.setAppUserModelId(APP_USER_MODEL_ID);
   if (!claimSingleInstance()) return;
 
   // macOS opens documents through an event, and it can fire before the application is

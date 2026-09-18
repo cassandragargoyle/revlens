@@ -197,10 +197,10 @@ export async function renderDocument(request: DocumentRequest): Promise<Rendered
 /** What an empty window says, so that starting the application is never a blank page. */
 export function renderWelcome(nonce: string = createNonce()): string {
   return chromePage({
-    title: 'revlens',
+    title: 'RevLens',
     nonce,
     body: `
-      <h1>revlens</h1>
+      <h1>RevLens</h1>
       <p class="lead">
         Read a document with every change highlighted in place, and the revision and the
         reviewer comment behind each one.
@@ -247,7 +247,7 @@ export function renderBuildForm(options: BuildFormOptions): string {
     body: `
       <h1>Build a bundle</h1>
       <p class="lead">
-        revlens walks the repository from the baseline to the head revision and joins every
+        RevLens walks the repository from the baseline to the head revision and joins every
         commit to the record that explains it.
       </p>
 
@@ -374,6 +374,12 @@ interface ChromePage {
  *
  * They follow the operating system's light and dark setting rather than carrying a theme
  * of their own, because they are chrome around a document and not part of it.
+ *
+ * `--accent` is the blue of the application icon, at the two depths the text on it needs:
+ * the icon reads `#387df3`, which carries only 3.6:1 under the light text of a filled
+ * button, so the light theme darkens it and the dark theme lightens it. The hue is the
+ * icon's in both - 217 degrees - so the button and the mark in the task bar are the same
+ * colour to a reader who sees them side by side.
  */
 function chromePage(page: ChromePage): string {
   return `<!doctype html>
@@ -383,9 +389,9 @@ function chromePage(page: ChromePage): string {
     <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-${page.nonce}'; form-action 'none'">
     <title>${escapeHtml(page.title)}</title>
     <style>
-      :root { color-scheme: light dark; --ink: #1c1c1a; --soft: #55534e; --line: #c9c6c0; --paper: #f7f6f3; --field: #ffffff; --accent: #1f5f4e; }
+      :root { color-scheme: light dark; --ink: #1c1c1a; --soft: #55534e; --line: #c9c6c0; --paper: #f7f6f3; --field: #ffffff; --accent: #2565d8; }
       @media (prefers-color-scheme: dark) {
-        :root { --ink: #e8e6e1; --soft: #a8a49c; --line: #43413d; --paper: #1d1c1a; --field: #26251f; --accent: #6fbfa6; }
+        :root { --ink: #e8e6e1; --soft: #a8a49c; --line: #43413d; --paper: #1d1c1a; --field: #26251f; --accent: #8ab4f8; }
       }
       * { box-sizing: border-box; }
       body { margin: 0; padding: 2rem 2.5rem 2.5rem; font-family: system-ui, sans-serif; background: var(--paper); color: var(--ink); line-height: 1.5; }
