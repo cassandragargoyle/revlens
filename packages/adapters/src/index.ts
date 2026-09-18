@@ -11,3 +11,4 @@ export * from './sources/engagement.js';
 export * from './sources/registry.js';
 export * from './build.js';
 export * from './report.js';
+export * from './run-build.js';

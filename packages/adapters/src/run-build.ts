@@ -2,22 +2,24 @@ import { execFile } from 'node:child_process';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { promisify } from 'node:util';
-import type { BuildReport, BuildResult } from '@revlens/adapters';
-import {
-  buildBundle,
-  findSourceAdapter,
-  formatReport,
-  listSourceAdapters,
-} from '@revlens/adapters';
 import { formatIssue, serializeBundle, validateBundle } from '@revlens/core';
+import type { BuildReport, BuildResult } from './build.js';
+import { buildBundle } from './build.js';
+import { findSourceAdapter, listSourceAdapters } from './sources/registry.js';
+import { formatReport } from './report.js';
 
 /**
- * Building a bundle from the window, by running what `revlens build` runs
+ * Building a bundle from a host, by running what `revlens build` runs
  *
- * The adapter is imported, not shelled out to. A packaged application cannot assume a
- * checkout, an npm and a `tsx` on the machine, and `packages/adapters` is an ordinary
- * Node module in an ordinary Node process - so the desktop takes the same code path the
- * command line does, and `serializeBundle` gives both of them the same bytes.
+ * The adapter is imported, not shelled out to. A packaged host cannot assume a checkout,
+ * an npm and a `tsx` on the machine, and this is an ordinary Node module in an ordinary
+ * Node process - so every host takes the same code path the command line does, and
+ * `serializeBundle` gives all of them the same bytes.
+ *
+ * It lives here rather than in one host because it has three callers: the desktop window,
+ * the editor extension (portunix-vscode #121) and, through them, anything else that grows
+ * a build button. The rule is the one `packages/viewer-page` already follows - a thing two
+ * hosts need is written once, in a package, not copied into each of them.
  *
  * What it cannot import is git. That stays a program on the PATH, and its absence is a
  * message naming what is missing and where to get it, not a stack trace.
@@ -25,7 +27,7 @@ import { formatIssue, serializeBundle, validateBundle } from '@revlens/core';
 
 const run = promisify(execFile);
 
-export interface DesktopBuildRequest {
+export interface BuildRequest {
   readonly source: string;
   readonly repo: string;
   readonly from: string;
@@ -51,7 +53,7 @@ export interface BuildFailed {
   readonly detail: readonly string[];
 }
 
-export type DesktopBuildOutcome = BuildSucceeded | BuildFailed;
+export type BuildOutcome = BuildSucceeded | BuildFailed;
 
 /** How many invariant failures are worth showing before the list stops being read. */
 const MAX_REPORTED_ISSUES = 25;
@@ -93,7 +95,7 @@ export function missingGitMessage(): BuildFailed {
   };
 }
 
-export async function runBuild(request: DesktopBuildRequest): Promise<DesktopBuildOutcome> {
+export async function runBuild(request: BuildRequest): Promise<BuildOutcome> {
   const adapter = findSourceAdapter(request.source);
   if (adapter === undefined) {
     const known = listSources().map((entry) => entry.name).join(', ');

@@ -26,7 +26,8 @@
     "markdown"
   ],
   "activationEvents": [
-    "onCustomEditor:revlens.bundle"
+    "onCustomEditor:revlens.bundle",
+    "onCommand:revlens.buildBundle"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -60,6 +61,11 @@
         "command": "revlens.reloadBundle",
         "title": "Reload Open Bundles",
         "category": "revlens"
+      },
+      {
+        "command": "revlens.buildBundle",
+        "title": "New Revision Bundle...",
+        "category": "revlens"
       }
     ],
     "menus": {
@@ -72,6 +78,11 @@
         {
           "command": "revlens.showBundleSource",
           "when": "resourceFilename =~ /\\.revlens(\\.json)?$/",
+          "group": "navigation"
+        },
+        {
+          "command": "revlens.buildBundle",
+          "when": "explorerResourceIsFolder",
           "group": "navigation"
         }
       ]

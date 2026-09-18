@@ -4,17 +4,17 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { Bundle } from '@revlens/core';
 import { serializeBundle } from '@revlens/core';
 import { buildBundle, engagementAdapter } from '@revlens/adapters';
-import type { Engagement } from '../../../packages/adapters/test/helpers/repository.js';
+import type { Engagement } from './helpers/repository.js';
 import {
   commit,
   createEngagement,
   write,
   writeStructure,
-} from '../../../packages/adapters/test/helpers/repository.js';
-import { gitVersion, listSources, missingGitMessage, runBuild } from '../src/build.js';
+} from './helpers/repository.js';
+import { gitVersion, listSources, missingGitMessage, runBuild } from '@revlens/adapters';
 
 /**
- * Building from the window runs what `revlens build` runs.
+ * Building from a host runs what `revlens build` runs.
  *
  * The point of the test is the last claim of INT-004: the file the application writes is
  * the file the command line writes. It is checked against a real repository rather than

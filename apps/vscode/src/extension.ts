@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import { BundleEditorProvider } from './bundle-editor.js';
+import { buildBundleCommand } from './build-command.js';
+import type { BuildLog } from './build-command.js';
 import { describeCapabilities, detectCapabilities } from './host.js';
-import type { HostCapabilities } from './host.js';
 
 /**
  * The extension entry, written for two hosts.
@@ -13,8 +14,9 @@ import type { HostCapabilities } from './host.js';
 
 export function activate(context: vscode.ExtensionContext): void {
   const capabilities = detectCapabilities(vscode);
-  const log = createLog(context, capabilities);
-  log(`revlens activated: ${describeCapabilities(capabilities)}`);
+  const channel = createChannel(context);
+  channel.appendLine(`revlens activated: ${describeCapabilities(capabilities)}`);
+  const log = (message: string): void => channel.appendLine(message);
 
   const provider = new BundleEditorProvider(context.extensionPath, capabilities, log);
 
@@ -42,6 +44,11 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('revlens.reloadBundle', async () => {
       await provider.reloadAll();
     }),
+    // Building a bundle used to mean leaving the application for a checkout and a
+    // command line; this is the same build, asked for from inside the host
+    vscode.commands.registerCommand('revlens.buildBundle', async (uri?: vscode.Uri) => {
+      await buildBundleCommand(channel, uri);
+    }),
   );
 }
 
@@ -55,29 +62,28 @@ async function pickBundle(): Promise<vscode.Uri | undefined> {
 }
 
 /**
- * Where the extension says what it did.
+ * Where the extension says what it did, and where a build's report goes.
  *
- * An output channel is the right place in Visual Studio Code and does not exist on the
- * State A host, which has the main process console instead - so the log falls back to it
- * rather than disappearing.
+ * An output channel is the right place in every host that has one. A host without them
+ * gets a console-backed stand-in of the same shape, so neither the activation log nor a
+ * build report simply disappears.
  */
-function createLog(
-  context: vscode.ExtensionContext,
-  capabilities: HostCapabilities,
-): (message: string) => void {
+function createChannel(context: vscode.ExtensionContext): BuildLog {
   const createOutputChannel = (
     vscode.window as { createOutputChannel?: (name: string) => vscode.OutputChannel }
   ).createOutputChannel;
 
-  if (!capabilities.commands || typeof createOutputChannel !== 'function') {
-    return (message: string): void => {
-      console.log(`[revlens] ${message}`);
+  if (typeof createOutputChannel !== 'function') {
+    return {
+      name: 'revlens',
+      appendLine: (message: string): void => console.log(`[revlens] ${message}`),
+      show: (): void => {
+        // Nothing to raise without a channel
+      },
     };
   }
 
   const channel = createOutputChannel('revlens');
   context.subscriptions.push(channel);
-  return (message: string): void => {
-    channel.appendLine(message);
-  };
+  return channel;
 }

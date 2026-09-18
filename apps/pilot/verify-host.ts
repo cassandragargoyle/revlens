@@ -74,7 +74,7 @@ console.log(`Pilot host: ${pilot}\n`);
 
 // Pilot's modules are plain CommonJS with no type declarations; everything below is
 // deliberately untyped, and the assertions are what stands in for the types.
-const { validateCatalog, findByFileType } = require(join(pilot, 'catalog.js'));
+const { validateCatalog, findByFileName } = require(join(pilot, 'catalog.js'));
 const { unpackVsix, isUnpacked } = require(join(pilot, 'vsix.js'));
 const { ExtensionHost } = require(join(pilot, 'host', 'extensionHost.js'));
 const { Uri } = require(join(pilot, 'host', 'uri.js'));
@@ -87,9 +87,15 @@ check(
   validated.errors.join('; '),
 );
 
-const entry = findByFileType(validated.entries, 'revlens');
+// Pilot matches a file type as a suffix of the name, longest match first, so the
+// compound bundle name resolves here and a plain .json file still does not
+const entry = findByFileName(validated.entries, 'analysis.revlens');
 check('Pilot matches *.revlens to this plugin', entry?.id === 'cassandragargoyle.revlens');
-check('and does not claim every .json file', findByFileType(validated.entries, 'json') === undefined);
+check(
+  'and matches the compound *.revlens.json name',
+  findByFileName(validated.entries, 'analysis.revlens.json')?.id === 'cassandragargoyle.revlens',
+);
+check('and does not claim every .json file', findByFileName(validated.entries, 'package.json') === undefined);
 
 const root = mkdtempSync(join(tmpdir(), 'revlens-pilot-'));
 const pluginDir = join(root, String(entry.id));

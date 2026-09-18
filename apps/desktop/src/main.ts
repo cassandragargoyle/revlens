@@ -3,8 +3,8 @@ import { basename, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import type { MenuItemConstructorOptions, WebContents } from 'electron';
 import { BrowserWindow, Menu, app, dialog, ipcMain, net, protocol, shell } from 'electron';
-import type { DesktopBuildRequest } from './build.js';
-import { listSources, runBuild } from './build.js';
+import type { BuildRequest } from '@revlens/adapters';
+import { listSources, runBuild } from '@revlens/adapters';
 import type { FileWatch } from './open.js';
 import { bundlePathsFromArgv, isBundlePath, watchBundleFile } from './open.js';
 import type { DesktopSettings } from './settings.js';
@@ -404,7 +404,7 @@ function registerIpc(): void {
     });
     return chosen.canceled ? undefined : chosen.filePath;
   });
-  ipcMain.handle('revlens:build', async (_event, request: DesktopBuildRequest) => {
+  ipcMain.handle('revlens:build', async (_event, request: BuildRequest) => {
     const outcome = await runBuild(request);
     if (outcome.ok) await openDocument(outcome.out);
     return outcome;

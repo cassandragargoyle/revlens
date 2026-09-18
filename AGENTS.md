@@ -27,6 +27,9 @@ shape of the tool are in [docs/adr/](docs/adr/).
 - `/packages/adapters/` - git and Markdown plumbing, token blame, joining the records
 - `/packages/viewer-page/` - The page a host embeds, and reading the file behind it; used
   by the editor extension and by the desktop application, never written twice
+- `/packages/adapters/src/run-build.ts` - Running a build for a host, with the failures
+  written as sentences a reader can act on; used by the desktop window and the editor
+  extension, for the same reason `viewer-page` is
 - `/apps/cli/` - `revlens build | validate | serve | sources`
 - `/apps/server/` - Read-only HTTP API, static hosting, MCP server
 - `/apps/web/` - The viewer (React + Vite)
@@ -229,9 +232,15 @@ custom readonly editor, a webview, configuration defaults and a file watcher.
 - The path that opens a document uses **only** what both hosts have
 - Anything beyond it is probed for in `apps/vscode/src/host.ts`, never assumed
 - What is Pilot-specific is a declaration in `apps/pilot/pilot-plugin.json`, not code
-- Bundles are named `*.revlens`. Pilot matches a plain `path.extname`, so a compound
-  `*.revlens.json` never matches there, and claiming `json` would grab every JSON file in
-  the application
+- Bundles are named `*.revlens.json`, and `*.revlens` is still claimed for the ones built
+  before that. Pilot matches a file type as a **suffix**, longest match first
+  (`portunix-vscode` #120), so the compound name works there and reads like the host's own
+  `.graph.json` / `.glens.json` sidecars. Claiming plain `json` would still grab every JSON
+  file in the application, and the Pilot seed refuses it
+- **Building a bundle is `runBuild` from `packages/adapters`** — the same call the desktop
+  window makes and the same code path the command line takes. It is never shelled out to
+  and never starts `apps/server`; a host cannot assume a checkout, an npm and a `tsx` on
+  the machine, and a second implementation of the build is worse than a larger bundle
 
 Do not add a second extension, and do not fork the viewer for a host. If one host can do
 something the other cannot, that belongs in the capability probe. The reasoning is
@@ -248,8 +257,8 @@ ADR-006's packaging decision and names which platforms are supported.
 - `main.ts` is the only module that imports Electron, so the tests need no Electron process
 - `electron` and `electron-builder` are devDependencies of `apps/desktop` alone; a test in
   `apps/desktop/test/packaging.test.ts` holds that line
-- Building a bundle imports `@revlens/adapters`; it never shells out to the CLI and never
-  starts `apps/server`
+- Building a bundle is `runBuild` from `@revlens/adapters`, shared with the editor
+  extension; it never shells out to the CLI and never starts `apps/server`
 
 ### Configuration
 

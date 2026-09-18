@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer, webUtils } from 'electron';
-import type { DesktopBuildOutcome, DesktopBuildRequest } from './build.js';
+import type { BuildOutcome, BuildRequest } from '@revlens/adapters';
 
 /**
  * The one narrow bridge between the window and the main process
@@ -25,7 +25,7 @@ export interface RevlensBridge {
   reload(): Promise<void>;
   chooseDirectory(): Promise<string | undefined>;
   chooseBundleTarget(): Promise<string | undefined>;
-  build(request: DesktopBuildRequest): Promise<DesktopBuildOutcome>;
+  build(request: BuildRequest): Promise<BuildOutcome>;
   closeWindow(): Promise<void>;
 }
 
