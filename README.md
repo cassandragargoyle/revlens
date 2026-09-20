@@ -261,6 +261,34 @@ nothing can say which of the two the survivor is. Measured on the engagement —
 from the 1.5 baseline against one from the first chapter commit — **100 of the 102 changes
 present in both keep the same id**, and all 15 shared revisions do.
 
+## Tech Stack
+
+| Layer | Technology |
+| ----------- | ----------- |
+| Language | [TypeScript](https://www.typescriptlang.org/) 5.9, ESM throughout, on Node.js 26.9+ (pinned in `.nvmrc`) |
+| Repository | npm workspaces — `packages/*` and `apps/*` in one `tsc -b` project graph |
+| Data contract | [Zod](https://zod.dev/) 4 in `packages/core`; `schema/bundle.schema.json` is generated from it |
+| Markdown | [unified](https://unifiedjs.com/) with [remark-parse](https://github.com/remarkjs/remark) and [remark-gfm](https://github.com/remarkjs/remark-gfm), `mdast-util-to-string` for block text |
+| Diff | [diff-match-patch](https://github.com/google/diff-match-patch) under a word-level tokenizer; the attribution on top of it is ours ([ADR-004](docs/adr/ADR-004-revlens-attribution-token-blame.md)) |
+| History | `git` itself, called as a process — no git library to keep in step with the installed one |
+| HTTP API | [Fastify](https://fastify.dev/) 5 with `@fastify/static`, read-only, bound to the loopback interface |
+| Assistant | [MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk) over stdio, in the same process as the API |
+| CLI | [Commander](https://github.com/tj/commander.js) 15 |
+| Viewer | [React 19](https://react.dev/) and plain CSS in `apps/web/src/styles.css` — no UI kit, no CSS framework |
+| Viewer build | [Vite](https://vitejs.dev/) 8 with `@vitejs/plugin-react` |
+| Extension build | [esbuild](https://esbuild.github.io/) — one file, so the `.vsix` carries no runtime dependency |
+| Editor host | The VS Code extension API from 1.80, of which Pilot implements a subset ([ADR-006](docs/adr/ADR-006-standalone-product-and-editor-extensions.md)) |
+| Desktop shell | [Electron](https://www.electronjs.org/) 44 packaged by [electron-builder](https://www.electron.build/) 26 ([ADR-007](docs/adr/ADR-007-desktop-application-for-readers.md)) |
+| Tests | [Vitest](https://vitest.dev/) 5, with [Testing Library](https://testing-library.com/) and jsdom for the viewer |
+| Lint | [ESLint](https://eslint.org/) 10 with [typescript-eslint](https://typescript-eslint.io/) |
+| Scripts | [tsx](https://tsx.is/) runs the repository scripts; [ajv](https://ajv.js.org/) checks the examples against `schema/records/` |
+
+**Nothing is fetched at read time.** The static export and the editor page have to open
+offline, so the viewer loads no font, script or style from a network, and a new runtime
+dependency needs a reason written in the pull request. `electron` and `electron-builder`
+are devDependencies of `apps/desktop` alone — `apps/desktop/test/packaging.test.ts` holds
+that line, so the rest of the workspace tests without an Electron process.
+
 ## Layout
 
 ```text
@@ -406,4 +434,4 @@ is Czech. The Czech drawing is
 ---
 
 **Created**: 2026-09-16
-**Last Updated**: 2026-09-17
+**Last Updated**: 2026-09-20

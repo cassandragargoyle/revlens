@@ -7,7 +7,7 @@ status: active
 language: cs
 translation_of: README.md
 created: 2026-09-17
-last_updated: 2026-09-17
+last_updated: 2026-09-20
 related:
   - ARCHITECTURE.cs.md
   - docs/issues/002-document-revision-viewer.md
@@ -275,6 +275,34 @@ z těch dvou přežila. Změřeno na zakázce — build z výchozího stavu 1.5 
 z prvního commitu kapitoly — **100 ze 102 změn přítomných v obou si drží stejné id**
 a všech 15 společných revizí také.
 
+## Technologie
+
+| Vrstva | Technologie |
+| ----------- | ----------- |
+| Jazyk | [TypeScript](https://www.typescriptlang.org/) 5.9, všude ESM, na Node.js 26.9+ (verze je v `.nvmrc`) |
+| Repozitář | npm workspaces — `packages/*` a `apps/*` v jednom grafu projektů `tsc -b` |
+| Datový kontrakt | [Zod](https://zod.dev/) 4 v `packages/core`; `schema/bundle.schema.json` se z něj generuje |
+| Markdown | [unified](https://unifiedjs.com/) s [remark-parse](https://github.com/remarkjs/remark) a [remark-gfm](https://github.com/remarkjs/remark-gfm), `mdast-util-to-string` pro text bloku |
+| Diff | [diff-match-patch](https://github.com/google/diff-match-patch) pod tokenizací po slovech; atribuce nad ním je naše ([ADR-004](docs/adr/ADR-004-revlens-attribution-token-blame.md)) |
+| Historie | samotný `git`, volaný jako proces — žádná git knihovna, kterou by bylo nutné držet v souladu s nainstalovaným gitem |
+| HTTP API | [Fastify](https://fastify.dev/) 5 s `@fastify/static`, jen pro čtení, na smyčkovém rozhraní |
+| Asistent | [MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk) přes stdio, ve stejném procesu jako API |
+| CLI | [Commander](https://github.com/tj/commander.js) 15 |
+| Prohlížeč | [React 19](https://react.dev/) a obyčejné CSS v `apps/web/src/styles.css` — žádná UI knihovna, žádný CSS framework |
+| Build prohlížeče | [Vite](https://vitejs.dev/) 8 s `@vitejs/plugin-react` |
+| Build rozšíření | [esbuild](https://esbuild.github.io/) — jeden soubor, takže `.vsix` nenese žádnou runtime závislost |
+| Hostitel v editoru | API rozšíření VS Code od 1.80, z něhož Pilot implementuje podmnožinu ([ADR-006](docs/adr/ADR-006-standalone-product-and-editor-extensions.md)) |
+| Desktopová schránka | [Electron](https://www.electronjs.org/) 44, balený [electron-builderem](https://www.electron.build/) 26 ([ADR-007](docs/adr/ADR-007-desktop-application-for-readers.md)) |
+| Testy | [Vitest](https://vitest.dev/) 5, pro prohlížeč s [Testing Library](https://testing-library.com/) a jsdom |
+| Lint | [ESLint](https://eslint.org/) 10 s [typescript-eslint](https://typescript-eslint.io/) |
+| Skripty | [tsx](https://tsx.is/) spouští skripty repozitáře; [ajv](https://ajv.js.org/) kontroluje příklady proti `schema/records/` |
+
+**Při čtení se nic nestahuje.** Statický export i stránka v editoru se musí otevřít
+offline, takže prohlížeč nenačítá ze sítě žádné písmo, skript ani styl a nová runtime
+závislost potřebuje důvod napsaný v pull requestu. `electron` a `electron-builder` jsou
+devDependencies jen v `apps/desktop` — tuhle hranici drží `apps/desktop/test/packaging.test.ts`,
+takže zbytek workspace se testuje bez procesu Electronu.
+
 ## Rozvržení repozitáře
 
 ```text
@@ -416,4 +444,4 @@ je česky. Anglická kresba je
 ---
 
 **Vytvořeno**: 2026-09-17
-**Poslední aktualizace**: 2026-09-17
+**Poslední aktualizace**: 2026-09-20
