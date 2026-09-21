@@ -1,4 +1,4 @@
-# revlens
+# RevLens
 
 *Česky: [README.cs.md](README.cs.md).*
 
@@ -6,9 +6,9 @@
 
 ## Overview
 
-**Repository**: `revlens`
-**Language**: TypeScript on Node.js 26.9+, npm workspaces
-**Status**: Early
+- **Repository**: `revlens`
+- **Language**: TypeScript on Node.js 26.9+, npm workspaces
+- **Status**: Early
 
 A document revision viewer. It shows **the final text as the reader gets it**, with every
 change that produced it highlighted in place, and — for each change — when it happened,

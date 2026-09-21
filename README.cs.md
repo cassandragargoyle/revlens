@@ -23,9 +23,9 @@ related:
 
 ## Přehled
 
-**Repozitář**: `revlens`
-**Jazyk**: TypeScript na Node.js 26.9+, npm workspaces
-**Stav**: začátek
+- **Repozitář**: `revlens`
+- **Jazyk**: TypeScript na Node.js 26.9+, npm workspaces
+- **Stav**: začátek
 
 Prohlížeč revizí dokumentu. Ukazuje **finální text tak, jak ho čtenář dostane**, s každou
 změnou, která k němu vedla, zvýrazněnou přímo na místě — a u každé změny říká, kdy
