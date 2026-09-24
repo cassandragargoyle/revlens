@@ -358,6 +358,33 @@ code {
   border-radius: 4px;
 }
 
+/* A wide table scrolls inside its block rather than widening the page */
+.block--table {
+  overflow-x: auto;
+}
+
+.block__table {
+  border-collapse: collapse;
+  font-size: 0.92em;
+  line-height: 1.4;
+}
+
+/* A host may theme table cells; the viewer has one theme and says what it is */
+.block__table th,
+.block__table td {
+  border: 1px solid var(--line);
+  padding: 4px 8px;
+  text-align: left;
+  vertical-align: top;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.block__table th {
+  font-weight: 650;
+  background: var(--bg);
+}
+
 .block--introduced,
 .block--removed {
   position: relative;

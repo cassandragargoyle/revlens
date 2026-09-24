@@ -79,8 +79,8 @@ describe('revlens_document', () => {
       stats: { unexplainedEdits: number };
     };
     expect(payload.document.title).toBe('Analýza kompetenčního centra');
-    expect(payload.chapters.map((chapter) => chapter.editCount)).toEqual([3, 4]);
-    expect(payload.revisions).toHaveLength(4);
+    expect(payload.chapters.map((chapter) => chapter.editCount)).toEqual([3, 4, 1]);
+    expect(payload.revisions).toHaveLength(5);
     expect(payload.stats.unexplainedEdits).toBe(0);
   });
 });
@@ -184,7 +184,7 @@ describe('revlens_search', () => {
       truncated: boolean;
       edits: unknown[];
     };
-    expect(payload.count).toBe(7);
+    expect(payload.count).toBe(8);
     expect(payload.edits).toHaveLength(2);
     expect(payload.truncated).toBe(true);
   });

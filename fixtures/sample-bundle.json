@@ -249,6 +249,112 @@
           ]
         }
       ]
+    },
+    {
+      "id": "ch-03",
+      "number": "3",
+      "title": "Role a odpovědnosti",
+      "source": "analysis/chapters/03-role.md",
+      "blocks": [
+        {
+          "id": "ch-03/b-01",
+          "kind": "heading",
+          "level": 2,
+          "runs": [
+            {
+              "kind": "kept",
+              "text": "3 Role a odpovědnosti"
+            }
+          ]
+        },
+        {
+          "id": "ch-03/b-02",
+          "kind": "paragraph",
+          "runs": [
+            {
+              "kind": "kept",
+              "text": "Za každou oblast odpovídá jedna osoba, uvedená v tabulce níže."
+            }
+          ]
+        },
+        {
+          "id": "ch-03/b-03",
+          "kind": "table",
+          "runs": [
+            {
+              "kind": "kept",
+              "text": "Oblast"
+            },
+            {
+              "kind": "kept",
+              "text": "Odpovědná osoba"
+            },
+            {
+              "kind": "kept",
+              "text": "Podklad"
+            },
+            {
+              "kind": "kept",
+              "text": "Obchod"
+            },
+            {
+              "kind": "kept",
+              "text": "Petra Dvořáková"
+            },
+            {
+              "kind": "kept",
+              "text": "organizační řád"
+            },
+            {
+              "kind": "kept",
+              "text": "Technology"
+            },
+            {
+              "kind": "kept",
+              "text": "Martin Svoboda"
+            },
+            {
+              "kind": "kept",
+              "text": "rozhovor"
+            },
+            {
+              "kind": "inserted",
+              "text": " a organizační řád",
+              "revision": "R-005",
+              "edit": "E-008"
+            },
+            {
+              "kind": "kept",
+              "text": "Produkty"
+            },
+            {
+              "kind": "kept",
+              "text": "Jan Novák"
+            },
+            {
+              "kind": "kept",
+              "text": "rozhovor"
+            }
+          ],
+          "table": {
+            "columns": 3,
+            "cellRunCounts": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              2,
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ]
     }
   ],
   "revisions": [
@@ -335,6 +441,25 @@
       "edits": [
         "E-002",
         "E-006"
+      ]
+    },
+    {
+      "id": "R-005",
+      "kind": "instruction",
+      "at": "2026-09-12T09:30:00+02:00",
+      "author": {
+        "name": "Jan Novák",
+        "role": "zpracovatel analýzy",
+        "side": "processor"
+      },
+      "title": "U oblasti Technology doplněn organizační řád jako podklad",
+      "verbatim": "u Technology v tabulce rolí chybí, že to stojí i na organizačním řádu",
+      "why": "podklad k oblasti Technology byl uveden neúplně",
+      "commit": "e5f6a7b",
+      "origin": "docs/changes/v1.2/changes.json#IN-051",
+      "comments": [],
+      "edits": [
+        "E-008"
       ]
     }
   ],
@@ -532,6 +657,17 @@
       "insertedChars": 26,
       "removedChars": 3,
       "summary": "CTO nahrazeno funkcí vedoucí oblasti Technology"
+    },
+    {
+      "id": "E-008",
+      "revision": "R-005",
+      "chapter": "ch-03",
+      "block": "ch-03/b-03",
+      "order": 8,
+      "kind": "insert",
+      "insertedChars": 18,
+      "removedChars": 0,
+      "summary": "Do buňky Podklad u oblasti Technology doplněn organizační řád"
     }
   ]
 }

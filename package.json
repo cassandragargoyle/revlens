@@ -1,6 +1,6 @@
 {
   "name": "revlens",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "private": true,
   "description": "Document revision viewer - the final text with every change highlighted in place, and the revision and reviewer comment behind it",
   "license": "MIT",

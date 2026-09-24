@@ -484,6 +484,32 @@
             ]
           },
           "description": "The block text split by attribution. Concatenating kept and inserted runs gives the final text; deleted runs sit where the text was removed."
+        },
+        "table": {
+          "type": "object",
+          "properties": {
+            "columns": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991,
+              "description": "Cells per row; the first row is the header"
+            },
+            "cellRunCounts": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "description": "How many consecutive runs each cell takes, row by row. The runs are not repeated in the cells: this only says where to cut them, so it sums to runs.length."
+            }
+          },
+          "required": [
+            "columns",
+            "cellRunCounts"
+          ],
+          "additionalProperties": false,
+          "description": "How the runs of a table block divide into cells. Absent on a table built before cells were kept, which is drawn as one paragraph."
         }
       },
       "required": [

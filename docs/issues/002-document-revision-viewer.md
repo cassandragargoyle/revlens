@@ -168,6 +168,13 @@ Three decisions behind this shape:
 - **Deletions are kept, not dropped.** A deleted run stays in the block at the position it
   was removed from. Clean mode hides it; review mode strikes it through. Without it, "what
   did my comment actually remove" cannot be answered.
+- **A table is a partition of its runs, not a second copy of them.** A block of kind
+  `table` carries `table: { columns, cellRunCounts }`: `cellRunCounts` says how many
+  consecutive runs each cell takes, row by row, the header row first. It sums to
+  `runs.length` and its length is a multiple of `columns`, and validation rejects a bundle
+  where it does not. Everything that reads `runs` goes on reading them; only the drawing
+  cuts them into cells. A table built before the field existed has no `table` and is drawn
+  as one paragraph ([INT-006](006-tables-are-flattened-into-text.md))
 
 ### How the bundle is produced: token blame with tombstones
 
@@ -191,6 +198,12 @@ an attributed token list per block:
    position; tokens that survive keep whatever attribution they already had.
 4. **Emit** the final state as runs — consecutive tokens with the same attribution are
    merged into one run, which keeps the bundle small and the highlighting readable.
+
+A table keeps an attributed token list **per cell**. Its rows are aligned first, with the
+same word diff one level up, so a row added in the middle does not shift the rows below
+it; a row edited in place is then diffed cell by cell, and runs are never merged across a
+cell boundary. A table whose column count changed is not aligned at all: it is a rewritten
+block, removed and added again.
 
 Tokens deleted by a later revision that were themselves inserted by an earlier one are
 dropped entirely (they never reached the reader) but counted in a build report, so a

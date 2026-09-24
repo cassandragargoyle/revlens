@@ -11,7 +11,7 @@ describe('an empty filter', () => {
     expect(isEmptyFilter({})).toBe(true);
     expect(isEmptyFilter({ query: '   ' })).toBe(true);
     expect(isEmptyFilter({ revisions: [] })).toBe(true);
-    expect(ids({})).toHaveLength(7);
+    expect(ids({})).toHaveLength(8);
   });
 });
 
@@ -33,7 +33,7 @@ describe('filtering edits', () => {
   });
 
   it('by author', () => {
-    expect(ids({ authors: ['Jan Novák'] })).toHaveLength(7);
+    expect(ids({ authors: ['Jan Novák'] })).toHaveLength(8);
     expect(ids({ authors: ['Nikdo Nikdo'] })).toEqual([]);
   });
 
@@ -43,6 +43,7 @@ describe('filtering edits', () => {
       'E-003',
       'E-006',
       'E-007',
+      'E-008',
     ]);
     expect(ids({ to: '2026-09-09T00:00:00+02:00' })).toEqual(['E-001']);
     expect(
@@ -87,6 +88,7 @@ describe('filtering the timeline', () => {
       'R-002',
       'R-003',
       'R-004',
+      'R-005',
     ]);
   });
 
@@ -101,6 +103,6 @@ describe('filtering the timeline', () => {
       filterRevisions(index, { from: '2026-09-11T00:00:00+02:00' }).map(
         (revision) => revision.id,
       ),
-    ).toEqual(['R-003', 'R-004']);
+    ).toEqual(['R-003', 'R-004', 'R-005']);
   });
 });

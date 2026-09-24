@@ -198,11 +198,11 @@ describe('the mode switch', () => {
 describe('filters', () => {
   it('shows a live count of the changes the filter admits', async () => {
     await renderApp();
-    expect(screen.getByTestId('filter-count').textContent).toBe('Zobrazeno 7 z 7 změn');
+    expect(screen.getByTestId('filter-count').textContent).toBe('Zobrazeno 8 z 8 změn');
 
     await userEvent.type(screen.getByLabelText(/Hledat v pokynech/), 'PLAN');
     await waitFor(() => {
-      expect(screen.getByTestId('filter-count').textContent).toBe('Zobrazeno 2 z 7 změn');
+      expect(screen.getByTestId('filter-count').textContent).toBe('Zobrazeno 2 z 8 změn');
     });
   });
 
@@ -220,7 +220,7 @@ describe('filters', () => {
   it('narrows the timeline to the selected round', async () => {
     await renderApp();
     await userEvent.click(screen.getByRole('tab', { name: 'Revize' }));
-    await waitFor(() => expect(document.querySelectorAll('.revision').length).toBe(4));
+    await waitFor(() => expect(document.querySelectorAll('.revision').length).toBe(5));
 
     await userEvent.selectOptions(screen.getByLabelText(/Kolo připomínek/), 'K1');
     await waitFor(() => {
@@ -233,7 +233,7 @@ describe('the revision timeline', () => {
   it('lands on the first change of a revision when one is chosen', async () => {
     await renderApp();
     await userEvent.click(screen.getByRole('tab', { name: 'Revize' }));
-    await waitFor(() => expect(document.querySelectorAll('.revision').length).toBe(4));
+    await waitFor(() => expect(document.querySelectorAll('.revision').length).toBe(5));
 
     const revision = document.querySelectorAll('.revision')[1];
     expect(revision).toBeDefined();
@@ -407,7 +407,7 @@ describe('the revision timeline', () => {
     await userEvent.click(screen.getByRole('tab', { name: 'Revize' }));
 
     await waitFor(() => {
-      expect(container.querySelectorAll('.revision').length).toBe(4);
+      expect(container.querySelectorAll('.revision').length).toBe(5);
     });
     const gates = container.querySelector('.revision__gates');
     expect(gates).not.toBeNull();
@@ -788,5 +788,60 @@ describe('the left rail', () => {
     // The list wraps, so the last entry leads back to the first.
     await userEvent.keyboard('{ArrowDown}');
     expect(document.activeElement).toBe(bar.getByRole('button', { name: 'Čistopis' }));
+  });
+});
+
+describe('a table', () => {
+  it('is drawn as a table, with the header row in thead', async () => {
+    const container = await renderApp('#/edit/E-008');
+    const table = await waitFor(() => {
+      const found = container.querySelector('[data-block="ch-03/b-03"] table');
+      expect(found).not.toBeNull();
+      return found as HTMLTableElement;
+    });
+
+    expect([...table.querySelectorAll('thead th')].map((cell) => cell.textContent)).toEqual([
+      'Oblast',
+      'Odpovědná osoba',
+      'Podklad',
+    ]);
+    expect(table.querySelectorAll('tbody tr')).toHaveLength(3);
+  });
+
+  it('highlights the changed cell only, and opens the revision behind it', async () => {
+    const container = await renderApp('#/edit/E-008');
+    const passage = await waitFor(() => {
+      const found = container.querySelector('[data-block="ch-03/b-03"] [data-edit="E-008"]');
+      expect(found).not.toBeNull();
+      return found as HTMLElement;
+    });
+
+    const changedCells = [...container.querySelectorAll('[data-block="ch-03/b-03"] td')].filter(
+      (cell) => cell.querySelector('[data-edit]') !== null,
+    );
+    expect(changedCells).toHaveLength(1);
+    expect(changedCells[0]?.textContent).toBe('rozhovor a organizační řád');
+
+    await userEvent.click(passage);
+    expect(
+      await screen.findByText('u Technology v tabulce rolí chybí, že to stojí i na organizačním řádu'),
+    ).toBeDefined();
+  });
+
+  it('is drawn as its runs when the bundle was built before cells were kept', async () => {
+    const old = structuredClone(sample) as typeof sample;
+    for (const chapter of old.chapters) {
+      for (const block of chapter.blocks) delete (block as { table?: unknown }).table;
+    }
+    window.history.replaceState(null, '', '#/edit/E-008');
+    const { container } = render(<App source={createEmbeddedSource(old)} />);
+    const block = await waitFor(() => {
+      const found = container.querySelector('[data-block="ch-03/b-03"]');
+      expect(found).not.toBeNull();
+      return found as HTMLElement;
+    });
+
+    expect(block.querySelector('table')).toBeNull();
+    expect(block.textContent).toContain('OblastOdpovědná osobaPodklad');
   });
 });

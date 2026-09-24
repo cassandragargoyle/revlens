@@ -43,9 +43,9 @@ describe('GET /api/bundle', () => {
       stats: { unexplainedEdits: number };
     };
 
-    expect(payload.revisions).toHaveLength(4);
-    expect(payload.edits).toHaveLength(7);
-    expect(payload.chapters.map((chapter) => chapter.editCount)).toEqual([3, 4]);
+    expect(payload.revisions).toHaveLength(5);
+    expect(payload.edits).toHaveLength(8);
+    expect(payload.chapters.map((chapter) => chapter.editCount)).toEqual([3, 4, 1]);
     expect(payload.chapters[0]).not.toHaveProperty('blocks');
     expect(payload.stats.unexplainedEdits).toBe(0);
   });

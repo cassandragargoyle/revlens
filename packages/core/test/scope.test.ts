@@ -103,7 +103,7 @@ describe('filtering by scope', () => {
     // all, and its change has to survive the filter.
     const edits = filterEdits(scoped, { scope: 'in-range' });
     expect(edits.map((edit) => edit.id)).toEqual(scoped.editsInDocumentOrder.map((e) => e.id));
-    expect(filterRevisions(scoped, { scope: 'in-range' })).toHaveLength(4);
+    expect(filterRevisions(scoped, { scope: 'in-range' })).toHaveLength(5);
   });
 });
 

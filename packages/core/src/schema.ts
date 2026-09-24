@@ -79,6 +79,19 @@ export const blockSchema = z
       .describe(
         'The block text split by attribution. Concatenating kept and inserted runs gives the final text; deleted runs sit where the text was removed.',
       ),
+    table: z
+      .strictObject({
+        columns: z.number().int().min(1).describe('Cells per row; the first row is the header'),
+        cellRunCounts: z
+          .array(z.number().int().min(0))
+          .describe(
+            'How many consecutive runs each cell takes, row by row. The runs are not repeated in the cells: this only says where to cut them, so it sums to runs.length.',
+          ),
+      })
+      .describe(
+        'How the runs of a table block divide into cells. Absent on a table built before cells were kept, which is drawn as one paragraph.',
+      )
+      .optional(),
   })
   .meta({ id: 'block' });
 
@@ -242,6 +255,7 @@ export const bundleSchema = z
 export type Person = z.infer<typeof personSchema>;
 export type Run = z.infer<typeof runSchema>;
 export type Block = z.infer<typeof blockSchema>;
+export type BlockTable = NonNullable<Block['table']>;
 export type Chapter = z.infer<typeof chapterSchema>;
 export type Revision = z.infer<typeof revisionSchema>;
 export type Comment = z.infer<typeof commentSchema>;

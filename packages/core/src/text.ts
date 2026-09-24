@@ -18,32 +18,75 @@ export function baselineRuns(block: Block): Run[] {
 
 /** Runs shown in a given mode. Review mode shows the whole block, deletions included. */
 export function runsForMode(block: Block, mode: ViewMode): Run[] {
+  return block.runs.filter(isShownIn(mode));
+}
+
+function isShownIn(mode: ViewMode): (run: Run) => boolean {
   switch (mode) {
     case 'clean':
-      return finalRuns(block);
+      return (run) => run.kind !== 'deleted';
     case 'baseline':
-      return baselineRuns(block);
+      return (run) => run.kind !== 'inserted';
     case 'review':
-      return block.runs;
+      return () => true;
   }
 }
 
+/**
+ * A table block cut into rows of cells, each cell the runs of it shown in the mode.
+ *
+ * The cut is `table.cellRunCounts`, so the runs stay the single source of truth. A row
+ * that has text in review mode but none in this one - a row added after the baseline,
+ * seen as the baseline, or a row removed, seen as the final text - is left out, not shown
+ * empty. Undefined for a block that is not a table with cells, and for one whose counts
+ * do not describe its runs, so a caller can fall back to drawing the runs as text.
+ */
+export function tableRows(block: Block, mode: ViewMode): Run[][][] | undefined {
+  const table = block.table;
+  if (table === undefined) return undefined;
+  const total = table.cellRunCounts.reduce((sum, count) => sum + count, 0);
+  if (total !== block.runs.length || table.cellRunCounts.length % table.columns !== 0) {
+    return undefined;
+  }
+
+  const shown = isShownIn(mode);
+  const rows: Run[][][] = [];
+  let start = 0;
+  let row: Run[][] = [];
+  let hadText = false;
+  for (const count of table.cellRunCounts) {
+    const cell = block.runs.slice(start, start + count);
+    start += count;
+    if (cell.length > 0) hadText = true;
+    row.push(cell.filter(shown));
+    if (row.length === table.columns) {
+      if (!hadText || row.some((cells) => cells.length > 0)) rows.push(row);
+      row = [];
+      hadText = false;
+    }
+  }
+  return rows;
+}
+
 export function finalText(block: Block): string {
-  return finalRuns(block)
-    .map((run) => run.text)
-    .join('');
+  return textForMode(block, 'clean');
 }
 
 export function baselineText(block: Block): string {
-  return baselineRuns(block)
-    .map((run) => run.text)
-    .join('');
+  return textForMode(block, 'baseline');
 }
 
+/** The text of a block in a mode; a table's cells are kept apart, a row on each line */
 export function textForMode(block: Block, mode: ViewMode): string {
-  return runsForMode(block, mode)
-    .map((run) => run.text)
-    .join('');
+  const rows = tableRows(block, mode);
+  if (rows !== undefined) {
+    return rows.map((row) => row.map(joinRuns).join(' | ')).join('\n');
+  }
+  return joinRuns(runsForMode(block, mode));
+}
+
+function joinRuns(runs: readonly Run[]): string {
+  return runs.map((run) => run.text).join('');
 }
 
 /**

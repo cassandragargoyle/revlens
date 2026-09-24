@@ -84,6 +84,7 @@ export function checkInvariants(bundle: Bundle): ValidationIssue[] {
 
   checkUniqueIds(bundle, report);
   checkRunAttribution(bundle, report);
+  checkTableCells(bundle, report);
   checkReferences(bundle, index, report);
   checkRevisionEditAgreement(bundle, index, report);
   checkCommentRevisionAgreement(bundle, index, report);
@@ -166,8 +167,16 @@ function checkRunAttribution(bundle: Bundle, report: Report): void {
       });
 
       // Two adjacent runs with the same attribution should have been merged by the
-      // builder; leaving them apart makes the highlight look like two changes.
+      // builder; leaving them apart makes the highlight look like two changes. A cell
+      // boundary is the exception: runs are never merged across one
+      const cellStarts = new Set<number>();
+      let start = 0;
+      for (const count of block.table?.cellRunCounts ?? []) {
+        start += count;
+        cellStarts.add(start);
+      }
       for (let i = 1; i < block.runs.length; i += 1) {
+        if (cellStarts.has(i)) continue;
         const previous = block.runs[i - 1];
         const current = block.runs[i];
         if (previous === undefined || current === undefined) continue;
@@ -184,6 +193,47 @@ function checkRunAttribution(bundle: Bundle, report: Report): void {
             message: `adjacent ${current.kind} runs with the same attribution in block ${block.id} were not merged`,
           });
         }
+      }
+    });
+  });
+}
+
+/**
+ * The cells of a table are a partition of its runs. When the counts do not describe the
+ * runs, the table would be cut in the wrong places - text shown in the wrong cell, or
+ * lost - so the bundle is rejected rather than drawn
+ */
+function checkTableCells(bundle: Bundle, report: Report): void {
+  bundle.chapters.forEach((chapter, chapterIndex) => {
+    chapter.blocks.forEach((block, blockIndex) => {
+      const table = block.table;
+      if (table === undefined) return;
+      const path = `chapters[${chapterIndex}].blocks[${blockIndex}].table`;
+
+      if (block.kind !== 'table') {
+        report({
+          rule: 'table-cells',
+          severity: 'error',
+          path,
+          message: `block ${block.id} is a ${block.kind} but carries table cells`,
+        });
+      }
+      const total = table.cellRunCounts.reduce((sum, count) => sum + count, 0);
+      if (total !== block.runs.length) {
+        report({
+          rule: 'table-cells',
+          severity: 'error',
+          path: `${path}.cellRunCounts`,
+          message: `table ${block.id} cuts ${total} runs into cells, but has ${block.runs.length}`,
+        });
+      }
+      if (table.cellRunCounts.length % table.columns !== 0) {
+        report({
+          rule: 'table-cells',
+          severity: 'error',
+          path: `${path}.cellRunCounts`,
+          message: `table ${block.id} has ${table.cellRunCounts.length} cells, which is not a whole number of rows of ${table.columns}`,
+        });
       }
     });
   });

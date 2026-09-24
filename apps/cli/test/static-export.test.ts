@@ -51,7 +51,7 @@ describe.skipIf(webRoot === undefined)('revlens build --static', () => {
     const parsed = bundleSchema.parse(
       JSON.parse(script.replace(/^globalThis\.__REVLENS_BUNDLE__ = /, '').replace(/;\n$/, '')),
     );
-    expect(parsed.edits).toHaveLength(7);
+    expect(parsed.edits).toHaveLength(8);
   });
 
   it('loads the bundle before the application module', () => {

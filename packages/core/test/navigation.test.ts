@@ -23,6 +23,7 @@ describe('document order', () => {
       'E-005',
       'E-006',
       'E-007',
+      'E-008',
     ]);
   });
 
@@ -78,12 +79,12 @@ describe('walking every edit in document order', () => {
   it('ignores the revision boundaries', () => {
     expect(nextEdit(index, 'E-004')?.id).toBe('E-005');
     expect(nextEdit(index, 'E-005')?.id).toBe('E-006');
-    expect(previousEdit(index, 'E-001')?.id).toBe('E-007');
+    expect(previousEdit(index, 'E-001')?.id).toBe('E-008');
   });
 
   it('starts at the first edit when nothing is selected', () => {
     expect(nextEdit(index, undefined)?.id).toBe('E-001');
-    expect(previousEdit(index, undefined)?.id).toBe('E-007');
+    expect(previousEdit(index, undefined)?.id).toBe('E-008');
   });
 
   it('walks a filtered scope when one is given', () => {

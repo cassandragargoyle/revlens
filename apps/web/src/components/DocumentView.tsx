@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { useEffect, useRef } from 'react';
 import type { Block, BundleIndex, Chapter, Run, Selection, ViewMode } from '@revlens/core';
-import { isBlockVisible, runsForMode } from '@revlens/core';
+import { isBlockVisible, runsForMode, tableRows } from '@revlens/core';
 import { revisionColor } from '../colors.js';
 import { scrollIntoViewWhenStable } from '../scroll.js';
 import { cs } from '../strings.js';
@@ -99,6 +99,21 @@ function BlockView(props: BlockViewProps): ReactElement {
   if (block.introducedBy !== undefined) classes.push('block--introduced');
   if (block.removedBy !== undefined) classes.push('block--removed');
 
+  const runView = (run: Run, key: string): ReactElement => (
+    <RunView
+      key={key}
+      run={run}
+      revisionIds={revisionIds}
+      {...(selectedEditId === undefined ? {} : { selectedEditId })}
+      {...(visibleEditIds === undefined ? {} : { visibleEditIds })}
+      onSelect={onSelect}
+    />
+  );
+
+  // A table built before cells were kept has no `table`, and is drawn as its runs are
+  const rows = tableRows(block, mode);
+  const [header, ...body] = rows ?? [];
+
   return (
     <div
       className={classes.join(' ')}
@@ -111,16 +126,36 @@ function BlockView(props: BlockViewProps): ReactElement {
             : undefined
       }
     >
-      {runsForMode(block, mode).map((run, position) => (
-        <RunView
-          key={`${block.id}:${position}`}
-          run={run}
-          revisionIds={revisionIds}
-          {...(selectedEditId === undefined ? {} : { selectedEditId })}
-          {...(visibleEditIds === undefined ? {} : { visibleEditIds })}
-          onSelect={onSelect}
-        />
-      ))}
+      {rows === undefined ? (
+        runsForMode(block, mode).map((run, position) => runView(run, `${block.id}:${position}`))
+      ) : (
+        <table className="block__table">
+          {header === undefined ? null : (
+            <thead>
+              <tr>
+                {header.map((cell, column) => (
+                  <th key={column}>
+                    {cell.map((run, position) => runView(run, `${block.id}:0:${column}:${position}`))}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+          )}
+          <tbody>
+            {body.map((row, index) => (
+              <tr key={index}>
+                {row.map((cell, column) => (
+                  <td key={column}>
+                    {cell.map((run, position) =>
+                      runView(run, `${block.id}:${index + 1}:${column}:${position}`),
+                    )}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }

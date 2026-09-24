@@ -10,7 +10,7 @@ see [the README](../README.md) — and the sample is the fixture its unit tests 
 
 | File | What it is |
 | ---- | ---------- |
-| `sample-bundle.json` | One complete bundle: two chapters, four revisions, three comments, seven edits |
+| `sample-bundle.json` | One complete bundle: three chapters, five revisions, three comments, eight edits |
 | [`../schema/bundle.schema.json`](../schema/bundle.schema.json) | JSON Schema the bundle is validated against — **generated** from the Zod schema in `packages/core`, not hand-edited |
 
 ## Where it comes from
@@ -45,6 +45,9 @@ quotation marks are what the renderer has to survive.
   next to each other
 - **`ch-02/b-06`** — a block that did not exist in the baseline (`introducedBy`), which the
   viewer marks as a whole rather than run by run
+- **`R-005`** — an instruction that edits **one cell of a table** (`ch-03/b-03`); the
+  table's `cellRunCounts` cuts its runs into cells, so the highlight is that cell and not
+  the whole table
 
 ## Invariants a generated bundle must hold
 
@@ -59,3 +62,5 @@ check catches it:
 - Every id referenced (`revision`, `edit`, `block`, `chapter`, comment id) exists
 - `revisions[].edits` and `edits[].revision` agree, and `edits[].order` runs in document order
 - `insertedChars` / `removedChars` equal the character counts of the runs of that edit
+- A table's `cellRunCounts` sums to the number of its runs, and holds a whole number of
+  rows of `columns` cells

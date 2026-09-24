@@ -154,3 +154,37 @@ describe('invariants', () => {
     expect(rulesFor(bundle)).toContain('run-text-nonempty');
   });
 });
+
+describe('table cells', () => {
+  const table = (draft: { chapters: { blocks: { id: string }[] }[] }) =>
+    draft.chapters[2]?.blocks.find((block) => block.id === 'ch-03/b-03') as
+      | { table?: { columns: number; cellRunCounts: number[] } }
+      | undefined;
+
+  it('rejects counts that do not sum to the runs, naming the block', () => {
+    const bundle = mutateSample((draft) => {
+      table(draft)?.table?.cellRunCounts.push(1, 1, 1);
+    });
+    const result = validateBundle(bundle);
+    expect(result.valid).toBe(false);
+    const issue = result.issues.find((found) => found.rule === 'table-cells');
+    expect(issue?.message).toContain('ch-03/b-03');
+  });
+
+  it('rejects a cell count that is not a whole number of rows', () => {
+    const bundle = mutateSample((draft) => {
+      const block = table(draft);
+      if (block?.table !== undefined) block.table.columns = 5;
+    });
+    const result = validateBundle(bundle);
+    expect(result.valid).toBe(false);
+    expect(result.issues.find((found) => found.rule === 'table-cells')?.message).toMatch(
+      /ch-03\/b-03 has 12 cells/,
+    );
+  });
+
+  it('does not ask for runs to be merged across a cell boundary', () => {
+    // Every cell of the sample table is one kept run, next to another kept run
+    expect(rulesFor(readSampleJson())).not.toContain('runs-merged');
+  });
+});

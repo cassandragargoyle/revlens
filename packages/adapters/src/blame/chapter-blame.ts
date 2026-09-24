@@ -65,7 +65,15 @@ export function createChapterState(
 
   for (const parsed of baseline) {
     state.blocks.push(
-      createBlockState(nextBlockId(state), parsed.kind, parsed.level, parsed.text),
+      createBlockState(
+        nextBlockId(state),
+        parsed.kind,
+        parsed.level,
+        parsed.text,
+        undefined,
+        undefined,
+        parsed.table,
+      ),
     );
   }
   return state;
@@ -141,6 +149,7 @@ export function applyChapterRevision(
         incoming.text,
         revision,
         key,
+        incoming.table,
       );
       edits.push({
         key,
@@ -171,7 +180,14 @@ export function applyChapterRevision(
     if (incoming.level !== undefined) block.level = incoming.level;
     else delete block.level;
 
-    const result = applyBlockRevision(block, state.id, incoming.text, revision, keys);
+    const result = applyBlockRevision(
+      block,
+      state.id,
+      incoming.text,
+      revision,
+      keys,
+      incoming.table,
+    );
     edits.push(...result.edits);
     churnTokens += result.churnTokens;
     next.push(block);
@@ -210,8 +226,12 @@ function findMatch(
 
     const text = liveText(block);
 
+    // A table whose columns changed is a rewritten block, the way a block whose kind
+    // changed is: aligning cells across the change is not attempted
+    const sameShape = block.table?.columns === incoming.table?.columns;
+
     // An unchanged block is the same block, full stop - no similarity needed.
-    if (text === incoming.text && block.kind === incoming.kind) {
+    if (text === incoming.text && block.kind === incoming.kind && sameShape) {
       return { index: i, score: 1 };
     }
 
@@ -220,7 +240,7 @@ function findMatch(
     const reservedFor = lastPosition.get(text);
     if (reservedFor !== undefined && reservedFor > position) break;
 
-    if (block.kind !== incoming.kind) continue;
+    if (block.kind !== incoming.kind || !sameShape) continue;
 
     const score = diceCoefficient(liveTokens(block), incomingTokens);
     if (score >= threshold && (best === undefined || score > best.score)) {

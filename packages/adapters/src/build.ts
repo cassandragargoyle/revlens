@@ -1,7 +1,7 @@
 import type { Bundle, Chapter, Comment, Edit, Revision } from '@revlens/core';
 import { BundleIndex, SCHEMA_VERSION, charCount, validateBundle } from '@revlens/core';
 import type { BlockState, PendingEdit } from './blame/attribution.js';
-import { EditKeyFactory } from './blame/attribution.js';
+import { EditKeyFactory, allTokens } from './blame/attribution.js';
 import type { ChapterState } from './blame/chapter-blame.js';
 import {
   DEFAULT_MATCH_THRESHOLD,
@@ -426,7 +426,7 @@ function collectEditContent(
     const state = states.get(chapter.id);
     if (state === undefined) continue;
     for (const block of state.blocks) {
-      for (const token of block.tokens) {
+      for (const token of allTokens(block)) {
         if (token.removedBy !== undefined) {
           if (token.removedEdit !== undefined) {
             const entry = content.get(token.removedEdit) ?? { inserted: '', removed: '' };
@@ -483,7 +483,7 @@ function recordPositions(
   blockIndex: number,
   into: Map<string, [number, number, number]>,
 ): void {
-  block.tokens.forEach((token, tokenIndex) => {
+  allTokens(block).forEach((token, tokenIndex) => {
     const key = token.removedBy === undefined ? token.insertedEdit : token.removedEdit;
     if (key === undefined || into.has(key)) return;
     into.set(key, [chapterIndex, blockIndex, tokenIndex]);

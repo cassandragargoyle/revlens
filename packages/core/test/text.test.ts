@@ -6,6 +6,7 @@ import {
   finalText,
   isBlockVisible,
   runsForMode,
+  tableRows,
   textForMode,
 } from '../src/index.js';
 import { loadSampleBundle } from './helpers/fixture.js';
@@ -66,5 +67,41 @@ describe('character counting', () => {
 
   it('counts an em dash as one character', () => {
     expect(charCount('CORE — jádro')).toBe(12);
+  });
+});
+
+describe('cutting a table into cells', () => {
+  const texts = (rows: ReturnType<typeof tableRows>) =>
+    rows?.map((row) => row.map((cell) => cell.map((run) => run.text).join('')));
+
+  it('slices the runs by the counts, the header row first', () => {
+    const rows = tableRows(block('ch-03/b-03'), 'review');
+    expect(texts(rows)?.[0]).toEqual(['Oblast', 'Odpovědná osoba', 'Podklad']);
+    expect(rows?.[2]?.[2]?.map((run) => run.kind)).toEqual(['kept', 'inserted']);
+  });
+
+  it('leaves the inserted run out of the baseline cell', () => {
+    expect(texts(tableRows(block('ch-03/b-03'), 'baseline'))?.[2]).toEqual([
+      'Technology',
+      'Martin Svoboda',
+      'rozhovor',
+    ]);
+  });
+
+  it('keeps the cells apart in the text of the block', () => {
+    expect(finalText(block('ch-03/b-03')).split('\n')[2]).toBe(
+      'Technology | Martin Svoboda | rozhovor a organizační řád',
+    );
+  });
+
+  it('has no cells for a table built before cells were kept', () => {
+    const { table: _cells, ...old } = block('ch-03/b-03');
+    expect(tableRows(old, 'review')).toBeUndefined();
+    expect(textForMode(old, 'baseline')).toContain('OblastOdpovědná osoba');
+  });
+
+  it('falls back to no cells when the counts do not describe the runs', () => {
+    const broken = { ...block('ch-03/b-03'), table: { columns: 3, cellRunCounts: [1, 1, 1] } };
+    expect(tableRows(broken, 'review')).toBeUndefined();
   });
 });

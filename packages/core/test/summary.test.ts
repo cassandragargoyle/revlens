@@ -8,10 +8,10 @@ describe('bundle summary', () => {
   const summary = summarizeBundle(index);
 
   it('carries the timeline, the comments and the edit index but no chapter text', () => {
-    expect(summary.revisions).toHaveLength(4);
+    expect(summary.revisions).toHaveLength(5);
     expect(summary.comments).toHaveLength(3);
-    expect(summary.edits).toHaveLength(7);
-    expect(summary.chapters).toHaveLength(2);
+    expect(summary.edits).toHaveLength(8);
+    expect(summary.chapters).toHaveLength(3);
     expect(summary.chapters[0]).not.toHaveProperty('blocks');
   });
 
@@ -19,6 +19,7 @@ describe('bundle summary', () => {
     expect(summary.chapters.map((chapter) => [chapter.id, chapter.editCount])).toEqual([
       ['ch-01', 3],
       ['ch-02', 4],
+      ['ch-03', 1],
     ]);
   });
 

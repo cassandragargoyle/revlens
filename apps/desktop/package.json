@@ -1,6 +1,6 @@
 {
   "name": "@revlens/desktop",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "private": true,
   "description": "revlens as a desktop application - the viewer in a window, with a file life-cycle",
   "license": "MIT",

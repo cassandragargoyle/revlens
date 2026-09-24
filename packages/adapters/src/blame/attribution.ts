@@ -1,4 +1,6 @@
 import type { Block, BlockKind, EditKind, Run } from '@revlens/core';
+import type { ParsedTable } from '../markdown/parse-blocks.js';
+import { tableText } from '../markdown/parse-blocks.js';
 import { tokenize } from '../text/tokens.js';
 import { diffTokens } from '../text/word-diff.js';
 
@@ -28,13 +30,31 @@ export interface BlockState {
   id: string;
   kind: BlockKind;
   level?: number;
+  /** The tokens of every block but a table; a table keeps its tokens in its cells */
   tokens: AttributedToken[];
+  table?: TableState;
   /** Revision that added the whole block. */
   introducedBy?: string;
   introducedEdit?: string;
   /** Revision that removed the whole block. */
   removedBy?: string;
   removedEdit?: string;
+}
+
+/**
+ * A table carries attribution per cell, so an edit in one cell is not attributed to the
+ * whole table. Rows are kept apart from cells because a row is what gets added or removed
+ */
+export interface TableState {
+  readonly columns: number;
+  rows: RowState[];
+}
+
+export interface RowState {
+  /** Exactly `columns` cells, each with its own tokens and its own tombstones */
+  cells: AttributedToken[][];
+  /** Revision that removed the whole row; its cells then hold only tombstones */
+  removedBy?: string;
 }
 
 /** An edit as the builder knows it, before ids are assigned in document order. */
@@ -81,14 +101,22 @@ export function createBlockState(
   text: string,
   revision?: string,
   editKey?: string,
+  table?: ParsedTable,
 ): BlockState {
-  const tokens = tokenize(text).map(
-    (token): AttributedToken =>
-      revision === undefined
-        ? { text: token }
-        : { text: token, insertedBy: revision, insertedEdit: editKey },
-  );
-  const state: BlockState = { id, kind, tokens };
+  const attribute = (source: string): AttributedToken[] =>
+    tokenize(source).map(
+      (token): AttributedToken =>
+        revision === undefined
+          ? { text: token }
+          : { text: token, insertedBy: revision, insertedEdit: editKey },
+    );
+  const state: BlockState = { id, kind, tokens: table === undefined ? attribute(text) : [] };
+  if (table !== undefined) {
+    state.table = {
+      columns: table.columns,
+      rows: chunk(table.cells, table.columns).map((cells) => ({ cells: cells.map(attribute) })),
+    };
+  }
   if (level !== undefined) state.level = level;
   if (revision !== undefined) {
     state.introducedBy = revision;
@@ -99,16 +127,32 @@ export function createBlockState(
 
 /** The text of the block as it stands now - the tombstones are not part of it. */
 export function liveText(block: BlockState): string {
-  return block.tokens
-    .filter((token) => token.removedBy === undefined)
-    .map((token) => token.text)
-    .join('');
+  if (block.table !== undefined) {
+    const cells = block.table.rows
+      .filter((row) => row.removedBy === undefined)
+      .flatMap((row) => row.cells.map(cellText));
+    return tableText(block.table.columns, cells);
+  }
+  return cellText(block.tokens);
 }
 
 export function liveTokens(block: BlockState): string[] {
-  return block.tokens
-    .filter((token) => token.removedBy === undefined)
-    .map((token) => token.text);
+  if (block.table !== undefined) return tokenize(liveText(block));
+  return liveOf(block.tokens);
+}
+
+/** Every token of the block in reading order, a table's cell by cell */
+export function allTokens(block: BlockState): AttributedToken[] {
+  if (block.table === undefined) return block.tokens;
+  return block.table.rows.flatMap((row) => row.cells.flat());
+}
+
+function liveOf(tokens: readonly AttributedToken[]): string[] {
+  return tokens.filter((token) => token.removedBy === undefined).map((token) => token.text);
+}
+
+function cellText(tokens: readonly AttributedToken[]): string {
+  return liveOf(tokens).join('');
 }
 
 /**
@@ -118,6 +162,9 @@ export function liveTokens(block: BlockState): string[] {
  * token that survives keeps whatever attribution it already had. That last clause is the
  * whole point: it is what keeps a change from three revisions back highlightable at the
  * position it occupies today.
+ *
+ * A table is revised by its cells, so `table` has to be given for a table block, with
+ * the same columns the block has.
  */
 export function applyBlockRevision(
   block: BlockState,
@@ -125,13 +172,45 @@ export function applyBlockRevision(
   newText: string,
   revision: string,
   keys: EditKeyFactory,
+  table?: ParsedTable,
 ): ApplyResult {
-  const before = liveTokens(block);
-  const after = tokenize(newText);
-  const ops = diffTokens(before, after);
+  const newEdit = (): PendingEdit => ({
+    key: keys.next(revision),
+    revision,
+    chapter: chapterId,
+    block: block.id,
+    kind: 'replace',
+  });
+
+  if (block.table !== undefined || table !== undefined) {
+    if (block.table === undefined || table === undefined || block.table.columns !== table.columns) {
+      // The chapter walk never pairs two tables of different shape - see findMatch
+      throw new Error(
+        `block ${block.id}: a table can only be revised by a table with the same columns`,
+      );
+    }
+    return applyTableRevision(block.table, table, revision, newEdit);
+  }
+
+  const result = reviseTokens(block.tokens, tokenize(newText), revision, newEdit);
+  block.tokens = result.tokens;
+  return { edits: result.edits, churnTokens: result.churnTokens };
+}
+
+/**
+ * The word diff of one token sequence - a block, or one cell of a table - folded into its
+ * attribution. Every cluster of changes becomes one edit minted by `newEdit`
+ */
+function reviseTokens(
+  tokens: readonly AttributedToken[],
+  after: readonly string[],
+  revision: string,
+  newEdit: () => PendingEdit,
+): { tokens: AttributedToken[]; edits: PendingEdit[]; churnTokens: number } {
+  const ops = diffTokens(liveOf(tokens), after);
 
   if (ops.every((op) => op.kind === 'equal')) {
-    return { edits: [], churnTokens: 0 };
+    return { tokens: [...tokens], edits: [], churnTokens: 0 };
   }
 
   const editOfOp = new Array<PendingEdit | undefined>(ops.length);
@@ -139,13 +218,9 @@ export function applyBlockRevision(
 
   for (const cluster of clusterOps(ops)) {
     const kinds = new Set(cluster.map((i) => ops[i]?.kind));
-    const edit: PendingEdit = {
-      key: keys.next(revision),
-      revision,
-      chapter: chapterId,
-      block: block.id,
-      kind: kinds.has('insert') && kinds.has('delete') ? 'replace' : kinds.has('insert') ? 'insert' : 'delete',
-    };
+    const edit = newEdit();
+    edit.kind =
+      kinds.has('insert') && kinds.has('delete') ? 'replace' : kinds.has('insert') ? 'insert' : 'delete';
     edits.push(edit);
     for (const i of cluster) editOfOp[i] = edit;
   }
@@ -155,8 +230,8 @@ export function applyBlockRevision(
   let churn = 0;
 
   const carryTombstones = (): void => {
-    while (cursor < block.tokens.length) {
-      const token = block.tokens[cursor];
+    while (cursor < tokens.length) {
+      const token = tokens[cursor];
       if (token === undefined || token.removedBy === undefined) break;
       next.push(token);
       cursor += 1;
@@ -165,7 +240,7 @@ export function applyBlockRevision(
 
   const takeLive = (): AttributedToken | undefined => {
     carryTombstones();
-    const token = block.tokens[cursor];
+    const token = tokens[cursor];
     if (token === undefined) return undefined;
     cursor += 1;
     return token;
@@ -206,13 +281,11 @@ export function applyBlockRevision(
 
   // Whatever the diff did not reach - trailing tombstones, and live tokens the diff left
   // untouched because the op lengths did not line up - stays where it was.
-  while (cursor < block.tokens.length) {
-    const token = block.tokens[cursor];
+  while (cursor < tokens.length) {
+    const token = tokens[cursor];
     if (token !== undefined) next.push(token);
     cursor += 1;
   }
-
-  block.tokens = next;
 
   // The kind is settled from the runs that survived, not from the diff that produced
   // them. A replacement whose deleted half turned out to be churn - text written after
@@ -220,14 +293,147 @@ export function applyBlockRevision(
   // a replacement would promise a removed passage the bundle does not contain.
   const surviving: PendingEdit[] = [];
   for (const edit of edits) {
-    const inserted = block.tokens.some((token) => token.insertedEdit === edit.key);
-    const deleted = block.tokens.some((token) => token.removedEdit === edit.key);
+    const inserted = next.some((token) => token.insertedEdit === edit.key);
+    const deleted = next.some((token) => token.removedEdit === edit.key);
     if (!inserted && !deleted) continue;
     edit.kind = inserted && deleted ? 'replace' : inserted ? 'insert' : 'delete';
     surviving.push(edit);
   }
 
-  return { edits: surviving, churnTokens: churn };
+  return { tokens: next, edits: surviving, churnTokens: churn };
+}
+
+/**
+ * A table revised against a table with the same columns.
+ *
+ * Rows are aligned first, by the same word diff one level up - a row is one symbol - so a
+ * row added in the middle does not shift every row below it onto its neighbour. A row
+ * that went and a row that came in its place are one row edited, and are diffed cell by
+ * cell; that is what makes the highlight land on the cell that changed. A row added or
+ * removed as a whole is one edit
+ */
+function applyTableRevision(
+  state: TableState,
+  table: ParsedTable,
+  revision: string,
+  newEdit: () => PendingEdit,
+): ApplyResult {
+  const incoming = chunk(table.cells, state.columns);
+  const rowKey = (cells: readonly string[]): string => cells.join('\u0000');
+  const ops = diffTokens(
+    state.rows
+      .filter((row) => row.removedBy === undefined)
+      .map((row) => rowKey(row.cells.map(cellText))),
+    incoming.map(rowKey),
+  );
+
+  const edits: PendingEdit[] = [];
+  const next: RowState[] = [];
+  let churn = 0;
+  let cursor = 0;
+  let position = 0;
+
+  const takeLive = (): RowState | undefined => {
+    while (cursor < state.rows.length) {
+      const row = state.rows[cursor];
+      cursor += 1;
+      if (row === undefined) continue;
+      if (row.removedBy === undefined) return row;
+      next.push(row);
+    }
+    return undefined;
+  };
+
+  const insertRow = (cells: readonly string[]): void => {
+    const edit = newEdit();
+    edit.kind = 'insert';
+    const row: RowState = {
+      cells: cells.map((cell) =>
+        tokenize(cell).map((text) => ({ text, insertedBy: revision, insertedEdit: edit.key })),
+      ),
+    };
+    if (row.cells.some((cell) => cell.length > 0)) edits.push(edit);
+    next.push(row);
+  };
+
+  const removeRow = (row: RowState): void => {
+    const edit = newEdit();
+    edit.kind = 'delete';
+    const hadTokens = row.cells.some((cell) => cell.length > 0);
+    row.cells = row.cells.map((cell) => {
+      const result = tombstoneAll(cell, revision, edit.key);
+      churn += result.churnTokens;
+      return result.tokens;
+    });
+    row.removedBy = revision;
+    if (row.cells.some((cell) => cell.some((token) => token.removedEdit === edit.key))) {
+      edits.push(edit);
+    }
+    // A row written after the baseline and removed again never reached the reader
+    if (!hadTokens || row.cells.some((cell) => cell.length > 0)) next.push(row);
+  };
+
+  const reviseRow = (row: RowState, cells: readonly string[]): void => {
+    row.cells = row.cells.map((cell, column) => {
+      const result = reviseTokens(cell, tokenize(cells[column] ?? ''), revision, newEdit);
+      edits.push(...result.edits);
+      churn += result.churnTokens;
+      return result.tokens;
+    });
+    next.push(row);
+  };
+
+  for (let i = 0; i < ops.length; i += 1) {
+    const op = ops[i];
+    if (op === undefined) continue;
+
+    if (op.kind === 'equal') {
+      for (let k = 0; k < op.tokens.length; k += 1) {
+        const row = takeLive();
+        if (row !== undefined) next.push(row);
+        position += 1;
+      }
+      continue;
+    }
+
+    if (op.kind === 'insert') {
+      for (let k = 0; k < op.tokens.length; k += 1) {
+        insertRow(incoming[position] ?? []);
+        position += 1;
+      }
+      continue;
+    }
+
+    // Rows removed and rows added in their place are rows edited, as many as pair up
+    const following = ops[i + 1];
+    const added = following?.kind === 'insert' ? following.tokens.length : 0;
+    const paired = Math.min(op.tokens.length, added);
+    for (let k = 0; k < op.tokens.length; k += 1) {
+      const row = takeLive();
+      if (row === undefined) continue;
+      if (k < paired) {
+        reviseRow(row, incoming[position] ?? []);
+        position += 1;
+      } else {
+        removeRow(row);
+      }
+    }
+    for (let k = paired; k < added; k += 1) {
+      insertRow(incoming[position] ?? []);
+      position += 1;
+    }
+    if (added > 0) i += 1;
+  }
+
+  // Rows removed earlier and sitting at the end of the table stay where they were
+  while (cursor < state.rows.length) {
+    const row = state.rows[cursor];
+    if (row !== undefined) next.push(row);
+    cursor += 1;
+  }
+
+  state.rows = next;
+  return { edits, churnTokens: churn };
 }
 
 /**
@@ -284,21 +490,43 @@ export function removeBlock(
   let churn = 0;
   block.removedBy = revision;
   block.removedEdit = edit.key;
-  block.tokens = block.tokens.filter((token) => {
-    if (token.removedBy !== undefined) return true;
-    if (token.insertedBy !== undefined) {
-      churn += 1;
-      return false;
-    }
-    return true;
-  });
-  block.tokens = block.tokens.map((token) =>
-    token.removedBy === undefined
-      ? { ...token, removedBy: revision, removedEdit: edit.key }
-      : token,
-  );
+  const tombstone = (tokens: readonly AttributedToken[]): AttributedToken[] => {
+    const result = tombstoneAll(tokens, revision, edit.key);
+    churn += result.churnTokens;
+    return result.tokens;
+  };
+
+  if (block.table === undefined) {
+    block.tokens = tombstone(block.tokens);
+  } else {
+    block.table.rows = block.table.rows.filter((row) => {
+      const hadTokens = row.cells.some((cell) => cell.length > 0);
+      row.cells = row.cells.map(tombstone);
+      // A row that was all churn leaves nothing to show, not an empty row
+      return !hadTokens || row.cells.some((cell) => cell.length > 0);
+    });
+  }
 
   return { edit, churnTokens: churn };
+}
+
+/**
+ * Every live token becomes a tombstone of this revision, except the ones inserted after
+ * the baseline: removing those is churn, and they are dropped
+ */
+function tombstoneAll(
+  tokens: readonly AttributedToken[],
+  revision: string,
+  editKey: string,
+): { tokens: AttributedToken[]; churnTokens: number } {
+  let churn = 0;
+  const next: AttributedToken[] = [];
+  for (const token of tokens) {
+    if (token.removedBy !== undefined) next.push(token);
+    else if (token.insertedBy !== undefined) churn += 1;
+    else next.push({ ...token, removedBy: revision, removedEdit: editKey });
+  }
+  return { tokens: next, churnTokens: churn };
 }
 
 /**
@@ -307,9 +535,20 @@ export function removeBlock(
  * what keeps the bundle small and the highlighting readable.
  */
 export function emitRuns(block: BlockState, editIds: ReadonlyMap<string, string>): Run[] {
+  return emitCells(block, editIds).flat();
+}
+
+/** The runs of every cell of a table, row by row; any other block is a single cell */
+function emitCells(block: BlockState, editIds: ReadonlyMap<string, string>): Run[][] {
+  if (block.table === undefined) return [runsOf(block.tokens, editIds)];
+  // Runs never merge across a cell boundary, or the cell could not be cut back out
+  return block.table.rows.flatMap((row) => row.cells.map((cell) => runsOf(cell, editIds)));
+}
+
+function runsOf(tokens: readonly AttributedToken[], editIds: ReadonlyMap<string, string>): Run[] {
   const runs: Run[] = [];
 
-  for (const token of block.tokens) {
+  for (const token of tokens) {
     const run = toRun(token, editIds);
     const previous = runs[runs.length - 1];
     if (previous !== undefined && sameAttribution(previous, run)) {
@@ -323,14 +562,21 @@ export function emitRuns(block: BlockState, editIds: ReadonlyMap<string, string>
 }
 
 export function emitBlock(block: BlockState, editIds: ReadonlyMap<string, string>): Block {
+  const cells = emitCells(block, editIds);
   const result: Block = {
     id: block.id,
     kind: block.kind,
-    runs: emitRuns(block, editIds),
+    runs: cells.flat(),
   };
   if (block.level !== undefined) result.level = block.level;
   if (block.introducedBy !== undefined) result.introducedBy = block.introducedBy;
   if (block.removedBy !== undefined) result.removedBy = block.removedBy;
+  if (block.table !== undefined) {
+    result.table = {
+      columns: block.table.columns,
+      cellRunCounts: cells.map((cell) => cell.length),
+    };
+  }
   return result;
 }
 
@@ -352,4 +598,11 @@ function sameAttribution(a: Run, b: Run): boolean {
   const revisionA = a.kind === 'kept' ? undefined : a.revision;
   const revisionB = b.kind === 'kept' ? undefined : b.revision;
   return revisionA === revisionB;
+}
+
+/** Cut a row-major list into rows of `columns` */
+function chunk<T>(items: readonly T[], columns: number): T[][] {
+  const rows: T[][] = [];
+  for (let i = 0; i < items.length; i += columns) rows.push(items.slice(i, i + columns));
+  return rows;
 }
