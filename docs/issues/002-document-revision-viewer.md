@@ -174,7 +174,7 @@ Three decisions behind this shape:
   `runs.length` and its length is a multiple of `columns`, and validation rejects a bundle
   where it does not. Everything that reads `runs` goes on reading them; only the drawing
   cuts them into cells. A table built before the field existed has no `table` and is drawn
-  as one paragraph ([INT-006](006-tables-are-flattened-into-text.md))
+  as one paragraph ([INT-006](done/006-tables-are-flattened-into-text.md))
 
 ### How the bundle is produced: token blame with tombstones
 

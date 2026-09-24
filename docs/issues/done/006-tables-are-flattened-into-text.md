@@ -3,7 +3,7 @@ title: INT-006 - Markdown tables are flattened into run-together text
 description: Apply when working on table blocks - the Markdown parse in packages/adapters, the block contract in packages/core, and the way apps/web draws a block that has cells.
 category: specification
 ai_load: on-demand
-status: draft
+status: active
 created: 2026-09-21
 related:
   - docs/issues/002-document-revision-viewer.md
@@ -14,19 +14,20 @@ related:
 
 ## Metadata
 
-- **Status**: 📋 Open
+- **Status**: ✅ Implemented
 - **Type**: bug
 - **Priority**: high
 - **Created**: 2026-09-21
+- **Closed**: 2026-09-24
 - **Author**: Zdeněk Kurc
 - **Target**: `packages/adapters` (the parse), `packages/core` (the contract and the
   validation), `apps/web` (the drawing); `packages/viewer-page` and the three hosts inherit
   the fix without changing
 - **GitHub**: [#6](https://github.com/cassandragargoyle/revlens/issues/6)
 - **Related**:
-  - [INT-002 — Document revision viewer](002-document-revision-viewer.md) — the data
-    contract this issue changes, which must be amended there as well
-  - [ADR-006 — Standalone product and editor extensions](../adr/ADR-006-standalone-product-and-editor-extensions.md)
+  - [INT-002 — Document revision viewer](../002-document-revision-viewer.md) — the data
+    contract this issue changes, amended there as well
+  - [ADR-006 — Standalone product and editor extensions](../../adr/ADR-006-standalone-product-and-editor-extensions.md)
     — why the fix may not be made in one host
 
 ## Problem
@@ -144,23 +145,25 @@ the contract change is written into INT-002 as well.
 
 ## Acceptance Criteria
 
-- [ ] A Markdown table parses into a block whose cells are separate: the fixture table's
+- [x] A Markdown table parses into a block whose cells are separate: the fixture table's
       cells appear as distinct runs, and no two cell texts are concatenated
-- [ ] `blockSchema` carries the optional `table` field, and `npm run schema:check` passes
+- [x] `blockSchema` carries the optional `table` field, and `npm run schema:check` passes
       against the regenerated `schema/bundle.schema.json`
-- [ ] `validate.ts` rejects a bundle whose `cellRunCounts` does not sum to `runs.length`, or
+- [x] `validate.ts` rejects a bundle whose `cellRunCounts` does not sum to `runs.length`, or
       whose cell count is not a multiple of `columns`, naming the block in the message
-- [ ] The viewer draws a table as a `<table>`, with the header row in `<thead>`, in all
-      three hosts — because all three take the page from `packages/viewer-page`
-- [ ] Changing one cell highlights that cell only, and clicking it opens the revision behind
+- [x] The viewer draws a table as a `<table>`, with the header row in `<thead>`, in all
+      three hosts — because all three take the page from `packages/viewer-page`; tried by
+      hand in Visual Studio Code with 0.1.8, the desktop application and the static export
+      only through the shared page and the jsdom viewer test
+- [x] Changing one cell highlights that cell only, and clicking it opens the revision behind
       that edit, not the revision behind the whole table
-- [ ] A table whose column count changed between revisions is shown as a rewritten block
+- [x] A table whose column count changed between revisions is shown as a rewritten block
       rather than as a mis-aligned table
-- [ ] A bundle built before this change still opens, and its table blocks are drawn as they
+- [x] A bundle built before this change still opens, and its table blocks are drawn as they
       are drawn today
-- [ ] `fixtures/` gains a chapter with a table, including a revision that edits one cell,
+- [x] `fixtures/` gains a chapter with a table, including a revision that edits one cell,
       and the unit tests run on it
-- [ ] `npm run lint`, `npm run typecheck`, `npm run schema:check`, `npm run build` and
+- [x] `npm run lint`, `npm run typecheck`, `npm run schema:check`, `npm run build` and
       `npm test` all pass
 
 ## Notes
@@ -170,3 +173,24 @@ does not change how a block is identified, only what is inside it.
 
 Nothing here needs a new runtime dependency. `remark-gfm` already parses the table — the
 information exists in the mdast and is being thrown away, not missing.
+
+## Implementation Notes
+
+Implemented in `71ad3ac`, released as 0.1.8.
+
+### Deviations
+
+- **`ParsedBlock` gains one field, not two**: `table: { columns, cells }`, so the column
+  count and the cells cannot be present one without the other
+- **Rows are aligned before cells are diffed.** The proposal diffs cell against cell by
+  position, which makes a row added in the middle of a table highlight every cell below it.
+  The rows are first aligned with the same word diff, a row being one symbol; a row that
+  went and a row that came in its place are one row edited, and a row added or removed as a
+  whole is one `insert` or `delete` edit. A removed row stays in the table, struck through
+- **The text of a table keeps its cells apart**: `textForMode`, `finalText` and
+  `baselineText` join the cells with ` | ` and the rows with a line break, so the MCP tools
+  no longer read a table as one run-on sentence
+- **`runs-merged` stops at a cell boundary.** Two kept cells side by side are two adjacent
+  kept runs, and are not a builder that forgot to merge them
+- A rewritten table - its columns changed - is drawn with the new table first and the
+  removed one after it, as any rewritten block is
