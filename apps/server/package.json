@@ -1,6 +1,6 @@
 {
   "name": "@revlens/server",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "private": true,
   "description": "revlens read-only HTTP API, static hosting and MCP server",
   "license": "MIT",

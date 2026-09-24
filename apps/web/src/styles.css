@@ -73,6 +73,19 @@ select {
   width: 100%;
 }
 
+/*
+ * A webview host injects its own element defaults into the page, and they fill in every
+ * property the viewer left to the browser. Visual Studio Code themes `blockquote` and
+ * `code` from the editor theme, so under a dark theme a quoted comment was near-black on
+ * near-black and could only be read by selecting it. The viewer has one theme and it is
+ * light, so it declares these itself rather than leaving a gap for the host to fill.
+ */
+blockquote,
+code {
+  background: transparent;
+  color: inherit;
+}
+
 /* Layout -------------------------------------------------------------------- */
 
 .app {
