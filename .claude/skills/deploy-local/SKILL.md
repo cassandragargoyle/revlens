@@ -26,7 +26,7 @@ The argument picks the targets; with no argument, deploy **both**.
 | Argument | Artifact | Installed to |
 | -------- | -------- | ------------ |
 | `vscode` | `dist/extension/cassandragargoyle.revlens-<version>.vsix` | VS Code, through `code --install-extension` |
-| `desktop` | `dist/desktop/revlens-<version>.AppImage` | `~/Applications/RevLens.AppImage`, with a launcher entry |
+| `desktop` | `dist/desktop/RevLens-<version>.AppImage` | `~/Applications/RevLens.AppImage`, with a launcher entry |
 | `all` | both of the above | |
 
 ## STEP 1: Look at what is being deployed
@@ -88,16 +88,18 @@ Linux only. On Windows, stop this target and point the user at the NSIS installe
 ```bash
 npm run package:desktop
 mkdir -p ~/Applications ~/.local/share/applications ~/.local/share/icons/hicolor/512x512/apps
-install -m 755 dist/desktop/revlens-<version>.AppImage ~/Applications/RevLens.AppImage
+install -m 755 dist/desktop/RevLens-<version>.AppImage ~/Applications/RevLens.AppImage
 install -m 644 apps/desktop/build/icon.png ~/.local/share/icons/hicolor/512x512/apps/revlens.png
 ```
 
 The installed file has a **fixed name** with no version in it, so the launcher entry and
 anything the user pinned keep working after the next deploy. Check that a running
-instance is not holding the old file first:
+instance is not holding the old file first - the process is `revlens`, the
+`executableName` in `electron-builder.yml`; matching the file name with `pgrep -f` would
+find the shell that runs the check:
 
 ```bash
-pgrep -af RevLens.AppImage
+pgrep -x revlens
 ```
 
 If it is running, ask the user to close it before installing.
@@ -111,16 +113,23 @@ Type=Application
 Name=RevLens
 Comment=Document revision viewer
 Exec=<home>/Applications/RevLens.AppImage %f
-Icon=revlens
+Icon=<home>/.local/share/icons/hicolor/512x512/apps/revlens.png
 Terminal=false
 Categories=Office;
 StartupWMClass=revlens
 ```
 
-Use the absolute home path in `Exec`; a desktop entry does not expand `~`. Then:
+Use the absolute home path in `Exec` and `Icon`; a desktop entry does not expand `~`.
+`Icon` is a path rather than the theme name `revlens` on purpose: a running Plasma keeps
+its icon cache from before the install and draws a blank document for a name it has not
+seen, in the menu and in the task bar alike. A path is read from the file directly.
+
+Then refresh the menu caches - `update-desktop-database` for GNOME and the others,
+`kbuildsycoca6` for KDE, which does not read the first one:
 
 ```bash
 update-desktop-database ~/.local/share/applications 2>/dev/null || true
+command -v kbuildsycoca6 >/dev/null && kbuildsycoca6 >/dev/null 2>&1 || true
 ```
 
 The AppImage needs FUSE to start. If the first launch fails with a FUSE error, tell the
@@ -144,6 +153,6 @@ A target that was skipped is reported as skipped, never as deployed.
 
 - VS Code: `code --uninstall-extension cassandragargoyle.revlens`, or install an older
   `.vsix` with `--force`
-- Desktop: an older `dist/desktop/revlens-<version>.AppImage`, if one is still there,
+- Desktop: an older `dist/desktop/RevLens-<version>.AppImage`, if one is still there,
   installed over `~/Applications/RevLens.AppImage`; remove the app with
   `rm ~/Applications/RevLens.AppImage ~/.local/share/applications/revlens.desktop`
