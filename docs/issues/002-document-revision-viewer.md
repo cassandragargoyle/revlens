@@ -499,9 +499,10 @@ edits instant.
       answer
 - [x] `#/edit/…`, `#/revision/…` and `#/comment/…` deep links open the corresponding
       selection on a cold load
-- [ ] `#/about` is a linkable page reachable from the header, carrying the cover image
+- [x] `#/about` is a linkable page reachable from the header, carrying the cover image
       with a caption that names what it shows, how to read the document, the three gates,
-      which identifiers are durable, and the provenance of the loaded bundle
+      which identifiers are durable, and the provenance of the loaded bundle - the entry
+      moved from the header to the left rail with INT-003
 - [ ] **A deep link survives a rebuild.** Edit and revision ids are derived from what the
       change is - the record and the commit behind the revision, and the text the edit
       inserted and removed - not from where it sits in the document. Document position
