@@ -3,7 +3,7 @@ title: INT-005 - The editor builds a bundle, not only reads one
 description: Apply when working on the Visual Studio Code and Pilot extension in apps/vscode - running a build from the editor, the shared build wrapper, the extension identifier and the one icon source behind all three targets.
 category: specification
 ai_load: on-demand
-status: draft
+status: active
 created: 2026-09-18
 related:
   - docs/issues/002-document-revision-viewer.md
@@ -15,22 +15,23 @@ related:
 
 ## Metadata
 
-- **Status**: 📋 Open
+- **Status**: ✅ Implemented
 - **Type**: enhancement
 - **Priority**: high
 - **Created**: 2026-09-18
+- **Closed**: 2026-10-17
 - **Author**: Zdeněk Kurc
 - **Target**: `apps/vscode` (the extension), `packages/adapters` (the shared build),
   `apps/desktop` (adopts the shared build), `apps/pilot` (the declaration)
 - **GitHub**: [#5](https://github.com/cassandragargoyle/revlens/issues/5)
 - **Related**:
-  - [INT-002 — Document revision viewer](002-document-revision-viewer.md) — the
+  - [INT-002 — Document revision viewer](../002-document-revision-viewer.md) — the
     specification; `revlens build` and the data contract are described there
-  - [INT-004 — Desktop application](done/004-desktop-application.md) — where the build
+  - [INT-004 — Desktop application](004-desktop-application.md) — where the build
     form already exists, and the code this issue shares rather than copies
-  - [ADR-006 — Standalone product and editor extensions](../adr/ADR-006-standalone-product-and-editor-extensions.md)
+  - [ADR-006 — Standalone product and editor extensions](../../adr/ADR-006-standalone-product-and-editor-extensions.md)
     — one extension, two hosts, and why the viewer may not be forked for either
-  - [ADR-007 — A desktop application for readers](../adr/ADR-007-desktop-application-for-readers.md)
+  - [ADR-007 — A desktop application for readers](../../adr/ADR-007-desktop-application-for-readers.md)
     — the editor stays the primary target; the window is the second one
 
 ## Feature Description
@@ -81,10 +82,11 @@ flags a second time.
 
 ### 1. One build, called from three places
 
-`buildBundle` in [`packages/adapters/src/build.ts`](../../packages/adapters/src/build.ts)
+`buildBundle` in [`packages/adapters/src/build.ts`](../../../packages/adapters/src/build.ts)
 is already shared by the CLI and the desktop window. What is *not* shared is everything
 around it, and it is the part with the judgement in it:
-[`apps/desktop/src/build.ts`](../../apps/desktop/src/build.ts) probes for git, writes the
+`apps/desktop/src/build.ts` (since folded into
+[`run-build.ts`](../../../packages/adapters/src/run-build.ts)) probes for git, writes the
 message that names the missing program instead of a stack trace, refuses an empty
 baseline, validates, serialises, and formats the report.
 
@@ -131,7 +133,7 @@ The answers are remembered per repository in `workspaceState`, which is also wha
 ### 3. Pilot, which has no commands
 
 Pilot's State A host offers a custom editor, a webview, configuration and a file watcher —
-and no `commands.registerCommand`. [`host.ts`](../../apps/vscode/src/host.ts) already
+and no `commands.registerCommand`. [`host.ts`](../../../apps/vscode/src/host.ts) already
 probes for exactly that, so the commands simply do not register there and nothing breaks.
 That is the floor, not the goal: the ask is that the analysis can be *run* in Pilot too.
 
@@ -325,4 +327,6 @@ Building from the editor already exists and two things in it were wrong:
       hosts now match (see *The two corrections §2 needs*)
 - [x] **Build Revision Bundle** on a folder pre-fills it as the repository
 - [ ] `npm run lint`, `npm run typecheck`, `npm run schema:check`, `npm test`,
-      `npm run build`, `npm run package:pilot` and `npm run verify:pilot-host` all pass
+      `npm run build` and `npm run package:pilot` pass; `npm run verify:pilot-host` does
+      not - it hangs in `portunix-vscode`'s `extract-zip` on Node 26.9 before reaching the
+      extension, identically on the commit before this issue, so it is a host problem
