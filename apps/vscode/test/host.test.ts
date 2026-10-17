@@ -13,6 +13,7 @@ const visualStudioCode = {
   window: {
     showErrorMessage: (): void => undefined,
     showTextDocument: (): void => undefined,
+    withProgress: (): void => undefined,
     registerCustomEditorProvider: (): void => undefined,
   },
   workspace: {
@@ -30,6 +31,22 @@ const stateAHost = {
   },
 };
 
+// What portunix-vscode #121 added to State A: commands, dialogs, messages, output channels
+const pilotHost = {
+  commands: { registerCommand: (): void => undefined, executeCommand: (): void => undefined },
+  window: {
+    registerCustomEditorProvider: (): void => undefined,
+    showErrorMessage: (): void => undefined,
+    showOpenDialog: (): void => undefined,
+    showSaveDialog: (): void => undefined,
+    createOutputChannel: (): void => undefined,
+  },
+  workspace: {
+    getConfiguration: (): void => undefined,
+    createFileSystemWatcher: (): void => undefined,
+  },
+};
+
 describe('detectCapabilities', () => {
   it('finds everything in Visual Studio Code', () => {
     expect(detectCapabilities(visualStudioCode)).toEqual({
@@ -37,6 +54,7 @@ describe('detectCapabilities', () => {
       notifications: true,
       fileWatcher: true,
       textDocuments: true,
+      progress: true,
     });
   });
 
@@ -46,6 +64,17 @@ describe('detectCapabilities', () => {
       notifications: false,
       fileWatcher: true,
       textDocuments: false,
+      progress: false,
+    });
+  });
+
+  it('finds the commands but no progress on the Pilot host', () => {
+    expect(detectCapabilities(pilotHost)).toEqual({
+      commands: true,
+      notifications: true,
+      fileWatcher: true,
+      textDocuments: false,
+      progress: false,
     });
   });
 
@@ -55,6 +84,7 @@ describe('detectCapabilities', () => {
       notifications: false,
       fileWatcher: false,
       textDocuments: false,
+      progress: false,
     });
   });
 
@@ -70,7 +100,7 @@ describe('describeCapabilities', () => {
     const line = describeCapabilities(detectCapabilities(stateAHost));
 
     expect(line).toContain('host offers fileWatcher');
-    expect(line).toContain('not offered: commands, notifications, textDocuments');
+    expect(line).toContain('not offered: commands, notifications, textDocuments, progress');
   });
 
   it('says so plainly when only the viewer works', () => {

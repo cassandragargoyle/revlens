@@ -6,6 +6,7 @@ import * as vscode from 'vscode';
 import { listExamples, tryExample } from '@revlens/adapters';
 import type { ExampleChoice } from '@revlens/adapters';
 import type { BuildLog } from './build-command.js';
+import { withProgressIfAny } from './build-command.js';
 import { BundleEditorProvider } from './bundle-editor.js';
 
 /**
@@ -33,6 +34,7 @@ interface ExampleItem extends vscode.QuickPickItem {
 export async function tryExampleCommand(
     channel: BuildLog,
     extensionPath: string,
+    progress: boolean,
 ): Promise<void> {
     const root = examplesRoot(extensionPath);
     const choices = await listExamples(root, vscode.env?.language ?? 'en');
@@ -75,19 +77,13 @@ export async function tryExampleCommand(
     channel.show();
     channel.appendLine(`writing ${picked.choice.id} (${language}) into ${target.fsPath}`);
 
-    const outcome = await vscode.window.withProgress(
-        {
-            location: vscode.ProgressLocation.Notification,
-            title: `Building ${picked.choice.title}`,
-            cancellable: false,
-        },
-        async () =>
-            tryExample({
-                root,
-                id: picked.choice.id,
-                language,
-                target: target.fsPath,
-            }),
+    const outcome = await withProgressIfAny(progress, `Building ${picked.choice.title}`, async () =>
+        tryExample({
+            root,
+            id: picked.choice.id,
+            language,
+            target: target.fsPath,
+        }),
     );
 
     if (!outcome.ok) {

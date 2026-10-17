@@ -1,0 +1,18 @@
+<!-- The product mark: a revised page under the product name, one line struck out and one inserted
+     Rendered by `npm run icons` to every PNG the extension, the viewer and the desktop ship -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="revlens">
+  <title>revlens</title>
+  <desc>A white page on no background, one line struck out and one inserted, under the name revlens</desc>
+  <!-- the page, with the corner folded; the outline keeps it visible on a light background -->
+  <path d="M22 14 a6 6 0 0 1 6-6 h48 l24 24 v66 a6 6 0 0 1-6 6 H28 a6 6 0 0 1-6-6 Z" fill="#ffffff" stroke="#8c959f" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M76 8 l24 24 h-18 a6 6 0 0 1-6-6 Z" fill="#d0d7de" stroke="#8c959f" stroke-width="3" stroke-linejoin="round"/>
+  <!-- unchanged text, a deletion struck through, an insertion underlined -->
+  <rect x="35" y="38" width="50" height="7" rx="3.5" fill="#9aa3ad"/>
+  <rect x="35" y="56" width="46" height="7" rx="3.5" fill="#e2b7b0"/>
+  <rect x="30" y="57.6" width="56" height="3.8" rx="1.9" fill="#a33a2c"/>
+  <rect x="35" y="74" width="40" height="7" rx="3.5" fill="#1a7f5a"/>
+  <rect x="35" y="85" width="40" height="4" rx="2" fill="#1a7f5a"/>
+  <!-- the name, on a plate the page sits in -->
+  <rect x="8" y="94" width="112" height="30" rx="10" fill="#2f363d"/>
+  <text x="64" y="115.5" font-family="Segoe UI, Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="0.4">revlens</text>
+</svg>

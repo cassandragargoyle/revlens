@@ -2,9 +2,11 @@
  * What the host we happen to be running in can actually do.
  *
  * One extension serves two hosts. Visual Studio Code offers the whole API; the Pilot
- * application runs the same `.vsix` on a deliberately small subset - a custom readonly
- * editor, a webview, configuration defaults and a file watcher, and nothing else
- * (`src/electron/extensions/host/` in `portunix-vscode`, ADR-010 there).
+ * application runs the same `.vsix` on a deliberately small subset
+ * (`src/electron/extensions/host/` in `portunix-vscode`, ADR-010 there). State A was a
+ * custom readonly editor, a webview, configuration defaults and a file watcher; issue
+ * #121 there added contributed commands, the dialogs, the messages and output channels,
+ * and still leaves out `withProgress`, `showTextDocument` and `workspaceState`.
  *
  * So the extension asks instead of assuming. The document always opens, because the
  * viewer needs only what both hosts have; the palette commands and the notifications
@@ -14,14 +16,16 @@
  */
 
 export interface HostCapabilities {
-  /** `commands.registerCommand` - the command palette. Absent on the State A host. */
+  /** `commands.registerCommand` - the command palette. Absent before portunix-vscode #121. */
   readonly commands: boolean;
-  /** `window.showErrorMessage` and friends. Absent on the State A host. */
+  /** `window.showErrorMessage` and friends. Absent before portunix-vscode #121. */
   readonly notifications: boolean;
   /** `workspace.createFileSystemWatcher` - reload when a rebuild rewrites the bundle. */
   readonly fileWatcher: boolean;
   /** `window.showTextDocument` - open the bundle as raw JSON beside the document. */
   readonly textDocuments: boolean;
+  /** `window.withProgress` - a notification while a build runs. Absent on the Pilot host. */
+  readonly progress: boolean;
 }
 
 /**
@@ -38,6 +42,7 @@ export function detectCapabilities(api: unknown): HostCapabilities {
     notifications: isCallable(member(api, 'window', 'showErrorMessage')),
     fileWatcher: isCallable(member(api, 'workspace', 'createFileSystemWatcher')),
     textDocuments: isCallable(member(api, 'window', 'showTextDocument')),
+    progress: isCallable(member(api, 'window', 'withProgress')),
   };
 }
 

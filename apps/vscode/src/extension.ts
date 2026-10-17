@@ -1,7 +1,9 @@
 import * as vscode from 'vscode';
 import { BundleEditorProvider } from './bundle-editor.js';
-import { buildBundleCommand } from './build-command.js';
-import type { BuildLog } from './build-command.js';
+import { buildBundleCommand, rebuildBundleCommand } from './build-command.js';
+import type { BuildContext, BuildLog } from './build-command.js';
+import { memoryStore } from './build-memory.js';
+import type { AnswerStore } from './build-memory.js';
 import { tryExampleCommand } from './example-command.js';
 import { describeCapabilities, detectCapabilities } from './host.js';
 
@@ -31,6 +33,13 @@ export function activate(context: vscode.ExtensionContext): void {
 
   if (!capabilities.commands) return;
 
+  const build: BuildContext = {
+    channel,
+    store: answerStore(context),
+    provider,
+    progress: capabilities.progress,
+  };
+
   context.subscriptions.push(
     vscode.commands.registerCommand('revlens.openBundle', async (uri?: vscode.Uri) => {
       const target = uri ?? (await pickBundle());
@@ -48,13 +57,17 @@ export function activate(context: vscode.ExtensionContext): void {
     // Building a bundle used to mean leaving the application for a checkout and a
     // command line; this is the same build, asked for from inside the host
     vscode.commands.registerCommand('revlens.buildBundle', async (uri?: vscode.Uri) => {
-      await buildBundleCommand(channel, uri);
+      await buildBundleCommand(build, uri);
+    }),
+    // The second build is the daily one: the same answers, after a fix, into the same tab
+    vscode.commands.registerCommand('revlens.rebuildBundle', async (uri?: vscode.Uri) => {
+      await rebuildBundleCommand(build, uri);
     }),
     // The first build is the hard one: it asks six questions about a shape nobody has
     // described. This writes one of each onto disk and builds it, so the shape is
     // something the reader can open rather than something they have to imagine
     vscode.commands.registerCommand('revlens.tryExample', async () => {
-      await tryExampleCommand(channel, context.extensionPath);
+      await tryExampleCommand(channel, context.extensionPath, capabilities.progress);
     }),
   );
 }
@@ -66,6 +79,18 @@ async function pickBundle(): Promise<vscode.Uri | undefined> {
     filters: { 'Revision bundle': ['revlens', 'json'] },
   });
   return picked?.[0];
+}
+
+/**
+ * Where the build answers are remembered.
+ *
+ * `workspaceState` in Visual Studio Code, so a rebuild still knows its answers after a
+ * restart. The Pilot host hands the extension no such store; there the answers last as
+ * long as the window, which still covers the fix-and-rebuild loop the command is for.
+ */
+function answerStore(context: vscode.ExtensionContext): AnswerStore {
+  const state = (context as { workspaceState?: vscode.Memento }).workspaceState;
+  return state !== undefined && typeof state.get === 'function' ? state : memoryStore();
 }
 
 /**

@@ -76,14 +76,15 @@ describe('what the manifest offers', () => {
 
 describe('the bundle a build writes', () => {
   /**
-   * `AGENTS.md`: bundles are named `*.revlens`. Pilot matches a plain `path.extname`, so
-   * a `*.revlens.json` file is one of the two hosts cannot open.
+   * `AGENTS.md`: bundles are named `*.revlens.json`. Pilot matches a file type as a
+   * suffix, longest first (portunix-vscode #120), so the compound name opens in both
+   * hosts; what the default is, is held in `build-memory.test.ts`.
    */
-  it('is offered the plain extension, never the compound one', async () => {
+  it('is offered the compound extension, by way of the shared default', async () => {
     const command = await read('apps/vscode/src/build-command.ts');
 
-    expect(command).toContain("'bundle.revlens'");
-    expect(command).not.toContain("'bundle.revlens.json'");
+    expect(command).toContain('defaultOutput(repo)');
+    expect(command).toContain("filters: { 'Revision bundle': ['revlens.json', 'revlens'] }");
   });
 
   it('takes the folder the explorer menu was invoked on as the repository', async () => {
@@ -96,6 +97,6 @@ describe('the bundle a build writes', () => {
       (item) => item.command === 'revlens.buildBundle',
     );
     expect(entry?.when).toBe('explorerResourceIsFolder');
-    expect(command).toMatch(/const repo =\s*\n?\s*folder \?\?/);
+    expect(command).toContain('if (folder !== undefined) return folder.fsPath;');
   });
 });

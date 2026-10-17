@@ -111,7 +111,7 @@ window with no workspace open:
 | Baseline (`from`) | `InputBox` | the last answer for this repository |
 | Head (`to`) | `InputBox`, may be left empty | empty, meaning the working revision |
 | Records | file picker, may be skipped | the last answer |
-| Output | save dialog | `<repository>/out/<name>.revlens` |
+| Output | save dialog | `<repository>/out/<name>.revlens.json` |
 
 Then `withProgress` while it runs, the report in an output channel, and the written file
 opened with `revlens.bundle` — the editor the extension already contributes.
@@ -153,6 +153,17 @@ whether Pilot's host may write a file the reader chose. Both are questions for
 `availableFeatures` is an assertion we make and have to keep true. If the answer is no,
 this issue ships the VS Code half and records the reason here, rather than pretending.
 
+> **Resolved — the seam was not needed.** Before this part was built, `portunix-vscode`
+> #121 gave the host `commands.registerCommand`, `contributes.menus["explorer/context"]`,
+> the open and save dialogs, `showInputBox`, `showQuickPick`, the messages and
+> `createOutputChannel`. The capability probe in `host.ts` therefore registers the build
+> commands in Pilot as it does in Visual Studio Code, and they run the same `runBuild`.
+> Pilot still has no `withProgress`, no `workspaceState` and no `editor/title` menu, so
+> there the build runs without a progress notification, a rebuild remembers its answers
+> until the window closes, and **Rebuild This Bundle** is on the bundle's context menu.
+> `pilot-plugin.json` says exactly that. Nothing was added to `apps/web` or to
+> `packages/viewer-page`.
+
 ### 4. The identifier, written the way it is used
 
 The extension id is `<publisher>.<name>`, today `CassandraGargoyle.revlens`. Everything
@@ -170,7 +181,7 @@ The mark exists three times, from one drawing:
 
 | File | Size | Consumer |
 | ---- | ---- | -------- |
-| `apps/vscode/icon.svg` | — | the drawing |
+| `assets/icon.svg` | — | the drawing, moved from `apps/vscode/` |
 | `apps/vscode/icon.png` | 128×128 | the extension manifest, the Pilot catalog |
 | `apps/web/src/assets/icon.png` | 128×128 | the viewer's favicon; a byte-identical copy, held in place by `apps/web/test/icon.test.ts` |
 | `apps/desktop/build/icon.png` | 512×512 | electron-builder, and the window |
@@ -247,57 +258,71 @@ teach which parts are essential and which were that engagement's:
 
 ### The two corrections §2 needs
 
-Building from the editor already exists and two things in it are wrong:
+Building from the editor already exists and two things in it were wrong:
 
-- the save dialog offers `bundle.revlens.json`. A compound extension is exactly what
-  `AGENTS.md` says never to write: Pilot matches a plain `path.extname`, so a
-  `*.revlens.json` file is one Pilot cannot open. The default is `*.revlens`.
-- the explorer context menu pre-fills the folder as the **records**. The folder a reader
+- the save dialog offered the extension Pilot could not match at the time. That reason
+  has since gone: Pilot matches a file type as a suffix, longest match first
+  (`portunix-vscode` #120), and `AGENTS.md` now names bundles `*.revlens.json`. The default
+  is therefore `<repository>/out/<name>.revlens.json`, and `*.revlens` is still accepted.
+- the explorer context menu pre-filled the folder as the **records**. The folder a reader
   right-clicks is the repository; that is what this issue said and what the menu's own
   label promises.
 
+### What was built
+
+- The palette command is titled **Build Revision Bundle…**, not *Build a Bundle…*: a
+  command has one title, and the explorer menu, which shows the same title, is the place
+  the issue names *Build Revision Bundle*. It sits beside *Open Revision Bundle*.
+- The records question offers *Use the last folder*, *Choose…* and *Build without
+  records*; a build without records still shows every change, without the reasons.
+- The answers of a successful build are remembered under the repository and under the
+  written file (`apps/vscode/src/build-memory.ts`). The first gives the next form its
+  defaults; the second is what **Rebuild This Bundle** runs again.
+- The mark lost its blue tile: a page on no background of its own, with a neutral plate
+  for the name. `npm run icons` renders every PNG from `assets/icon.svg`.
+
 ## Acceptance Criteria
 
-- [ ] `revlens: Build a Bundle…` runs a build from Visual Studio Code and opens the written
+- [x] `revlens: Build a Bundle…` runs a build from Visual Studio Code and opens the written
       bundle in the `revlens.bundle` editor, without a terminal
-- [ ] The command asks through native pickers only, and works with no folder open
-- [ ] **Build Revision Bundle** appears on a folder in the explorer and pre-fills it as the
+- [x] The command asks through native pickers only, and works with no folder open
+- [x] **Build Revision Bundle** appears on a folder in the explorer and pre-fills it as the
       repository
-- [ ] `revlens: Rebuild This Bundle` re-runs the build behind the open bundle and
+- [x] `revlens: Rebuild This Bundle` re-runs the build behind the open bundle and
       re-renders the tab; with nothing remembered, it offers the form instead of failing
-- [ ] Progress shows while the build runs, and the report `revlens build` prints lands in
+- [x] Progress shows while the build runs, and the report `revlens build` prints lands in
       an output channel
-- [ ] Without git on the `PATH`, the editor shows the message naming what is missing and
+- [x] Without git on the `PATH`, the editor shows the message naming what is missing and
       where to get it — the same words the desktop window shows, from the same function
-- [ ] A build started in the editor and the same build started from `revlens build` write
+- [x] A build started in the editor and the same build started from `revlens build` write
       the same bytes
-- [ ] `runBuild` and its helpers live in one package; `apps/desktop/src/build.ts` calls it
+- [x] `runBuild` and its helpers live in one package; `apps/desktop/src/build.ts` calls it
       rather than owning it, and no third copy of the git probe exists
-- [ ] The extension registers the build commands only where the host has `commands`, and
+- [x] The extension registers the build commands only where the host has `commands`, and
       opening a bundle in Pilot is unchanged
-- [ ] Either Pilot can start a build through the webview seam, with `pilot-plugin.json`
+- [x] Either Pilot can start a build through the webview seam, with `pilot-plugin.json`
       saying so, or this issue records why it cannot and `availableFeatures` stays honest
-- [ ] Nothing host-specific is added to `apps/web`: the viewer draws a build affordance
+- [x] Nothing host-specific is added to `apps/web`: the viewer draws a build affordance
       from a capability it is handed, not from knowing which host it is in
-- [ ] The manifest publisher is `cassandragargoyle`, so the identifier, the `.vsix` file
+- [x] The manifest publisher is `cassandragargoyle`, so the identifier, the `.vsix` file
       name and the Pilot catalog entry are the same string
-- [ ] One drawing produces all three PNGs through a script, and the existing icon test
+- [x] One drawing produces all three PNGs through a script, and the existing icon test
       still holds the viewer's copy identical to the extension's
-- [ ] `revlens: Try an Example…` writes an example into a folder the reader chose, seeds
+- [x] `revlens: Try an Example…` writes an example into a folder the reader chose, seeds
       the repository, builds the bundle and opens it — without the reader having any
       material of their own
-- [ ] The desktop welcome page offers the same, as a third button
-- [ ] What is written is readable afterwards: `docs/changes/` and `docs/comments/` on
+- [x] The desktop welcome page offers the same, as a third button
+- [x] What is written is readable afterwards: `docs/changes/` and `docs/comments/` on
       disk, a git repository beside them, and the bundle built from both
-- [ ] Three examples are offered, and each says what it is in the language the reader
+- [x] Three examples are offered, and each says what it is in the language the reader
       picked
-- [ ] `example.json` has a contract beside `history.schema.json`, and
+- [x] `example.json` has a contract beside `history.schema.json`, and
       `npm run example:check` validates every example against it
-- [ ] The seeding has one implementation: `scripts/seed-example.ts` calls it rather than
+- [x] The seeding has one implementation: `scripts/seed-example.ts` calls it rather than
       owning it, and `make seed` still produces the repository it produced before
-- [ ] The examples travel in the `.vsix` and in the packaged window, beside the viewer
-- [ ] The build command's save dialog offers `*.revlens`, not the compound extension
-      Pilot cannot match
-- [ ] **Build Revision Bundle** on a folder pre-fills it as the repository
+- [x] The examples travel in the `.vsix` and in the packaged window, beside the viewer
+- [x] The build command's save dialog offers `*.revlens.json`, the compound name both
+      hosts now match (see *The two corrections §2 needs*)
+- [x] **Build Revision Bundle** on a folder pre-fills it as the repository
 - [ ] `npm run lint`, `npm run typecheck`, `npm run schema:check`, `npm test`,
       `npm run build`, `npm run package:pilot` and `npm run verify:pilot-host` all pass

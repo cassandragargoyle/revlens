@@ -381,11 +381,11 @@ interface ChromePage {
  * They follow the operating system's light and dark setting rather than carrying a theme
  * of their own, because they are chrome around a document and not part of it.
  *
- * `--accent` is the blue of the application icon, at the two depths the text on it needs:
- * the icon reads `#387df3`, which carries only 3.6:1 under the light text of a filled
- * button, so the light theme darkens it and the dark theme lightens it. The hue is the
- * icon's in both - 217 degrees - so the button and the mark in the task bar are the same
- * colour to a reader who sees them side by side.
+ * `--accent` is one blue, hue 217 degrees, at the two depths the text on it needs:
+ * `#387df3` carries only 3.6:1 under the light text of a filled button, so the light
+ * theme darkens it and the dark theme lightens it. The icon used to be a tile of that
+ * blue; it is neutral now, because a coloured tile shouted in a task bar of quieter
+ * marks, and the accent stays on the buttons where a reader looks for it.
  */
 function chromePage(page: ChromePage): string {
   return `<!doctype html>

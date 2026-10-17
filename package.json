@@ -1,6 +1,6 @@
 {
   "name": "revlens",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "private": true,
   "description": "Document revision viewer - the final text with every change highlighted in place, and the revision and reviewer comment behind it",
   "license": "MIT",
@@ -45,6 +45,7 @@
     "revlens": "tsx apps/cli/src/cli.ts",
     "example:seed": "tsx scripts/seed-example.ts",
     "example:check": "tsx scripts/validate-records.ts",
+    "icons": "tsx scripts/render-icons.ts",
     "demo:vscode": "tsx scripts/demo-vscode.ts",
     "verify:pilot-host": "tsx apps/pilot/verify-host.ts"
   },

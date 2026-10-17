@@ -5,10 +5,11 @@ import { describe, expect, it } from 'vitest';
 /**
  * One mark, wherever revlens is installed from.
  *
- * `apps/vscode/icon.svg` is the drawing; the PNG beside it is what the extension manifest
- * and the Pilot catalog point at, and the same file is the viewer's favicon, so a browser
- * tab, an editor tab and a desktop window all show the same thing. Nothing enforces that
- * but this test: the copy is a copy, and a copy rots quietly.
+ * `assets/icon.svg` is the drawing and `npm run icons` renders it. The 128x128 PNG is
+ * what the extension manifest and the Pilot catalog point at, and the same file is the
+ * viewer's favicon, so a browser tab, an editor tab and a desktop window all show the
+ * same thing. The script writes the copy; this test is what notices when a hand edit
+ * skipped the script.
  */
 
 const read = (relative: string): Promise<Buffer> =>

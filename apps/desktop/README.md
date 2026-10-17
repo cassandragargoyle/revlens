@@ -79,15 +79,9 @@ inside an installer.
 
 ## The icon
 
-The drawing is `apps/vscode/icon.svg` — one mark for the product, rendered at the size
-each consumer wants. The desktop needs 512×512, which electron-builder reads from
-`build/icon.png`:
-
-```bash
-sed 's|width="128" height="128"|width="512" height="512"|' apps/vscode/icon.svg > /tmp/icon-512.svg
-chrome --headless --default-background-color=00000000 --window-size=512,512 \
-  --screenshot=apps/desktop/build/icon.png /tmp/icon-512.svg
-```
+The drawing is [`assets/icon.svg`](../../assets/icon.svg) — one mark for the product,
+rendered at the size each consumer wants. The desktop needs 512×512, which
+electron-builder reads from `build/icon.png`; `npm run icons` writes it with the others.
 
 ## Layout
 
@@ -96,7 +90,7 @@ apps/desktop/
   package.json           # the application manifest; electron and electron-builder live here alone
   esbuild.mjs            # two CommonJS bundles, plus the built viewer copied into media/
   electron-builder.yml   # the installers, the file association, the platforms
-  build/icon.png         # the product mark at 512x512, rendered from apps/vscode/icon.svg;
+  build/icon.png         # the product mark at 512x512, rendered from assets/icon.svg;
                          # copied into media/ at build time, because the window needs it
                          # at runtime on Linux and build/ is not packed
   src/

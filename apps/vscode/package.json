@@ -2,8 +2,8 @@
   "name": "revlens",
   "displayName": "RevLens",
   "description": "Read a document with every change highlighted in place, and the revision and reviewer comment behind it",
-  "version": "0.1.8",
-  "publisher": "CassandraGargoyle",
+  "version": "0.1.9",
+  "publisher": "cassandragargoyle",
   "license": "MIT",
   "icon": "icon.png",
   "repository": {
@@ -64,7 +64,12 @@
       },
       {
         "command": "revlens.buildBundle",
-        "title": "New Revision Bundle...",
+        "title": "Build Revision Bundle...",
+        "category": "revlens"
+      },
+      {
+        "command": "revlens.rebuildBundle",
+        "title": "Rebuild This Bundle",
         "category": "revlens"
       },
       {
@@ -86,8 +91,20 @@
           "group": "navigation"
         },
         {
+          "command": "revlens.rebuildBundle",
+          "when": "resourceFilename =~ /\\.revlens(\\.json)?$/",
+          "group": "navigation"
+        },
+        {
           "command": "revlens.buildBundle",
           "when": "explorerResourceIsFolder",
+          "group": "navigation"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "revlens.rebuildBundle",
+          "when": "activeCustomEditorId == revlens.bundle",
           "group": "navigation"
         }
       ]

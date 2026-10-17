@@ -97,9 +97,9 @@ export function buildCatalogEntry(seed: PluginSeed, packaged: PackagedExtension)
 /**
  * The curated metadata, checked before it is written into a catalog.
  *
- * `fileTypes` is where this goes wrong quietly: Pilot matches a plain `path.extname`, so
- * a compound suffix like `revlens.json` would never match, and a bare `json` would claim
- * every JSON file in the application. Both are rejected here.
+ * `fileTypes` is where this goes wrong quietly: Pilot matches a file type as a suffix,
+ * longest first (portunix-vscode #120), so a compound `revlens.json` is right - and a
+ * bare `json` would claim every JSON file in the application. That one is rejected here.
  */
 export function parsePluginSeed(value: unknown): PluginSeed {
   if (typeof value !== 'object' || value === null) {

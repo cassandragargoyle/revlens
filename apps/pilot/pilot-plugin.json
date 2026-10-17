@@ -5,8 +5,17 @@
   "fileTypes": ["revlens", "revlens.json"],
   "compat": {
     "verdict": "supported",
-    "availableFeatures": ["customEditor", "webview", "configuration", "fileSystemWatcher"],
-    "unavailableFeatures": [],
-    "notes": "The document renders from the bundle embedded in the webview, so the viewer needs nothing beyond the State A surface. The command palette entries and the output channel exist only in Visual Studio Code and are absent here by design."
+    "availableFeatures": [
+      "customEditor",
+      "webview",
+      "configuration",
+      "fileSystemWatcher",
+      "commands",
+      "explorerContextMenu",
+      "dialogs",
+      "outputChannel"
+    ],
+    "unavailableFeatures": ["progressNotifications", "editorTitleMenu", "workspaceState"],
+    "notes": "The document renders from the bundle embedded in the webview, so reading needs nothing beyond the State A surface. Building, rebuilding and Try an Example run through the commands, the explorer context menu, the dialogs and the output channel portunix-vscode #121 added. A build shows no progress notification here, Rebuild This Bundle is on the bundle's context menu rather than the editor title, and the answers a rebuild reuses last until the window closes."
   }
 }

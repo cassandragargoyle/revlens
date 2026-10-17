@@ -1,4 +1,4 @@
-import { basename, dirname, join } from 'node:path';
+import { basename, dirname, join, resolve } from 'node:path';
 import { readFile } from 'node:fs/promises';
 import { randomBytes } from 'node:crypto';
 import * as vscode from 'vscode';
@@ -31,6 +31,8 @@ export class BundleEditorProvider implements vscode.CustomReadonlyEditorProvider
   public static readonly viewType = 'revlens.bundle';
 
   private readonly open = new Set<OpenViewer>();
+  /** The viewer the reader looked at last, which is what a rebuild without a file means */
+  private active: OpenViewer | undefined;
 
   constructor(
     private readonly extensionPath: string,
@@ -67,12 +69,32 @@ export class BundleEditorProvider implements vscode.CustomReadonlyEditorProvider
     };
 
     this.open.add(viewer);
+    this.active = viewer;
+    // Both hosts report the active panel; a host that did not would leave the newest
+    // viewer as the active one, which is the right guess more often than not
+    panel.onDidChangeViewState?.((event) => {
+      if (event.webviewPanel.active) this.active = viewer;
+    });
     panel.onDidDispose(() => {
       this.open.delete(viewer);
+      if (this.active === viewer) this.active = undefined;
     });
 
     this.watch(viewer, panel);
     await viewer.render();
+  }
+
+  /** The file behind the viewer the reader looked at last, if one is still open */
+  public activeBundle(): string | undefined {
+    return this.active?.fsPath;
+  }
+
+  /** Re-render the viewers showing one file, after a rebuild rewrote it */
+  public async reload(fsPath: string): Promise<void> {
+    const target = resolve(fsPath);
+    await Promise.all(
+      [...this.open].filter((viewer) => resolve(viewer.fsPath) === target).map((viewer) => viewer.render()),
+    );
   }
 
   /** Re-render every open viewer - the fallback where no file watcher exists. */
